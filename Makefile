@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/09/12 20:53:39 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/09/15 17:35:37 by sle-rest         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
 SRCD		=	srcs/
 
-INCLUDES	=	includes/expr.h includes/job_control.h includes/parser.h includes/readraw.h includes/shell.h
+INCLUDES	=	includes/expr.h includes/job_control.h includes/parser.h \
+				includes/readraw.h includes/shell.h includes/globing.h
 _PROMPT_FS	=	ft_readraw.c selectmode.c move_char.c move_history.c \
 				move_word.c move_end.c printprompt.c
 PROMPT_FS	=	$(addprefix $(SRCD)prompt/,$(_PROMPT_FS))
@@ -55,15 +56,24 @@ EXPR_FS		=	$(addprefix $(SRCD)expr/,$(_EXPR_FS))
 _EXPR_FSO	=	$(_EXPR_FS:.c=.o)
 EXPR_FSO	=	$(EXPR_FS:.c=.o)
 
+_GLOB_FS	=	check_match_functions.c detect_globbing.c error_glob.c exp_glob.c fill_split_acc.c \
+				free_functions_glob.c ft_no_backslash.c get_elemacc_simplified.c get_len_simplification.c \
+				get_splitacc.c is_match_glob.c loop_get_glob.c malloc_functions_glob.c process_glob.c \
+				setup_glob_crochet.c setup_glob_normal.c setup_glob_question.c setup_glob_stars.c \
+				simplification_bracket.c split_acc.c split_path.c ultimate_glob_process.c
+GLOB_FS		=	$(addprefix $(SRCD)globing/,$(_GLOB_FS))
+_GLOB_FSO	=	$(_GLOB_FS:.c=.o)
+GLOB_FSO	=	$(GLOB_FS:.c=.o)
+
 _MAIN_FS	=	main.c ft_env.c ft_env2.c ft_getcursor.c ft_exec.c ft_getpaths.c \
 				ft_parsepath.c list_redirections.c history.c shell_init.c shell_begin.c
 MAIN_FS		=	$(addprefix $(SRCD),$(_MAIN_FS))
 _MAIN_FSO	=	$(_MAIN_FS:.c=.o)
-MAIN_FSO	=	$(MAIN_FSO:.c=.o)
+MAIN_FSO	=	$(MAIN_FS:.c=.o)
 
 ICLD		=	-Iincludes -I$(LIBFTD)/includes
-SRCS		=	$(MAIN_FS) $(PROMPT_FS) $(JBCNTRL_FS) $(BLTN_FS) $(PARSER_FS) $(SHCB_FS) $(EXPR_FS)
-_OBJS		=	$(_MAIN_FSO) $(_PROMPT_FSO) $(_JBCNTRL_FSO) $(_BLTN_FSO) $(_PARSER_FSO) $(_SHCB_FSO) $(_EXPR_FSO)
+SRCS		=	$(MAIN_FS) $(PROMPT_FS) $(JBCNTRL_FS) $(BLTN_FS) $(PARSER_FS) $(SHCB_FS) $(EXPR_FS) $(GLOB_FS)
+_OBJS		=	$(_MAIN_FSO) $(_PROMPT_FSO) $(_JBCNTRL_FSO) $(_BLTN_FSO) $(_PARSER_FSO) $(_SHCB_FSO) $(_EXPR_FSO) $(_GLOB_FSO)
 OBJD		=	.objs/
 OBJS		=	$(addprefix $(SRCD),$(_OBJS))
 OBJB		=	$(addprefix $(OBJD),$(_OBJS))
@@ -120,6 +130,11 @@ $(OBJD)%.o: $(SRCD)callbacks/%.c $(INCLUDES) Makefile
 	@$(CC) $(CFLAGS) -o $@ -c $< $(ICLD)
 
 $(OBJD)%.o: $(SRCD)expr/%.c $(INCLUDES) Makefile
+	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
+	@mkdir -p $(OBJD)
+	@$(CC) $(CFLAGS) -o $@ -c $< $(ICLD)
+
+$(OBJD)%.o: $(SRCD)globing/%.c $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CFLAGS) -o $@ -c $< $(ICLD)
