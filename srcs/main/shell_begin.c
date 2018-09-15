@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/11 18:30:58 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/09/15 23:31:39 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 
 #include "../logger/incs/logger.h"
 
-void	sign_child(int sign)
+void			sign_child(int sign)
 {
 	t_list	*elem;
 	pid_t	pid;

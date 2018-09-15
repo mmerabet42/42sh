@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 20:10:31 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/10 20:33:25 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/15 23:26:12 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static void	usualprompt(void)
 	if (ft_strstr_pos(g_shell->pwd, g_shell->homepwd) == 0)
 		start_pwd = g_shell->pwd + ft_strlen(g_shell->homepwd);
 	ft_printf("%{0}%{bold}%C%{0} %{lred}%s %{lcyan}%s%s%{0} ",
-			L'㋜', (g_shell->user ? g_shell->user : "21sh"), (start_pwd ? "~" : ""),
-			(start_pwd ? start_pwd : g_shell->pwd));
+			L'㋜', (g_shell->user ? g_shell->user : "21sh"),
+			(start_pwd ? "~" : ""), (start_pwd ? start_pwd : g_shell->pwd));
 	if (g_shell->exitcode)
 		ft_printf("%{bold/lred}(%d)%C%{0} ", g_shell->exitcode, L'❯');
 	else

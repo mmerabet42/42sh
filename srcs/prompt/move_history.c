@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/09 21:00:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/11 21:34:03 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/15 23:26:30 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "ft_str.h"
 #include "ft_mem.h"
 
-#include "../../logger/incs/logger.h"
 static void	clean_line(t_bufferl *bl)
 {
 	int	res;

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/14 16:38:19 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 00:16:29 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct		s_opt
 
 typedef struct		s_strid
 {
-	char			*str;
+	char			str[50];
 	char			*next;
 	int				len;
 	int				ifound;

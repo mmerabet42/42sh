@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/14 16:38:17 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/15 23:23:46 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,17 +90,6 @@ static t_allf		g_allf = {
 	&g_lexerf.parserf, &g_lexerf, &g_shell_iterf, &g_expf
 };
 
-static t_exp2		g_exps2[] = {
-	{"*[\"*\"@b]:'*':$'*'", exp_quote2},
-	{"*[`?`;$(?);${?};\"*\";'*'@b]", exp_cmd1},
-	{"$*[aA0_-zZ9_]:$?", exp_var2},
-	{"~", exp_tild2},
-};
-
-static t_expf2		g_expf2 = {
-	g_exps2, sizeof(g_exps2), &g_allf, 0
-};
-
 int			main(int argc, char **argv, char **envp)
 {
 	char	line[8192];
@@ -121,16 +110,6 @@ int			main(int argc, char **argv, char **envp)
 		++name;
 	shell_begin(name, argc, argv, envp);
 	g_shell->allf = &g_allf;
-	t_list	*res;
-	res = NULL;
-	ft_strexpand2(argv[2], &res, 0, &g_expf2);
-	while (res)
-	{
-		ft_printf("arg: '%s'\n", res->content);
-		res = res->next;
-	}
-	logger_close();
-	return (shell_end());
 	if (g_shell->bits & (1 << 0))
 	{
 		g_lexerf.parserf.def_word = DLM_WORD_N;
@@ -178,7 +157,7 @@ int			main(int argc, char **argv, char **envp)
 					continue ;
 				}
 				head = ft_lexer(line, &g_lexerf);
-				if ((ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
+				if (!repair_hdoc(head, 0) && (ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
 				{
 					ft_printshret(ret, line);
 					if (ret != SH_EXIT)

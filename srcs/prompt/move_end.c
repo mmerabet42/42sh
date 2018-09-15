@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/09 23:14:54 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/09 23:39:56 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/15 23:25:37 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 static void	move_paste(t_bufferl *bl)
 {
 	static char	line_sm[8192];
-	int	i;
+	int			i;
 
 	i = 0;
 	if (!bl->sm && line_sm[i])

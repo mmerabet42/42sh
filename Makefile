@@ -6,11 +6,11 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/09/15 17:35:37 by sle-rest         ###   ########.fr        #
+#    Updated: 2018/09/16 00:15:54 by mmerabet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	21sh
+NAME		=	42sh
 CC			=	gcc
 CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
 
@@ -66,7 +66,7 @@ _GLOB_FSO	=	$(_GLOB_FS:.c=.o)
 GLOB_FSO	=	$(GLOB_FS:.c=.o)
 
 _MAIN_FS	=	main.c ft_env.c ft_env2.c ft_getcursor.c ft_exec.c ft_getpaths.c \
-				ft_parsepath.c list_redirections.c history.c shell_init.c shell_begin.c
+				ft_parsepath.c list_redirections.c history.c shell_init.c shell_begin.c shell_end.c
 MAIN_FS		=	$(addprefix $(SRCD),$(_MAIN_FS))
 _MAIN_FSO	=	$(_MAIN_FS:.c=.o)
 MAIN_FSO	=	$(MAIN_FS:.c=.o)

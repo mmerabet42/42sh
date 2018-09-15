@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/12 23:06:58 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/15 23:33:21 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include "expr.h"
 # include "job_control.h"
 
-# define DLM_REDP1 "<<:<<*[aA0-zZ9]:>>:*[0-9]>>:<:>:*[<>@=1]&*[0-9]:*[<>@=1]&-"
+# define DLM_REDP1 "<<:<<<:*[0-9]<<<:<:>:*[0-9]<<:>>:*[0-9]>>:*[<>@=1]&*[0-9]:*[<>@=1]&-"
 # define DLM_REDP2 DLM_REDP1 ":*[0-9]*[<>@=1]&:*[<>@=1]&:*[0-9]*[<>@=1]&-"
 # define DLM_REDP DLM_REDP2 ":*[0-9]*[<>@=1]&*[0-9]:*[0-9]*[<>]"
 
@@ -38,7 +38,7 @@
 # define DLM_RSTOP DLM_RSTOP1 ":*[0-9]<<"
 # define DLM_STOP "while:if:then:else:not:*[0-9]*[<>@=1]&*[0-9]"
 
-# define SHELL_TMP_FILE "/tmp/.21sh-4796531.temp"
+# define HDOC_TMP_FILE "/tmp/.21sh-hdoc.tmp"
 
 typedef enum	e_shret
 {
@@ -129,6 +129,7 @@ void				printprompt(int i);
 t_func				*get_function(char *name);
 int					check_function(t_ast *ast, void *res, t_iterf *iterf);
 void				redir_printerror(t_redir *r, int err, void **op);
+int					repair_hdoc(t_ast *ast, int n);
 int					replace_fd(t_redir *r, int *closed_fd);
 t_list				*list_redirections(t_ast **ast, t_expf *expf);
 

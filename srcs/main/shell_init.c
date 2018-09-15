@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/16 21:25:42 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/10 20:05:50 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 00:13:17 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,34 @@
 #include "ft_io.h"
 #include <fcntl.h>
 
-static int	shell_exec(int argc, char **argv)
+static t_exp	g_exps[] = {
+	{"\\\\*[$`\"@=1]", exp_var},
+	{"$*[aA0_-zZ9_]:$?", exp_var},
+	{"$*[0-9]:$@", exp_arg},
+	{"*[$((?));(?);\"*\";'*'@b]", exp_arth},
+	{"*[${?};\"*\";'*'@b]", exp_dvar},
+	{"*[`?`;${?};\"*\";'*'@b]", exp_cmd},
+	{"*[$\\[*\\];\"*\";'*'@b]", exp_cond}
+};
+
+static t_expf	g_expf = {
+	g_exps, sizeof(g_exps), NULL, 0
+};
+
+static void	resolve_history_file(void)
+{
+	char	*res;
+
+	if (!g_shell->history_file)
+		return ;
+	res = NULL;
+	ft_strexpand(g_shell->history_file, &res, 0, &g_expf);
+	g_shell->history_file = res;
+}
+
+static int	shell_exec(int argc, char **argv, char *line)
 {
 	int		script_fd;
-	char	*line;
 
 	if (*argv || argc == -1)
 	{
@@ -31,6 +55,7 @@ static int	shell_exec(int argc, char **argv)
 	}
 	else if (g_shell->history_file)
 	{
+		resolve_history_file();
 		if ((script_fd = open(g_shell->history_file,
 						O_RDONLY | O_CREAT, 0666)) != -1)
 		{
@@ -50,17 +75,16 @@ int			shell_init(int argc, char **argv)
 	t_opt	opt;
 
 	++argv;
-	g_shell->history_file = ".history.log";
+	g_shell->history_file = "$HOME/.history.log";
 	g_shell->start_cmd = "if test -r $HOME/.21shrc then source $HOME/.21shrc";
 	while (ft_getopt(&argv, "l.1s.1;log.1", &opt) != OPT_END)
 	{
-		if (opt.ret == OPT_UNKNOWN)
+		if (argc && opt.ret == OPT_UNKNOWN)
 		{
 			if (opt.c == '-')
-				ft_exitf(1, "%s: unknown option: %s\n", g_shell->name,
-						opt.clong);
+				ft_exitf(1, "%s: bad option: %s\n", g_shell->name, opt.clong);
 			else
-				ft_exitf(1, "%s: unknown option: %c\n", g_shell->name, opt.c);
+				ft_exitf(1, "%s: bad option: %c\n", g_shell->name, opt.c);
 			return (1);
 		}
 		else if (opt.c == 'l' || (opt.c == '-' && ft_strequ(opt.clong, "log")))
@@ -72,8 +96,7 @@ int			shell_init(int argc, char **argv)
 		else if (opt.c == '-' && ft_strequ(opt.clong, "nsep"))
 			g_shell->bits = (1 << 0);
 	}
-	(void)argc;
-	return (shell_exec((!isatty(0) ? -1 : 1), argv));
+	return (shell_exec((!isatty(0) ? -1 : 1), argv, NULL));
 }
 
 void		init_gshell(char **envp, char *name)
@@ -82,40 +105,4 @@ void		init_gshell(char **envp, char *name)
 	g_shell->name = name;
 	g_shell->running = 1;
 	g_shell->exitcode = 0;
-}
-
-static void	del_func(void *content, size_t size)
-{
-	t_func	*func;
-
-	(void)size;
-	if ((func = (t_func *)content))
-	{
-		free(func->name);
-		free(func->src);
-		ft_astdel(&func->ast);
-		free(func);
-	}
-}
-
-int			shell_end(void)
-{
-	char	**ptr;
-	int		exitcode;
-
-	if ((ptr = g_shell->paths))
-		while (*ptr)
-			free(*ptr++);
-	free(g_shell->paths);
-	if ((ptr = g_shell->envp))
-		while (*ptr)
-			free(*ptr++);
-	free(g_shell->script);
-	free(g_shell->envp);
-	clearhistory(1);
-	ft_lstdel(&g_shell->funcs, del_func);
-	exitcode = g_shell->exitcode;
-	free(g_shell);
-	g_shell = NULL;
-	return (exitcode);
 }
