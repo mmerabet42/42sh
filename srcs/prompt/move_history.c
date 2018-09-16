@@ -56,6 +56,8 @@ static void	reprint_history(t_bufferl *bl, char *str)
 		bl->x = res1 % bl->w;
 	}
 	ft_putstr(ft_strrepc(ft_strcpy(halfc, bl->line), '\t', ' '));
+	if (bl->x == 1)
+		ft_putchar('\n');
 }
 
 void		move_history(t_bufferl *bl, int c)
@@ -67,7 +69,8 @@ void		move_history(t_bufferl *bl, int c)
 		bl->ni = 0;
 		return ;
 	}
-	if ((c == 'A' && !bl->it->next) || (c == 'B' && !bl->it->parent))
+	if ((c == 'A' && ((!bl->ni && !bl->it) || (bl->ni && !bl->it->next)))
+			|| (c == 'B' && !bl->it->parent))
 		return ;
 	if (bl->ni)
 		bl->it = (c == 'A' ? bl->it->next : bl->it->parent);

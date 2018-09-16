@@ -14,7 +14,11 @@
 
 t_list	*ft_lstatpos(t_list *lst, int i)
 {
-	if (lst && i > 0)
-		return (ft_lstatpos(lst->next, i - 1));
+	if (i < 0 && (lst = ft_lstend(lst)))
+		while (lst && ++i < 0)
+			lst = lst->parent;
+	else
+		while (lst && i-- > 0)
+			lst = lst->next;
 	return (lst);
 }

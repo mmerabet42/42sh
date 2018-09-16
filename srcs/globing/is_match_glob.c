@@ -12,6 +12,13 @@
 
 #include "globing.h"
 
+static int	(*g_check_match[4])(t_glob **glob, char *name, int *i) = {
+	&check_match_normal,
+	&check_match_stars,
+	&check_match_question,
+	&check_match_crochet
+};
+
 int	is_match_stars(t_glob **glob, char *name, int *i)
 {
 	int	type;

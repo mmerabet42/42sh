@@ -13,6 +13,13 @@
 #include "globing.h"
 #include "ft_str.h"
 
+static int	(*g_setup_glob[4])(t_glob **glob, char *splitpath, char *splitacc, int *k) = {
+	&setup_glob_normal,
+	&setup_glob_stars,
+	&setup_glob_question,
+	&setup_glob_crochet
+};
+
 int			last_char_splitpaacc_slash(char *splitacc)
 {
 	int		i;

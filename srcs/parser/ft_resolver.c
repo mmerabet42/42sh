@@ -147,7 +147,6 @@ int			ft_strexpand2(const char *origin, t_list **res, int i, t_expf2 *expf)
 			strid.len = (pos == -1 ? (int)ft_strlen(origin) : pos);
 		origin += strid.len;
 		ft_lstpushfront(&head, ft_lstnew(&strid, sizeof(t_strid2)));
-		//	log_debug("oOOKK: %.*s %d\n", strid.len, strid.str, strid.j);
 		++strid.j;
 	}
 	efail = strexpand2(head, expf, res);
@@ -155,7 +154,7 @@ int			ft_strexpand2(const char *origin, t_list **res, int i, t_expf2 *expf)
 	return (efail);
 }
 
-int			ft_resolver(t_args *args, t_expf *expf)
+int			ft_resolver(t_args *args, t_args *res, t_expf *expf)
 {
 	int		i;
 	int		err;
@@ -192,7 +191,11 @@ int			ft_astcresolver(t_ast *ast, t_expf *expf)
 {
 	int	efail;
 
-	ft_argsdel(ast->cargs);
+	if (!ast->cargs)
+		ast->cargs = ft_memalloc(sizeof(t_args));
+	return (ft_resolver(ast->args, ast->cargs, expf));
+
+/*	ft_argsdel(ast->cargs);
 	ft_memdel((void **)&ast->cargs);
 	ast->cargs = NULL;
 	ast->cname = NULL;
@@ -202,5 +205,5 @@ int			ft_astcresolver(t_ast *ast, t_expf *expf)
 	if ((efail = ft_resolver(ast->cargs, expf)))
 		return (efail);
 	ast->cname = ast->cargs->argv[0];
-	return (0);
+	return (0);*/
 }

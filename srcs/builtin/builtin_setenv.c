@@ -65,6 +65,11 @@ int	builtin_unsetenv(int argc, char **argv)
 {
 	int	i;
 
+	if (argc == 1)
+	{
+		ft_putstr_fd("unsetenv: not enough arguments\n", 2);
+		return (1);
+	}
 	i = 0;
 	while (++i < argc)
 	{

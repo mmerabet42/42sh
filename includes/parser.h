@@ -191,7 +191,7 @@ t_ast				*astlink(t_ast *a, t_ast *b, int lr);
 t_ast				*newast(t_inst *inst, int type, t_lexerf *ldef, t_ast *cur);
 int					ft_astvalid(t_ast *ast);
 
-int					ft_resolver(t_args *args, t_expf *expf);
+int					ft_resolver(t_args *args, t_args *res, t_expf *expf);
 int					ft_astresolver(t_ast *ast, t_expf *expf);
 int					ft_astcresolver(t_ast *ast, t_expf *expf);
 int					ft_strexpand(const char *origin,

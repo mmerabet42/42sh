@@ -20,6 +20,7 @@ SRCD		=	srcs/
 
 INCLUDES	=	includes/expr.h includes/job_control.h includes/parser.h \
 				includes/readraw.h includes/shell.h includes/globing.h
+
 _PROMPT_FS	=	ft_readraw.c selectmode.c move_char.c move_history.c \
 				move_word.c move_end.c printprompt.c
 PROMPT_FS	=	$(addprefix $(SRCD)prompt/,$(_PROMPT_FS))
@@ -72,8 +73,10 @@ _MAIN_FSO	=	$(_MAIN_FS:.c=.o)
 MAIN_FSO	=	$(MAIN_FS:.c=.o)
 
 ICLD		=	-Iincludes -I$(LIBFTD)/includes
-SRCS		=	$(MAIN_FS) $(PROMPT_FS) $(JBCNTRL_FS) $(BLTN_FS) $(PARSER_FS) $(SHCB_FS) $(EXPR_FS) $(GLOB_FS)
-_OBJS		=	$(_MAIN_FSO) $(_PROMPT_FSO) $(_JBCNTRL_FSO) $(_BLTN_FSO) $(_PARSER_FSO) $(_SHCB_FSO) $(_EXPR_FSO) $(_GLOB_FSO)
+SRCS		=	$(MAIN_FS) $(PROMPT_FS) $(JBCNTRL_FS) $(BLTN_FS) \
+				$(PARSER_FS) $(SHCB_FS) $(EXPR_FS) $(GLOB_FS)
+_OBJS		=	$(_MAIN_FSO) $(_PROMPT_FSO) $(_JBCNTRL_FSO) $(_BLTN_FSO) \
+				$(_PARSER_FSO) $(_SHCB_FSO) $(_EXPR_FSO) $(_GLOB_FSO)
 OBJD		=	.objs/
 OBJS		=	$(addprefix $(SRCD),$(_OBJS))
 OBJB		=	$(addprefix $(OBJD),$(_OBJS))

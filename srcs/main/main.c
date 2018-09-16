@@ -90,6 +90,17 @@ static t_allf		g_allf = {
 	&g_lexerf.parserf, &g_lexerf, &g_shell_iterf, &g_expf
 };
 
+static t_exp2	g_exps2[] = {
+	{"*[\"*\"@b]:'*':$'*'", exp_quote2},
+	{"*[`?`;$(?);${?};\"*\";'*'@b]", exp_cmd1},
+	{"$*[aA0_-zZ9_]:$?", exp_var2},
+	{"~", exp_tild2},
+};
+
+static t_expf2	g_expf2 = {
+	g_exps2, sizeof(g_exps2), &g_allf, 0
+};
+
 int			main(int argc, char **argv, char **envp)
 {
 	char	line[8192];
@@ -105,11 +116,23 @@ int			main(int argc, char **argv, char **envp)
 	g_expf.data = &g_allf;
 	if (logger_init(D_TRACE, "/tmp/out.log") != 0)
 		ft_printf("failed to open the logger\n");
-	name = argv[0];
-	if ((name = ft_strrchr(argv[0], '/')))
-		++name;
+	name = ft_strrchr(argv[0], '/');
+	name = (name ? name + 1 : argv[0]);
 	shell_begin(name, argc, argv, envp);
 	g_shell->allf = &g_allf;
+/*
+	t_list	*lst = NULL;
+	ft_strexpand2(argv[2], &lst, 0, &g_expf2);
+	t_list *it = lst;
+	while (it)
+	{
+		ft_printf("arg: '%s'\n", it->content);
+		it = it->next;
+	}
+	ft_printf("pos: '%s'\n", ft_lstatpos(lst, 0)->content);
+	ft_lstdel(&lst, content_delfunc);
+	return (shell_end());
+*/
 	if (g_shell->bits & (1 << 0))
 	{
 		g_lexerf.parserf.def_word = DLM_WORD_N;

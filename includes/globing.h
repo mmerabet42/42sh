@@ -95,12 +95,12 @@ int					setup_glob_normal(t_glob **glob, char *splitpath, char *splitacc, int *k
 int					setup_glob_stars(t_glob **glob, char *splitpath, char *splitacc, int *k);
 int					setup_glob_question(t_glob **glob, char *splitpath, char *splitacc, int *k);
 int					setup_glob_crochet(t_glob **glob, char *splitpath, char *splitacc, int *k);
-static int			(*g_setup_glob[4])(t_glob **glob, char *splitpath, char *splitacc, int *k) = {
+/*static int			(*g_setup_glob[4])(t_glob **glob, char *splitpath, char *splitacc, int *k) = {
 	&setup_glob_normal,
 	&setup_glob_stars,
 	&setup_glob_question,
 	&setup_glob_crochet
-};
+};*/
 
 /*
 **	------------- GLOB_PROCESS -----------------
@@ -120,11 +120,11 @@ int					check_match_normal(t_glob **glob, char *name, int *i);
 int					check_match_stars(t_glob **glob, char *name, int *i);
 int					check_match_question(t_glob **glob, char *name, int *i);
 int					check_match_crochet(t_glob **glob, char *name, int *i);
-static int			(*g_check_match[4])(t_glob **glob, char *name, int *i) = {
+/*static int			(*g_check_match[4])(t_glob **glob, char *name, int *i) = {
 	&check_match_normal,
 	&check_match_stars,
 	&check_match_question,
 	&check_match_crochet
-};
+};*/
 
 #endif
