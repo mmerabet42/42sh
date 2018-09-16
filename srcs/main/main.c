@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/15 23:23:46 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 23:01:31 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,17 +90,6 @@ static t_allf		g_allf = {
 	&g_lexerf.parserf, &g_lexerf, &g_shell_iterf, &g_expf
 };
 
-static t_exp2	g_exps2[] = {
-	{"*[\"*\"@b]:'*':$'*'", exp_quote2},
-	{"*[`?`;$(?);${?};\"*\";'*'@b]", exp_cmd1},
-	{"$*[aA0_-zZ9_]:$?", exp_var2},
-	{"~", exp_tild2},
-};
-
-static t_expf2	g_expf2 = {
-	g_exps2, sizeof(g_exps2), &g_allf, 0
-};
-
 int			main(int argc, char **argv, char **envp)
 {
 	char	line[8192];
@@ -123,6 +112,8 @@ int			main(int argc, char **argv, char **envp)
 /*
 	t_list	*lst = NULL;
 	ft_strexpand2(argv[2], &lst, 0, &g_expf2);
+	ft_strexpand2(argv[3], &lst, 0, &g_expf2);
+	ft_strexpand2(argv[4], &lst, 0, &g_expf2);
 	t_list *it = lst;
 	while (it)
 	{

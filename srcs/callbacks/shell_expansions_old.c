@@ -1,20 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   shell_expansions_v.c                               :+:      :+:    :+:   */
+/*   shell_func.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/09/16 18:29:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 23:00:08 by mmerabet         ###   ########.fr       */
+/*   Created: 2018/07/12 18:58:46 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/09/16 20:37:37 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-#include "ft_types.h"
 #include "ft_str.h"
+#include "ft_types.h"
+#include "ft_mem.h"
+#include "ft_printf.h"
+#include "get_next_line.h"
+#include <sys/wait.h>
 
-int			exp_var(t_strid *sid, t_list **res, t_expf *expf)
+int			exp_var(t_strid *sid, char **res, t_expf *expf)
 {
 	char	*value;
 	char	tmp;
@@ -22,7 +26,7 @@ int			exp_var(t_strid *sid, t_list **res, t_expf *expf)
 	(void)expf;
 	if (*sid->str == '\\')
 	{
-		*res = ft_lstcreate(ft_strndup(sid->str + 1, 1), 0);
+		*res = ft_strndup(sid->str + 1, 1);
 		return (0);
 	}
 	tmp = sid->str[sid->len];
@@ -30,34 +34,36 @@ int			exp_var(t_strid *sid, t_list **res, t_expf *expf)
 	if (!ft_isalpha(*(sid->str + 1)) && !ft_isdigit(*(sid->str + 1)))
 	{
 		if (*(sid->str + 1) == '?')
-			*res = ft_lstcreate(ft_itoa(g_shell->exitcode), 0);
+			*res = ft_itoa(g_shell->exitcode);
 	}
 	else if ((value = ft_getenv(sid->str + 1, g_shell->envp)))
-		*res = ft_lstcreate(ft_strdup(value), 0);
+		*res = ft_strdup(value);
 	sid->str[sid->len] = tmp;
 	return (0);
+	ft_printf("var expansion: '%.*s' %d %d %d\n", sid->len, sid->str,
+			sid->len, sid->i, sid->j);
 }
 
-int			exp_tild(t_strid *sid, t_list **res, t_expf *expf)
+int			exp_tild(t_strid *sid, char **res, t_expf *expf)
 {
 	char	*name;
 
 	(void)expf;
 	name = NULL;
-	if (!sid->next_str || *sid->next_str == '/')
+	if (!sid->next || *sid->next == '/')
 		name = "HOME";
-	else if (sid->next_str && (*sid->next_str == '+' || *sid->next_str == '-'))
+	else if (sid->next && (*sid->next == '+' || *sid->next == '-'))
 	{
-		if ((!sid->next_str[1] || sid->next_str[1] == '/') && !sid->j)
+		if (!sid->next[1] || sid->next[1] == '/')
 		{
 			sid->jump = 1;
-			name = (*sid->next_str == '+' ? "PWD" : "OLDPWD");
+			name = (*sid->next == '+' ? "PWD" : "OLDPWD");
 		}
 	}
-	if (name && !sid->j)
-		*res = ft_lstcreate(ft_strdup(ft_getenv(name, g_shell->envp)), 0);
+	if (name && sid->j == 0)
+		*res = ft_strdup(ft_getenv(name, g_shell->envp));
 	else
-		*res = sid->next;
+		*res = sid->str;
 	return (0);
 }
 
@@ -75,31 +81,26 @@ static t_expf	g_expf = {
 	g_exps, sizeof(g_exps), NULL, 0
 };
 
-int			exp_quote(t_strid *sid, t_list **res, t_expf *expf)
+int			exp_quote(t_strid *sid, char **res, t_expf *expf)
 {
 	char	sep;
-	t_list	*lst;
 
-	(void)expf;
 	g_expf.data = expf->data;
 	if (sid->len == 1)
 		return ((*res = NULL) ? 0 : 0);
 	if ((sep = sid->str[sid->len - 1]) == '\'' || sep == '"')
 		sid->str[sid->len - 1] = '\0';
 	if (*sid->str == '$')
-		*res = ft_lstcreate(ft_strdupk(sid->str + 2), 0);
+		*res = ft_strdupk(sid->str + 2);
+	else if (*sid->str == '\'')
+		*res = ft_strdup(sid->str + 1);
 	else
-	{
-		lst = NULL;
-		ft_strexpand(sid->str + 1, &lst, -1, &g_expf);
-		*res = ft_lstcreate(lst->content, 0);
-		ft_lstdel(&lst, NULL);
-	}
+		ft_strexpand(sid->str + 1, res, 0, &g_expf);
 	sid->str[sid->len - 1] = sep;
 	return (0);
 }
 
-int			exp_arg(t_strid *sid, t_list **res, t_expf *expf)
+int			exp_arg(t_strid *sid, char **res, t_expf *expf)
 {
 	int	n;
 
@@ -108,9 +109,9 @@ int			exp_arg(t_strid *sid, t_list **res, t_expf *expf)
 	if (g_shell->curargs)
 	{
 		if (sid->str[1] == '@')
-			*res = ft_lstcreate(ft_itoa(g_shell->curargs->argc), 0);
+			*res = ft_itoa(g_shell->curargs->argc);
 		else if ((n = ft_atoi(sid->str + 1)) < g_shell->curargs->argc)
-			*res = ft_lstcreate(ft_strdup(g_shell->curargs->argv[n]), 0);
+			*res = ft_strdup(g_shell->curargs->argv[n]);
 	}
 	return (0);
 }

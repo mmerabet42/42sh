@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/23 22:17:51 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/23 22:19:11 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 22:48:09 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	shell_arth_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		*(int *)res = 0;
 	return (0);
 }
-
+/*
 int	exp_arth(t_strid *sid, char **res, t_expf *expf)
 {
 	EXPRT		val;
@@ -86,5 +86,49 @@ int	exp_cond(t_strid *sid, char **res, t_expf *expf)
 	}
 	sid->str[sid->len - 1] = ']';
 	*res = ft_lltoa(val);
+	return (0);
+}
+*/
+int	exp_arth(t_strid *sid, t_list **res, t_expf *expf)
+{
+	EXPRT		val;
+	int			err;
+	t_exprdata	edata;
+
+	(void)expf;
+	val = (EXPRT)0;
+	sid->str[sid->len - 2] = '\0';
+	ft_bzero(&edata, sizeof(t_exprdata));
+	edata.var_db = &g_shell->envp;
+	if ((err = ft_expr(sid->str + 3, &val, &edata, g_shell->curargs)))
+	{
+		sid->str[sid->len - 2] = ')';
+		*res = NULL;
+		return (SH_EXPRERR + err);
+	}
+	sid->str[sid->len - 2] = ')';
+	*res = ft_lstcreate(ft_lltoa(val), 0);
+	return (0);
+}
+
+int	exp_cond(t_strid *sid, t_list **res, t_expf *expf)
+{
+	EXPRT		val;
+	int			err;
+	t_exprdata	edata;
+
+	(void)expf;
+	val = (EXPRT)0;
+	sid->str[sid->len - 1] = '\0';
+	ft_bzero(&edata, sizeof(t_exprdata));
+	edata.var_db = &g_shell->envp;
+	if ((err = ft_expr(sid->str + 2, &val, &edata, g_shell->curargs)))
+	{
+		sid->str[sid->len - 1] = ']';
+		*res = NULL;
+		return (SH_EXPRERR + err);
+	}
+	sid->str[sid->len - 1] = ']';
+	*res = ft_lstcreate(ft_lltoa(val), 0);
 	return (0);
 }

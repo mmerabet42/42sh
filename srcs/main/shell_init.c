@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/16 21:25:42 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 00:13:17 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 22:57:25 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,15 @@ static t_expf	g_expf = {
 
 static void	resolve_history_file(void)
 {
-	char	*res;
+	t_list	*res;
 
 	if (!g_shell->history_file)
 		return ;
 	res = NULL;
-	ft_strexpand(g_shell->history_file, &res, 0, &g_expf);
-	g_shell->history_file = res;
+	ft_strexpand(g_shell->history_file, &res, -1, &g_expf);
+	g_shell->history_file = res->content;
+	res->content = NULL;
+	ft_lstdel(&res, content_delfunc);
 }
 
 static int	shell_exec(int argc, char **argv, char *line)

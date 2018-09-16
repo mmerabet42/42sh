@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 00:16:29 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 23:51:10 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ typedef struct		s_opt
 
 typedef struct		s_strid
 {
-	char			str[50];
-	char			*next;
+	char			str[500];
+	char			*next_str;
+	t_list			*next;
 	int				len;
 	int				ifound;
 	int				jump;
@@ -45,7 +46,7 @@ typedef struct		s_strid
 }					t_strid;
 
 typedef struct s_expf	t_expf;
-typedef int			(*t_expfunc)(t_strid *, char **, t_expf *);
+typedef int			(*t_expfunc)(t_strid *, t_list **, t_expf *);
 
 typedef struct		s_exp
 {
@@ -144,14 +145,14 @@ struct				s_iterf
 	size_t			bsize;
 };
 
-int					exp_var(t_strid *sid, char **res, t_expf *expf);
-int					exp_arg(t_strid *sid, char **res, t_expf *expf);
-int					exp_tild(t_strid *sid, char **res, t_expf *expf);
-int					exp_arth(t_strid *sid, char **res, t_expf *expf);
-int					exp_cmd(t_strid *sid, char **res, t_expf *expf);
-int					exp_dvar(t_strid *sid, char **res, t_expf *expf);
-int					exp_quote(t_strid *sid, char **res, t_expf *expf);
-int					exp_cond(t_strid *sid, char **res, t_expf *expf);
+int					exp_var(t_strid *sid, t_list **res, t_expf *expf);
+int					exp_arg(t_strid *sid, t_list **res, t_expf *expf);
+int					exp_tild(t_strid *sid, t_list **res, t_expf *expf);
+int					exp_arth(t_strid *sid, t_list **res, t_expf *expf);
+int					exp_cmd(t_strid *sid, t_list **res, t_expf *expf);
+int					exp_dvar(t_strid *sid, t_list **res, t_expf *expf);
+int					exp_quote(t_strid *sid, t_list **res, t_expf *expf);
+int					exp_cond(t_strid *sid, t_list **res, t_expf *expf);
 
 int					shell_cmd_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
@@ -191,57 +192,19 @@ t_ast				*astlink(t_ast *a, t_ast *b, int lr);
 t_ast				*newast(t_inst *inst, int type, t_lexerf *ldef, t_ast *cur);
 int					ft_astvalid(t_ast *ast);
 
-int					ft_resolver(t_args *args, t_args *res, t_expf *expf);
-int					ft_astresolver(t_ast *ast, t_expf *expf);
+int					ft_resolver(t_args *args, t_list **res, t_expf *expf);
+//int					ft_astresolver(t_ast *ast, t_expf *expf);
 int					ft_astcresolver(t_ast *ast, t_expf *expf);
 int					ft_strexpand(const char *origin,
-							char **res,
+							t_list **res,
 							int i,
 							t_expf *expf);
-
-
-
-
-
-typedef struct		s_strid2
-{
-	char			*str;
-	char			*next_str;
-	t_list			*next;
-	int				len;
-	int				ifound;
-	int				jump;
-	int				i;
-	int				j;
-}					t_strid2;
-
-typedef struct s_expf2	t_expf2;
-typedef int			(*t_expfunc2)(t_strid2 *, t_list **, t_expf2 *);
-
-typedef struct		s_exp2
-{
-	char			*name;
-	t_expfunc2		func;
-}					t_exp2;
-
-struct				s_expf2
-{
-	t_exp2			*expansions;
-	size_t			len;
-	void			*data;
-	int				onlyfirst;
-};
-
-int					exp_quote2(t_strid2 *sid, t_list **res, t_expf2 *expf);
-int					exp_cmd1(t_strid2 *sid, t_list **res, t_expf2 *expf);
-int					exp_var2(t_strid2 *sid, t_list **res, t_expf2 *expf);
-int					exp_tild2(t_strid2 *sid, t_list **res, t_expf2 *expf);
-
+/*
 int					ft_strexpand2(const char *origin,
 							t_list **res,
 							int i,
 							t_expf2 *expf);
-
+*/
 int					ft_astgood(t_ast *ast);
 void				ft_astprint(t_ast *bt, int n);
 int					ft_getopt(char ***argv, const char *options, t_opt *opt);

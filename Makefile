@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/09/16 00:15:54 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/09/16 23:48:40 by mmerabet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ _PARSER_FSO	=	$(_PARSER_FS:.c=.o)
 PARSER_FSO	=	$(PARSER_FS:.c=.o)
 
 _SHCB_FS	=	shell_command.c shell_pipe.c shell_arithmetic.c shell_condition.c \
-				shell_expansions.c shell_expansions1.c shell_equal.c shell_redir.c shell_redir1.c
+				shell_equal.c shell_redir.c shell_redir1.c shell_expansions.c shell_expansions1.c
 SHCB_FS		=	$(addprefix $(SRCD)callbacks/,$(_SHCB_FS))
 _SHCB_FSO	=	$(_SHCB_FS:.c=.o)
 SHCB_FSO	=	$(SHCB_FS:.c=.o)

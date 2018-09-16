@@ -1,38 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   shell_expansions1_v.c                              :+:      :+:    :+:   */
+/*   shell_expansions1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/09/16 20:01:35 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 22:59:19 by mmerabet         ###   ########.fr       */
+/*   Created: 2018/08/16 14:52:54 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/09/16 20:25:58 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_io.h"
 #include "ft_str.h"
+#include <sys/wait.h>
+#include <fcntl.h>
 
-#include "../../logger/incs/logger.h"
-static int		exp_cmd1(int fd[2], t_list **res, int mode)
+static int		exp_cmd2(int fd[2], char **res)
 {
 	char	*line;
-	char	*end;
+	char	*all;
 
 	wait(NULL);
 	close(fd[1]);
-	if (mode == -1)
+	all = NULL;
+	while (get_next_line(fd[0], &line) >= 0)
 	{
-		get_next_delimstr(fd[0], EOF_NEVER_REACH, &line);
-		end = ft_strend(line);
-		while (end != line && *end == '\n')
-			*end-- = '\0';
-		*res = ft_lstcreate(line, 0);
+		if (all)
+			all = ft_strjoinc_clr(all, '\n');
+		all = ft_strjoin_clr(all, line, 2);
 	}
-	else
-		while (get_next_line(fd[0], &line) >= 0)
-			ft_lstpush_p(res, ft_strsplitpbrk_lst(line, " \t"));
+	*res = all;
 	close(fd[0]);
 	return (0);
 }
@@ -49,7 +47,7 @@ static t_ast	*lexer_iter(char *str, t_expf *ef, int *efail)
 	return (ast);
 }
 
-int				exp_cmd(t_strid *sid, t_list **res, t_expf *expf)
+int				exp_cmd(t_strid *sid, char **res, t_expf *expf)
 {
 	int		fd[2];
 	int		efail;
@@ -72,32 +70,29 @@ int				exp_cmd(t_strid *sid, t_list **res, t_expf *expf)
 		close(fd[1]);
 		exit(efail ? 1 : 0);
 	}
-	return (exp_cmd1(fd, res, sid->i));
+	return (exp_cmd2(fd, res));
 }
 
-int				exp_dvar(t_strid *sid, t_list **res, t_expf *expf)
+int				exp_dvar(t_strid *sid, char **res, t_expf *expf)
 {
 	char	*str;
 	char	*final;
+	char	*ores;
 	int		efail;
-	t_list	*lst;
 
 	str = sid->str + 2;
-	lst = NULL;
+	ores = NULL;
 	sid->str[sid->len - 1] = '\0';
-	efail = ft_strexpand(str, &lst, -1, expf);
+	efail = ft_strexpand(str, &ores, 0, expf);
 	sid->str[sid->len - 1] = '}';
 	if (efail)
-	{
-		ft_lstdel(&lst, content_delfunc);
 		return (efail);
-	}
-	final = ft_strnew(ft_strlen(lst->content) + 1);
-	ft_strcpy(final + 1, lst->content);
+	final = ft_strnew(ft_strlen(ores) + 1);
+	ft_strcpy(final + 1, ores);
 	final[0] = '$';
+	free(ores);
 	*res = NULL;
 	efail = ft_strexpand(final, res, sid->j, expf);
-	ft_lstdel(&lst, content_delfunc);
 	free(final);
 	return (efail);
 }

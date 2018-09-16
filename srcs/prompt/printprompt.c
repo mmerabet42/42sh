@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 20:10:31 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/15 23:26:12 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 22:56:17 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	usualprompt(void)
 void		printprompt(int i)
 {
 	char	*prompt;
-	char	*nprompt;
+	t_list	*nprompt;
 
 	if (i)
 	{
@@ -52,8 +52,9 @@ void		printprompt(int i)
 	{
 		nprompt = NULL;
 		ft_strexpand(prompt, &nprompt, 0, g_shell->allf->expf);
-		ft_printf(nprompt);
-		free(nprompt);
+		if (nprompt && nprompt->content)
+			ft_printf(nprompt->content);
+		ft_lstdel(&nprompt, content_delfunc);
 	}
 	else
 		usualprompt();

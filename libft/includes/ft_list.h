@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:39:12 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/12 23:07:25 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 23:42:10 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct		s_list
 }					t_list;
 
 t_list				*ft_strsplit_lst(const char *s, char sep);
+t_list				*ft_strsplitpbrk_lst(const char *s, const char *seps);
 t_list				*ft_strsplitstr_lst(const char *s, const char *sep);
 
 /*

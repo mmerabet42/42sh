@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/15 23:33:21 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 23:22:00 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@
 # define DLM_STOP "while:if:then:else:not:*[0-9]*[<>@=1]&*[0-9]"
 
 # define HDOC_TMP_FILE "/tmp/.21sh-hdoc.tmp"
+# define EOF_NEVER_REACH "\01\02\033\033[EOFEOF]\n"
 
 typedef enum	e_shret
 {

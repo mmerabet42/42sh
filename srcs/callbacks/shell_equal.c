@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 21:09:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/26 17:12:16 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 22:49:47 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_func		*get_function(char *name)
 	return (NULL);
 }
 
-static void	shell_equal_cb2(t_ast *astr, char *lstr, t_allf *allf, char *str)
+static void	shell_equal_cb2(t_ast *astr, char *lstr, t_allf *allf, t_list *lst)
 {
 	t_func	*funcp;
 	t_func	func;
@@ -52,28 +52,32 @@ static void	shell_equal_cb2(t_ast *astr, char *lstr, t_allf *allf, char *str)
 	}
 	else
 	{
-		ft_strexpand(astr->name, &str, 0, allf->expf);
-		ft_setenv(lstr, str, &g_shell->envp);
-		free(str);
+		ft_strexpand(astr->name, &lst, -1, allf->expf);
+		if (lst && lst->content)
+			ft_setenv(lstr, (char *)lst->content, &g_shell->envp);
+		ft_lstdel(&lst, content_delfunc);
 	}
 }
 
 int			shell_equal_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
-	char	*lstr;
-	char	*str;
+	t_list	*lst;
+	t_list	*lst2;
 
 	(void)op;
 	if (!ft_astvalid(ast->left) && (*(int *)res = 1))
 		return (SH_BADEXPR);
-	lstr = NULL;
-	ft_strexpand(ast->left->name, &lstr, 0, ((t_allf *)iterf->data)->expf);
-	str = NULL;
-	if (!ft_astvalid(ast->right))
-		ft_setenv(lstr, "", &g_shell->envp);
-	else
-		shell_equal_cb2(ast->right, lstr, (t_allf *)iterf->data, str);
-	free(lstr);
+	lst = NULL;
+	ft_strexpand(ast->left->name, &lst, -1, ((t_allf *)iterf->data)->expf);
+	lst2 = NULL;
+	if (lst && lst->content)
+	{
+		if (!ft_astvalid(ast->right))
+			ft_setenv(lst->content, "", &g_shell->envp);
+		else
+			shell_equal_cb2(ast->right, lst->content, (t_allf *)iterf->data, lst2);
+	}
+	ft_lstdel(&lst, content_delfunc);
 	*(int *)res = 0;
 	return (0);
 }

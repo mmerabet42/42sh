@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 16:37:58 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 00:17:18 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 22:58:04 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "ft_printf.h"
-
+/*
 static int	strexpand1(t_list *it, t_expf *expf, char **res)
 {
 	t_strid	*s;
@@ -72,17 +72,17 @@ int			ft_strexpand(const char *origin, char **res, int i, t_expf *expf)
 	efail = strexpand1(head, expf, res);
 	ft_lstdel(&head, content_delfunc);
 	return (efail);
-}
+}*/
 #include "../../logger/incs/logger.h"
-static int	strexpand2(t_list *it, t_expf2 *expf, t_list **res)
+static int	strexpand1(t_list *it, t_expf *expf, t_list **res)
 {
-	t_strid2	*s;
+	t_strid	*s;
 	t_list		*cur;
 	t_list		*end;
 	t_list		*tmp_lst;
 	int			efail;
 
-	while (it && (s = (t_strid2 *)it->content))
+	while (it && (s = (t_strid *)it->content))
 	{
 		cur = NULL;
 		s->jump = 0;
@@ -117,17 +117,19 @@ static int	strexpand2(t_list *it, t_expf2 *expf, t_list **res)
 			}
 			else if (cur == s->next)
 				(*res)->content = ft_strn2join(s->str, s->next_str + s->jump, s->len);
-			ft_memdel((void **)&s->next_str);
+			if (cur)
+				ft_memdel((void **)&s->next_str);
 		}
 		it = it->next;
 	}
 	return (0);
 }
 
-int			ft_strexpand2(const char *origin, t_list **res, int i, t_expf2 *expf)
+int			ft_strexpand(const char *origin, t_list **res, int i, t_expf *expf)
 {
 	t_list		*head;
-	t_strid2	strid;
+	t_list		*lres;
+	t_strid		strid;
 	int			pos;
 	int			efail;
 
@@ -141,22 +143,40 @@ int			ft_strexpand2(const char *origin, t_list **res, int i, t_expf2 *expf)
 		pos = ft_strpbrkstrp_pos(origin, 0, expf->len, expf->expansions,
 				sizeof(t_exp), 0);
 		strid.ifound = (pos == 0 ? g_ifound : -1);
-		if ((strid.str = (char *)origin) && pos == 0)
+		if (pos == 0)
 			strid.len = g_iread;
 		else
 			strid.len = (pos == -1 ? (int)ft_strlen(origin) : pos);
+		ft_strncpy(strid.str, origin, strid.len);
 		origin += strid.len;
-		ft_lstpushfront(&head, ft_lstnew(&strid, sizeof(t_strid2)));
+		ft_lstpushfront(&head, ft_lstnew(&strid, sizeof(t_strid)));
 		++strid.j;
 	}
-	efail = strexpand2(head, expf, res);
+	lres = NULL;
+	efail = strexpand1(head, expf, &lres);
+	ft_lstpush_p(res, lres);
 	ft_lstdel(&head, content_delfunc);
 	return (efail);
 }
 
-int			ft_resolver(t_args *args, t_args *res, t_expf *expf)
+int			ft_resolver(t_args *args, t_list **lst, t_expf *expf)
 {
 	int		i;
+	int		err;
+
+	i = 0;
+	*lst = NULL;
+	while (i < args->argc && (!i || !expf->onlyfirst))
+	{
+		if ((err = ft_strexpand(args->argv[i], lst, i, expf)))
+		{
+			ft_lstdel(lst, content_delfunc);
+			return (err);
+		}
+		++i;
+	}
+	return (0);
+/*	int		i;
 	int		err;
 	char	*nwarg;
 
@@ -171,31 +191,47 @@ int			ft_resolver(t_args *args, t_args *res, t_expf *expf)
 		args->argv[i] = (nwarg ? nwarg : args->argv[i]);
 		++i;
 	}
-	return (0);
+	return (0);*/
 }
-
-int			ft_astresolver(t_ast *ast, t_expf *expf)
+/*
+int			ft_astresolver(t_ast *ast, t_expf2 *expf)
 {
 	int	efail;
 
 	ast->name = NULL;
 	if (!ast || !ast->args || !ast->args->argv)
 		return (0);
-	if ((efail = ft_resolver(ast->args, expf)))
+	if ((efail = ft_resolver(ast->args, NULL, expf)))
 		return (efail);
 	ast->name = ast->args->argv[0];
 	return (0);
 }
-
+*/
 int			ft_astcresolver(t_ast *ast, t_expf *expf)
 {
-	int	efail;
+	int		efail;
+	t_list	*lst;
+	t_list	*it;
 
-	if (!ast->cargs)
-		ast->cargs = ft_memalloc(sizeof(t_args));
-	return (ft_resolver(ast->args, ast->cargs, expf));
-
-/*	ft_argsdel(ast->cargs);
+	if ((efail = ft_resolver(ast->args, &lst, expf)))
+		return (efail);
+	ft_argsdel(ast->cargs);
+	if (!(ast->cargs = (t_args *)ft_memalloc(sizeof(t_args))))
+		return (-1);
+	it = lst;
+	while (it)
+	{
+		ast->cargs->argv = ft_memjoin_clr(ast->cargs->argv,
+				sizeof(char *) * ast->cargs->argc++, &it->content, sizeof(char *));
+		it = it->next;
+	}
+	ast->cargs->argv = ft_memjoin_clr(ast->cargs->argv,
+			sizeof(char *) * ast->cargs->argc, &it, sizeof(char *));
+	ast->cname = ast->cargs->argv[0];
+	ft_lstdel(&lst, NULL);
+	return (0);
+	/*
+	ft_argsdel(ast->cargs);
 	ft_memdel((void **)&ast->cargs);
 	ast->cargs = NULL;
 	ast->cname = NULL;
