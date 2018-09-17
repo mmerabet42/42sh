@@ -75,7 +75,10 @@ static	void	sign_handler(int sign)
 	{
 		g_shell->kill_builtin = 1;
 		if (g_shell->script)
+		{
+			shell_end();
 			exit(0);
+		}
 	}
 	else if (sign == SIGWINCH)
 	{
@@ -108,6 +111,8 @@ static	void	initenvp(char **envp)
 	g_shell->envp[i] = NULL;
 }
 
+t_allf			g_allf;
+
 int				shell_begin(char *name, int argc, char **argv, char **envp)
 {
 	static	t_args	args;
@@ -121,6 +126,7 @@ int				shell_begin(char *name, int argc, char **argv, char **envp)
 	args.argc = argc;
 	args.argv = argv;
 	g_shell->curargs = &args;
+	g_shell->allf = &g_allf;
 	initenvp(envp);
 	ft_bzero(g_shell->pwd, 2048);
 	if ((tmp = ft_getenv("PWD", g_shell->envp)))

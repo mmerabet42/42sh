@@ -26,11 +26,14 @@ int	builtin_source(int argc, char **argv)
 		ft_putstr_fd("source: not enough arguments\n", 2);
 		return (1);
 	}
-	else if ((fd = open(argv[1], O_RDONLY)) == -1 && ft_printf_fd(2,
-				"source: %s: %s\n", ft_strshret(SH_NEXIST), argv[1]))
-		return (1);
-	content = NULL;
-	get_next_delimstr(fd, "\01\02\033EOFEOF\n", &content);
+	else if ((fd = open(argv[1], O_RDONLY)) == -1
+			|| get_next_delimstr(fd, EOF_NEVER_REACH, &content) == -1)
+	{
+		ft_printf_fd(2, "source: %s: %s\n", ft_strshret(SH_NEXIST), argv[1]);
+		if (fd != -1)
+			close(fd);
+		return (127);
+	}
 	close(fd);
 	ast = ft_lexer(content, g_shell->allf->lexerf);
 	res = 0;
@@ -55,8 +58,9 @@ int	builtin_function(int argc, char **argv)
 		res = 0;
 		++g_shell->curargs->argv;
 		--g_shell->curargs->argc;
+		t_iterf *itf = g_shell->allf->iterf;
 		if ((func = get_function(argv[1])))
-			ret = ft_astiter(func->ast, &res, g_shell->allf->iterf);
+			ret = ft_astiter(func->ast, &res, itf);
 		--g_shell->curargs->argv;
 		++g_shell->curargs->argc;
 		if (!func || ret)

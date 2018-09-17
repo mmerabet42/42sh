@@ -13,8 +13,8 @@
 #include "shell.h"
 #include "ft_io.h"
 #include "ft_str.h"
+#include <sys/wait.h>
 
-#include "../../logger/incs/logger.h"
 static int		exp_cmd1(int fd[2], t_list **res, int mode)
 {
 	char	*line;
@@ -29,10 +29,16 @@ static int		exp_cmd1(int fd[2], t_list **res, int mode)
 		while (end != line && *end == '\n')
 			*end-- = '\0';
 		*res = ft_lstcreate(line, 0);
+		line = NULL;
 	}
 	else
+	{
 		while (get_next_line(fd[0], &line) >= 0)
+		{
 			ft_lstpush_p(res, ft_strsplitpbrk_lst(line, " \t"));
+			free(line);
+		}
+	}
 	close(fd[0]);
 	return (0);
 }
@@ -87,7 +93,7 @@ int				exp_dvar(t_strid *sid, t_list **res, t_expf *expf)
 	sid->str[sid->len - 1] = '\0';
 	efail = ft_strexpand(str, &lst, -1, expf);
 	sid->str[sid->len - 1] = '}';
-	if (efail)
+	if (efail || !lst || !lst->content)
 	{
 		ft_lstdel(&lst, content_delfunc);
 		return (efail);

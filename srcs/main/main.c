@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 23:01:31 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/16 23:47:13 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@
 #include <unistd.h>
 #include <limits.h>
 #include <fcntl.h>
-
-#include "../logger/incs/logger.h"
 
 static t_op			g_ops[] = {
 	{"\\:=", OP_BINARY | OP_ASSOCRL},
@@ -41,7 +39,7 @@ static t_op			g_ops[] = {
 static t_exp		g_exps[] = {
 	{"\\\\*[@=1]", exp_var},
 	{"$*[aA0_-zZ9_]:$?", exp_var},
-	{"$*[0-9]:$@", exp_arg},
+	{"$*[0-9]:$#:$@:$@*[0-9]", exp_arg},
 	{"*[$(?);(?);`?`;${?};\"*\";'*'@b]", exp_cmd},
 	{"*[$((?));(?);\"*\";'*'@b]", exp_arth},
 	{"~", exp_tild},
@@ -86,44 +84,31 @@ static t_iterf		g_shell_iterf = {
 	(void *)&g_expf, 0, sizeof(int)
 };
 
-static t_allf		g_allf = {
-	&g_lexerf.parserf, &g_lexerf, &g_shell_iterf, &g_expf
-};
+t_allf				g_allf;
 
-int			main(int argc, char **argv, char **envp)
+static char	*init_structs(char *argv0)
 {
-	char	line[8192];
-	t_ast	*head;
-	int		c;
-	int		ret;
 	char	*name;
-	
+
 	g_expf.data = &g_allf;
 	g_lexerf.data = &g_allf;
 	g_lexerf.parserf.data = &g_allf;
 	g_shell_iterf.data = &g_allf;
 	g_expf.data = &g_allf;
-	if (logger_init(D_TRACE, "/tmp/out.log") != 0)
-		ft_printf("failed to open the logger\n");
-	name = ft_strrchr(argv[0], '/');
-	name = (name ? name + 1 : argv[0]);
-	shell_begin(name, argc, argv, envp);
-	g_shell->allf = &g_allf;
-/*
-	t_list	*lst = NULL;
-	ft_strexpand2(argv[2], &lst, 0, &g_expf2);
-	ft_strexpand2(argv[3], &lst, 0, &g_expf2);
-	ft_strexpand2(argv[4], &lst, 0, &g_expf2);
-	t_list *it = lst;
-	while (it)
-	{
-		ft_printf("arg: '%s'\n", it->content);
-		it = it->next;
-	}
-	ft_printf("pos: '%s'\n", ft_lstatpos(lst, 0)->content);
-	ft_lstdel(&lst, content_delfunc);
-	return (shell_end());
-*/
+	g_allf.parserf = &g_lexerf.parserf;
+	g_allf.lexerf = &g_lexerf;
+	g_allf.iterf = &g_shell_iterf;
+	g_allf.expf = &g_expf;
+	name = argv0;
+	if ((name = ft_strrchr(argv0, '/')))
+		++name;
+	return (name);
+}
+
+static int	check_script(void)
+{
+	int	c;
+
 	if (g_shell->bits & (1 << 0))
 	{
 		g_lexerf.parserf.def_word = DLM_WORD_N;
@@ -133,26 +118,45 @@ int			main(int argc, char **argv, char **envp)
 	{
 		++g_shell->curargs->argv;
 		--g_shell->curargs->argc;
-		if ((c = ft_interpret(g_shell->script, &g_shell->exitcode, &g_lexerf, &g_shell_iterf))
-				&& c != SH_EXIT)
+		c = ft_interpret(g_shell->script, &g_shell->exitcode, &g_lexerf,
+				&g_shell_iterf);
+		if (c && c != SH_EXIT)
 			ft_printf_fd(2, "%s: %s: [%s]\n", g_shell->name, ft_strshret(c),
 					g_shell->script, (g_shell->exitcode = 1));
 		--g_shell->curargs->argv;
 		++g_shell->curargs->argc;
-		return (shell_end());
+		return (1);
 	}
+	return (0);
+}
+
+static int	check_cmd_starter(void)
+{
+	int	c;
+
 	if (!isatty(1))
 		return (1);
-	if (g_shell->start_cmd)
+	if (g_shell->start_cmd && (c = ft_interpret(g_shell->start_cmd,
+					&g_shell->exitcode, &g_lexerf, &g_shell_iterf)))
 	{
-		if ((c = ft_interpret(g_shell->start_cmd, &g_shell->exitcode, &g_lexerf, &g_shell_iterf)))
-		{
-			if (c == SH_EXIT)
-				return (shell_end());
-			ft_printf_fd(2, "%s: %s: [%s]\n", g_shell->name, ft_strshret(c),
-					g_shell->start_cmd, (g_shell->exitcode = 1));
-		}
+		if (c == SH_EXIT)
+			return (1);
+		ft_printf_fd(2, "%s: %s: [%s]\n", g_shell->name, ft_strshret(c),
+				g_shell->start_cmd, (g_shell->exitcode = 1));
 	}
+	return (0);
+}
+
+int			main(int argc, char **argv, char **envp)
+{
+	char	line[8192];
+	t_ast	*head;
+	int		c;
+	int		ret;
+	
+	shell_begin(init_structs(argv[0]), argc, argv, envp);
+	if (check_script() || check_cmd_starter())
+		return (shell_end());
 	ft_bzero(line, 8192);
 	while (g_shell->running)
 	{
@@ -171,7 +175,8 @@ int			main(int argc, char **argv, char **envp)
 					continue ;
 				}
 				head = ft_lexer(line, &g_lexerf);
-				if (!repair_hdoc(head, 0) && (ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
+				if (!repair_hdoc(head, 0)
+						&& (ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
 				{
 					ft_printshret(ret, line);
 					if (ret != SH_EXIT)
@@ -187,6 +192,5 @@ int			main(int argc, char **argv, char **envp)
 		}
 	}
 	ft_makeraw(0);
-	logger_close();
 	return (shell_end());
 }

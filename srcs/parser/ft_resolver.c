@@ -147,7 +147,7 @@ int			ft_strexpand(const char *origin, t_list **res, int i, t_expf *expf)
 			strid.len = g_iread;
 		else
 			strid.len = (pos == -1 ? (int)ft_strlen(origin) : pos);
-		ft_strncpy(strid.str, origin, strid.len);
+		ft_strncpy(strid.str, origin, strid.len)[strid.len] = '\0';
 		origin += strid.len;
 		ft_lstpushfront(&head, ft_lstnew(&strid, sizeof(t_strid)));
 		++strid.j;
@@ -216,6 +216,7 @@ int			ft_astcresolver(t_ast *ast, t_expf *expf)
 	if ((efail = ft_resolver(ast->args, &lst, expf)))
 		return (efail);
 	ft_argsdel(ast->cargs);
+	free(ast->cargs);
 	if (!(ast->cargs = (t_args *)ft_memalloc(sizeof(t_args))))
 		return (-1);
 	it = lst;

@@ -64,7 +64,7 @@ int			exp_tild(t_strid *sid, t_list **res, t_expf *expf)
 static t_exp	g_exps[] = {
 	{"\\\\*[$`\"@=1]", exp_var},
 	{"$*[aA0_-zZ9_]:$?", exp_var},
-	{"$*[0-9]:$@", exp_arg},
+	{"$*[0-9]:$#:$@:$@*[0-9]", exp_arg},
 	{"*[$((?));(?);\"*\";'*'@b]", exp_arth},
 	{"*[${?};\"*\";'*'@b]", exp_dvar},
 	{"*[`?`;${?};\"*\";'*'@b]", exp_cmd},
@@ -88,6 +88,8 @@ int			exp_quote(t_strid *sid, t_list **res, t_expf *expf)
 		sid->str[sid->len - 1] = '\0';
 	if (*sid->str == '$')
 		*res = ft_lstcreate(ft_strdupk(sid->str + 2), 0);
+	else if (*sid->str == '\'')
+		*res = ft_lstcreate(ft_strdup(sid->str + 1), 0);
 	else
 	{
 		lst = NULL;
@@ -104,11 +106,28 @@ int			exp_arg(t_strid *sid, t_list **res, t_expf *expf)
 	int	n;
 
 	(void)expf;
-	*res = NULL;
 	if (g_shell->curargs)
 	{
-		if (sid->str[1] == '@')
+		if (sid->str[1] == '#')
 			*res = ft_lstcreate(ft_itoa(g_shell->curargs->argc), 0);
+		else if (sid->str[1] == '@')
+		{
+			if ((n = ft_atoi(sid->str + 2)) >= g_shell->curargs->argc)
+				return (0);
+			if (sid->i == -1)
+			{
+				*res = ft_lstcreate(NULL, 0);
+				while (n < g_shell->curargs->argc)
+				{
+					(*res)->content = ft_strjoin_clr((*res)->content, g_shell->curargs->argv[n++], 0);
+					if (n < g_shell->curargs->argc)
+						(*res)->content = ft_strjoinc_clr((*res)->content, ' ');
+				}
+			}
+			else
+				while (n < g_shell->curargs->argc)
+					ft_lstpush_p(res, ft_lstcreate(ft_strdup(g_shell->curargs->argv[n++]), 0));
+		}
 		else if ((n = ft_atoi(sid->str + 1)) < g_shell->curargs->argc)
 			*res = ft_lstcreate(ft_strdup(g_shell->curargs->argv[n]), 0);
 	}

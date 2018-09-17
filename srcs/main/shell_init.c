@@ -77,8 +77,8 @@ int			shell_init(int argc, char **argv)
 	t_opt	opt;
 
 	++argv;
-	g_shell->history_file = "$HOME/.history.log";
-	g_shell->start_cmd = "if test -r $HOME/.21shrc then source $HOME/.21shrc";
+	g_shell->history_file = "$HOME/.42sh_history";
+	g_shell->start_cmd = "if test -r $HOME/.42shrc then source $HOME/.42shrc";
 	while (ft_getopt(&argv, "l.1s.1;log.1", &opt) != OPT_END)
 	{
 		if (argc && opt.ret == OPT_UNKNOWN)
