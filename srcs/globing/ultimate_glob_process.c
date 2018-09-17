@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/29 21:08:20 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/15 18:20:06 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/17 22:22:47 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static int	add_new_lst_glob(t_list **lst, struct dirent *dp, char **dir) // a mo
 {
 	int		len;
 	char	*str;
+	t_list	*new;
 
 	len = ft_strlen(dp->d_name) + ft_strlen(*dir);
 	if (!(str = (char *)malloc(sizeof(char) * (len + 1))))
@@ -31,8 +32,7 @@ static int	add_new_lst_glob(t_list **lst, struct dirent *dp, char **dir) // a mo
 	if (ft_strcmp(*dir, "."))
 		ft_strcat(str, "/");
 	ft_strcat(str, dp->d_name);
-	t_list	*new;
-	if (!(new = ft_lstnew(str, ft_strlen(str))))
+	if (!(new = ft_lstcreate(str, ft_strlen(str) + 1)))
 		return (0);
 	new->next = (*lst)->next;
 	if ((*lst)->next)

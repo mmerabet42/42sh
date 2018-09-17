@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/17 22:58:49 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/17 23:01:13 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ static t_exp		g_exps[] = {
 	{"*[$\\[*\\];\"*\";'*'@b]", exp_cond},
 
 	{EXP_BRACES, NULL},
-	{EXP_SUBSHELL, NULL}
+	{EXP_SUBSHELL, NULL},
+	{"", exp_glob}
 };
 
 static t_expf		g_expf = {

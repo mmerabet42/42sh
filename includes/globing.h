@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/22 21:40:35 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/15 17:50:10 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/17 21:49:45 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <sys/dir.h>
 # include "ft_list.h"
 # include "parser.h"
+# include <stdio.h> // to del
 
 # define G_START 0
 # define G_END 1
@@ -106,6 +107,7 @@ int					setup_glob_crochet(t_glob **glob, char *splitpath, char *splitacc, int *
 **	------------- GLOB_PROCESS -----------------
 */
 
+int			exp_glob(t_strid *strid, t_list **lst, t_expf *expf);
 int			ultimate_glob_process(t_glob **glob, t_list **lst, char **dir);
 int			process_glob(t_glob ***glob, t_list **lst);
 
