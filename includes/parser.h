@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 23:51:10 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/17 22:51:07 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,8 @@ int					shell_else_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
 int					shell_equal_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
+int					shell_error_cb(t_ast *ast, void **op, void *res,
+								t_iterf *iterf);
 
 int					shell_then_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
@@ -193,18 +195,12 @@ t_ast				*newast(t_inst *inst, int type, t_lexerf *ldef, t_ast *cur);
 int					ft_astvalid(t_ast *ast);
 
 int					ft_resolver(t_args *args, t_list **res, t_expf *expf);
-//int					ft_astresolver(t_ast *ast, t_expf *expf);
 int					ft_astcresolver(t_ast *ast, t_expf *expf);
 int					ft_strexpand(const char *origin,
 							t_list **res,
 							int i,
 							t_expf *expf);
-/*
-int					ft_strexpand2(const char *origin,
-							t_list **res,
-							int i,
-							t_expf2 *expf);
-*/
+
 int					ft_astgood(t_ast *ast);
 void				ft_astprint(t_ast *bt, int n);
 int					ft_getopt(char ***argv, const char *options, t_opt *opt);

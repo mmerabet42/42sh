@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/09/16 23:48:40 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/09/17 22:30:22 by mmerabet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ _BLTN_FSO	=	$(_BLTN_FS:.c=.o)
 BLTN_FSO	=	$(BLTN_FS:.c=.o)
 
 _PARSER_FS	=	ft_parser.c ft_lexer.c ft_astiter.c ft_resolver.c ft_getopt.c \
-				ft_argsdel.c ft_astdel.c newast.c ft_interpret.c
+				ft_argsdel.c ft_astdel.c newast.c ft_interpret.c utils.c
 PARSER_FS	=	$(addprefix $(SRCD)parser/,$(_PARSER_FS))
 _PARSER_FSO	=	$(_PARSER_FS:.c=.o)
 PARSER_FSO	=	$(PARSER_FS:.c=.o)

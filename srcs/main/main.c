@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/17 19:39:54 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/17 22:58:49 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <limits.h>
 #include <fcntl.h>
 
+#include "../../logger/incs/logger.h"
 static t_op			g_ops[] = {
 	{"\\:=", OP_BINARY | OP_ASSOCRL},
 	{DLM_REDP, OP_BINARY},
@@ -39,7 +40,7 @@ static t_op			g_ops[] = {
 static t_exp		g_exps[] = {
 	{"\\\\*[@=1]", exp_var},
 	{"$*[aA0_-zZ9_]:$?", exp_var},
-	{"$*[0-9]:$#:$@:$@*[0-9]", exp_arg},
+	{"$*[0-9]:$#", exp_arg},
 	{"*[$(?);(?);`?`;${?};\"*\";'*'@b]", exp_cmd},
 	{"*[$((?));(?);\"*\";'*'@b]", exp_arth},
 	{"~", exp_tild},
@@ -147,13 +148,38 @@ static int	check_cmd_starter(void)
 	return (0);
 }
 
-#include "../../logger/incs/logger.h"
+static void	main_execution(int c, char *line)
+{
+	t_ast	*head;
+	int		ret;
+
+	if (c == 4 && !(g_shell->running = 0))
+		ft_strcpy(ft_strclr(line), "exit");
+	if (c != 3)
+	{
+		if (!line[0] && c == 13 && !(g_shell->exitcode = 0) && !check_bgend())
+			return ;
+		head = ft_lexer(line, &g_lexerf);
+		if (!repair_hdoc(head, 0)
+				&& (ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
+		{
+			ft_printshret(ret, line);
+			if (ret != SH_EXIT)
+				g_shell->exitcode = 1;
+		}
+		check_bgend();
+		ft_astdel(&head);
+	}
+	else
+		g_shell->exitcode = 1;
+	if (c != 3 && c != 4)
+		addhistory(line);
+}
+
 int			main(int argc, char **argv, char **envp)
 {
 	char	line[8192];
-	t_ast	*head;
 	int		c;
-	int		ret;
 
 	if (logger_init(D_TRACE, "/tmp/out.log") != 0)
 		ft_printf_fd(2, "failed to open the logger\n");
@@ -168,30 +194,7 @@ int			main(int argc, char **argv, char **envp)
 		if ((c = ft_readraw(ft_strclr(line), 8192)))
 		{
 			ft_putchar('\n');
-			if (c == 4 && !(g_shell->running = 0))
-				ft_strcpy(ft_strclr(line), "exit");
-			if (c != 3)
-			{
-				if (!line[0] && c == 13 && !(g_shell->exitcode = 0))
-				{
-					check_bgend();
-					continue ;
-				}
-				head = ft_lexer(line, &g_lexerf);
-				if (!repair_hdoc(head, 0)
-						&& (ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
-				{
-					ft_printshret(ret, line);
-					if (ret != SH_EXIT)
-						g_shell->exitcode = 1;
-				}
-				check_bgend();
-				ft_astdel(&head);
-			}
-			else
-				g_shell->exitcode = 1;
-			if (c != 3 && c != 4)
-				addhistory(line);
+			main_execution(c, line);
 		}
 	}
 	ft_makeraw(0);

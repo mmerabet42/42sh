@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/23 17:35:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/10 15:21:58 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/17 22:50:11 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,21 @@ static int	is_post(t_ast *ast, void **op, t_astfunc *func, t_iterf *iterf)
 	return (efail);
 }
 
-int			ft_astgood(t_ast *ast)
+static int	is_unary(t_ast *ast, void **op, t_astfunc *func, t_iterf *iterf)
 {
-	if (!ast || !ast->left || !ast->left->name || !ast->right
-			|| !ast->right->name)
-		return (0);
-	return (1);
+	int	efail;
+
+	if (ast->u || func->post == 0)
+	{
+		if (func->unary_func)
+			efail = func->unary_func(ast, op, ast->extra_param, iterf);
+		else
+			efail = iterf->opmissing_err;
+	}
+	else if (!(efail = func->func(ast, op, ast->extra_param, iterf)))
+		if (!(efail = ft_astiter(ast, ast->extra_param, iterf)))
+			efail = ft_astiter(ast, ast->extra_param, iterf);
+	return (efail);
 }
 
 static int	astiter2(t_ast *ast, void *res, t_astfunc *func, t_iterf *iterf)
@@ -50,19 +59,13 @@ static int	astiter2(t_ast *ast, void *res, t_astfunc *func, t_iterf *iterf)
 	int		efail;
 
 	ft_bzero(op, sizeof(void *) * 2);
-	if (ast->u || func->post == 0)
-	{
-		if (func->unary_func)
-			efail = func->unary_func(ast, (void **)op, res, iterf);
-		else
-			efail = iterf->opmissing_err;
-		return (efail);
-	}
+	ast->extra_param = res;
+	if (ast->u || func->post == 0 || func->post == -2)
+		return (is_unary(ast, op, func, iterf));
 	if (iterf->opmissing_err && !ft_astgood(ast))
 		return (iterf->opmissing_err);
 	if (!ft_memalloc_xp(2, iterf->bsize, op) && ft_memdel_x(2, &op[0], &op[1]))
 		return (-1);
-	ast->extra_param = res;
 	if (func->post == -1 || func->post == 1)
 		return (is_post(ast, op, func, iterf));
 	if (!(efail = ft_astiter(ast->left, (func->func ? op[0] : res), iterf)))

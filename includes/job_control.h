@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 18:59:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/10 20:04:54 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/17 21:44:36 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int					exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf);
 int					exec_btin_bin(t_ast *ast, void *res, t_iterf *iterf);
 int					handle_bgstat(pid_t pid, int status);
 int					handle_bgproc(pid_t pid_fork, char **cmd, int status);
-void				check_bgend(void);
+int					check_bgend(void);
 int					end_status(char *str);
 void				print_cmd_args(char **tab);
 void				print_cmd_args2(char **tab);

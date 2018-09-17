@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/17 14:48:30 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/09/17 21:44:28 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
 	return (elem->next);
 }
 
-void			check_bgend(void)
+int				check_bgend(void)
 {
 	t_list		*elem;
 	t_inffork	*struc;
@@ -98,4 +98,5 @@ void			check_bgend(void)
 		else
 			elem = elem->next;
 	}
+	return (0);
 }
