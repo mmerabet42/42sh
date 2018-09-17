@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/29 00:05:33 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/15 18:13:46 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/17 21:59:01 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int			process_glob(t_glob ***glob, t_list **lst)
 			free(tmp->content);
 			free(tmp);
 		}
-		*lst = (*lst)->next;
 	}
 	return (1);
 }
