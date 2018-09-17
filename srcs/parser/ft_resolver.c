@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 16:37:58 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 22:58:04 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/17 19:39:56 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ static int	strexpand1(t_list *it, t_expf *expf, t_list **res)
 	{
 		cur = NULL;
 		s->jump = 0;
+		log_debug("HEELLO %d\n", s->ifound);
 		if (s->ifound == -1 || !expf->expansions[s->ifound].func)
 		{
 			if (!*res)
@@ -104,7 +105,12 @@ static int	strexpand1(t_list *it, t_expf *expf, t_list **res)
 				return (efail);
 			}
 			if (!*res)
-				*res = cur;
+			{
+				if (!cur)
+					*res = ft_lstcreate(ft_strdup(s->str), 0);
+				else
+					*res = cur;
+			}
 			else if (cur && cur != *res && (tmp_lst = *res))
 			{
 				if ((end = ft_lstend(cur)) != cur)

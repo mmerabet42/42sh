@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 21:20:28 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/18 12:40:39 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/17 19:40:15 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,12 @@ static int	strpbrkstr_type0(const char *a, const char *tab, size_t size,
 	i = 0;
 	while (i < size)
 	{
+		if (!*(*(char **)tab + *(size_t *)pos[1].b) && !curs[0])
+		{
+			g_ifound = (i ? i / *(size_t *)pos[1].a : 0);
+			curs[0] = ft_strlen(a);
+			break ;
+		}
 		if (*(int *)pos[0].a)
 			len = ft_strpbrkstrl_len(a, *(char **)tab + *(size_t *)pos[1].b);
 		else
@@ -121,7 +127,7 @@ int			ft_strpbrkstrplv_len(const char *a, int type, size_t size,
 
 	if (!a)
 		return (0);
-	ret = 0;
+	ret = 1;
 	if (!type)
 	{
 		data = va_arg(vp, void *);
