@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/09 20:36:55 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/11 19:17:10 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/18 18:08:42 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		return (SH_FORKFAIL);
 	close(fd[1]);
 	close(fd[0]);
+	waitpid(pidr, res, 0);
 	if (!fd[2])
 		waitpid(pidl, NULL, 0);
-	waitpid(pidr, res, 0);
 	*(int *)res = WEXITSTATUS(*(int *)res);
 	return (0);
 }

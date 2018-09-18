@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 16:37:58 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/17 19:39:56 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/18 22:13:59 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,47 +14,56 @@
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "ft_printf.h"
-/*
-static int	strexpand1(t_list *it, t_expf *expf, char **res)
+#include "../../logger/incs/logger.h"
+
+static int	strexpand1(t_strid *s, t_expf *expf, t_list **res)
 {
-	t_strid	*s;
-	char	*cur;
+	t_list	*end;
+	t_list	*cur;
 	int		efail;
 
-	while (it && (s = (t_strid *)it->content))
+	end = ft_lstend(*res);
+	if (s->ifound == -1 || !expf->expansions[s->ifound].func)
 	{
+		if (!*res)
+			*res = ft_lstcreate(ft_strdup(s->str), 0);
+		else if (end)
+			end->content = ft_strjoin_clr(end->content, s->str, 0);
+	}
+	else if (expf->expansions[s->ifound].func)
+	{
+		s->prev = end;
 		cur = NULL;
-		s->next = *res;
-		if (!(s->jump = 0) && s->ifound == -1)
-			*res = ft_strn2join_clr(s->str, *res, s->len, 1);
-		else if (expf->expansions[s->ifound].func)
+		if ((efail = expf->expansions[s->ifound].func(s, &cur, expf)))
 		{
-			if ((efail = expf->expansions[s->ifound].func(s, &cur, expf)))
-				return (ft_memdel_x(2, res, &cur) ? efail : efail);
-			if (cur == s->str)
-				cur = ft_strn2join(cur, *res + s->jump, s->len);
-			else
-				cur = ft_strjoin_clr(cur, *res + s->jump, 0);
-			*ft_memdel((void **)res) = cur;
+			ft_lstdel(res, content_delfunc);
+			ft_lstdel(&cur, content_delfunc);
+			return (efail);
 		}
-		else
-			*res = ft_strn2join_clr(s->str, *res, s->len, 1);
-		it = it->next;
+		if (!*res && !cur)
+			*res = ft_lstcreate(ft_strdup(s->str), 0);
+		else if (!*res)
+			*res = cur;
+		else if (cur)
+		{
+			end->content = ft_strjoin_clr(end->content, cur->content, 0);
+			if (cur->next)
+				ft_lstpush(end, cur->next);
+			ft_lstdelone(&cur, content_delfunc);
+		}
 	}
 	return (0);
 }
 
-int			ft_strexpand(const char *origin, char **res, int i, t_expf *expf)
+int	ft_strexpand(const char *origin, t_list **res, int i, t_expf *expf)
 {
-	t_list	*head;
 	t_strid	strid;
+	t_list	*lres;
 	int		pos;
-	int		efail;
 
-	head = NULL;
+	ft_bzero(&strid, sizeof(t_strid));
 	strid.i = i;
-	strid.j = 0;
-	strid.next = NULL;
+	lres = NULL;
 	while (*origin)
 	{
 		pos = ft_strpbrkstrp_pos(origin, 0, expf->len, expf->expansions,
@@ -64,19 +73,21 @@ int			ft_strexpand(const char *origin, char **res, int i, t_expf *expf)
 			strid.len = g_iread;
 		else
 			strid.len = (pos == -1 ? (int)ft_strlen(origin) : pos);
-		ft_strncpy(strid.str, origin, strid.len);
-		origin += strid.len;
-		ft_lstpushfront(&head, ft_lstnew(&strid, sizeof(t_strid)));
+		ft_strncpy(strid.str, origin, strid.len)[strid.len] = '\0';
+		strid.next_str = origin + strid.len;
+		if ((pos = strexpand1(&strid, expf, &lres)))
+			return (pos);
+		origin += strid.len + strid.jump;
+		strid.jump = 0;
 		++strid.j;
 	}
-	efail = strexpand1(head, expf, res);
-	ft_lstdel(&head, content_delfunc);
-	return (efail);
-}*/
-#include "../../logger/incs/logger.h"
+	ft_lstpush_p(res, lres);
+	return (0);
+}
+/*
 static int	strexpand1(t_list *it, t_expf *expf, t_list **res)
 {
-	t_strid	*s;
+	t_strid		*s;
 	t_list		*cur;
 	t_list		*end;
 	t_list		*tmp_lst;
@@ -86,7 +97,6 @@ static int	strexpand1(t_list *it, t_expf *expf, t_list **res)
 	{
 		cur = NULL;
 		s->jump = 0;
-		log_debug("HEELLO %d\n", s->ifound);
 		if (s->ifound == -1 || !expf->expansions[s->ifound].func)
 		{
 			if (!*res)
@@ -164,7 +174,7 @@ int			ft_strexpand(const char *origin, t_list **res, int i, t_expf *expf)
 	ft_lstdel(&head, content_delfunc);
 	return (efail);
 }
-
+*/
 int			ft_resolver(t_args *args, t_list **lst, t_expf *expf)
 {
 	int		i;
@@ -182,37 +192,8 @@ int			ft_resolver(t_args *args, t_list **lst, t_expf *expf)
 		++i;
 	}
 	return (0);
-/*	int		i;
-	int		err;
-	char	*nwarg;
-
-	i = 0;
-	while (i < args->argc && (!i || !expf->onlyfirst))
-	{
-		nwarg = NULL;
-		if ((err = ft_strexpand(args->argv[i], &nwarg, i, expf)))
-			return (err);
-		if (nwarg)
-			free(args->argv[i]);
-		args->argv[i] = (nwarg ? nwarg : args->argv[i]);
-		++i;
-	}
-	return (0);*/
 }
-/*
-int			ft_astresolver(t_ast *ast, t_expf2 *expf)
-{
-	int	efail;
 
-	ast->name = NULL;
-	if (!ast || !ast->args || !ast->args->argv)
-		return (0);
-	if ((efail = ft_resolver(ast->args, NULL, expf)))
-		return (efail);
-	ast->name = ast->args->argv[0];
-	return (0);
-}
-*/
 int			ft_astcresolver(t_ast *ast, t_expf *expf)
 {
 	int		efail;
@@ -237,16 +218,4 @@ int			ft_astcresolver(t_ast *ast, t_expf *expf)
 	ast->cname = ast->cargs->argv[0];
 	ft_lstdel(&lst, NULL);
 	return (0);
-	/*
-	ft_argsdel(ast->cargs);
-	ft_memdel((void **)&ast->cargs);
-	ast->cargs = NULL;
-	ast->cname = NULL;
-	if (!ast || !ast->args || !ast->args->argv
-			|| !(ast->cargs = ft_argscopy(ast->args)))
-		return (0);
-	if ((efail = ft_resolver(ast->cargs, expf)))
-		return (efail);
-	ast->cname = ast->cargs->argv[0];
-	return (0);*/
 }

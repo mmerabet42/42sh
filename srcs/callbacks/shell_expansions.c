@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 18:29:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 23:00:08 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/18 22:07:34 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "ft_types.h"
 #include "ft_str.h"
 
+#include "../../logger/incs/logger.h"
 int			exp_var(t_strid *sid, t_list **res, t_expf *expf)
 {
 	char	*value;
@@ -44,7 +45,7 @@ int			exp_tild(t_strid *sid, t_list **res, t_expf *expf)
 
 	(void)expf;
 	name = NULL;
-	if (!sid->next_str || *sid->next_str == '/')
+	if (!*sid->next_str || *sid->next_str == '/')
 		name = "HOME";
 	else if (sid->next_str && (*sid->next_str == '+' || *sid->next_str == '-'))
 	{

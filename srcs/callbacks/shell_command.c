@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 17:44:26 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/18 22:09:14 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	(void)op;
 	if ((ret = ft_astcresolver(ast, ((t_allf *)iterf->data)->expf)))
 		return ((*(int *)res = 1) ? ret : ret);
-	log_debug("OOOOK: %s\n", ast->cname);
 	if (!ast || !ast->cname || !*ast->cname)
 		return (0);
 	args = g_shell->curargs;

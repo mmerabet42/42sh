@@ -2,8 +2,10 @@
 
 int main(int argc, char **argv)
 {
-	(void)argc;
-	while (*argv)
-		printf("l: '%s'\n", *argv++);
+	int	*ptr;
+	
+	ptr = 1;
+	if (ptr == -1)
+		printf("Ok bro\n");
 	return (0);
 }
