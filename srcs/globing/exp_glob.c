@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/02 22:30:11 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/17 22:23:12 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/18 16:00:21 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static int		split_splitacc_into_lst(t_list **lst, t_list *tmp,
 		new->parent = *lst;
 		*lst = new;
 	}
-	while (*lst && (*lst)->parent && (*lst)->parent != tmp)
+	while (*lst && (*lst)->parent && *lst != tmp)
 		*lst = (*lst)->parent;
 	return (1);
 }
