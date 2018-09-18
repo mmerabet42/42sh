@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/13 14:10:07 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/17 21:55:46 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/18 16:44:34 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	ft_free_tab(char ***tab)
 	*tab = NULL;
 }
 
-int			error_glob(char *format, ...)
+int		error_glob(char *format, ...)
 {
 	int		i;
 	va_list	ap;
