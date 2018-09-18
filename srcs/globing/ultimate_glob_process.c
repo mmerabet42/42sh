@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/29 21:08:20 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/18 16:00:00 by ouralgan         ###   ########.fr       */
+/*   Updated: 2018/09/18 16:42:25 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "ft_list.h"
 #include "sys/stat.h"
 
-static int	add_new_lst_glob(t_list **lst, struct dirent *dp, char **dir) // a modifier
+static int	add_new_lst_glob(t_list **lst, struct dirent *dp, char **dir)
 {
 	int		len;
 	char	*str;

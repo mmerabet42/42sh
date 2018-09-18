@@ -6,47 +6,16 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/02 22:30:11 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/18 16:00:21 by ouralgan         ###   ########.fr       */
+/*   Updated: 2018/09/18 16:44:05 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "globing.h"
 #include "parser.h"
-# include "ft_list.h"
+#include "ft_list.h"
 #include "ft_str.h"
 #include "shell.h"
 
-// FONCTION DE TEST
-/*
-static void	print_glob(t_glob *glob)
-{
-	while (glob)
-	{
-		dprintf(1, "glob->pat: %s\n", glob->pat);
-		dprintf(1, "glob->type: %d\n", glob->type);
-		dprintf(1, "glob->slash[0]: %d glob->slash[1]: %d\n", glob->slash[0], glob->slash[1]);
-		glob = glob->next;
-	}
-}
-
-static void	print_triple_glob(t_glob ***glob)
-{
-	int	i = 0;
-	int	j;
-	while (glob && glob[i])
-	{
-		j = 0;
-		while (glob && glob[i][j])
-		{
-			dprintf(1, "------------------\n");
-			dprintf(1, "print_glob[%d][%d]\n", i, j);
-			print_glob(glob[i][j]);
-			j++;
-		}
-		i++;
-	}
-}
-*/
 static t_glob	***get_glob(char ***splitpath, char **splitacc)
 {
 	t_glob	***glob;
@@ -121,16 +90,15 @@ static int		get_match(t_list **lst)
 	if (!(splitacc = split_acc((*lst)->content)))
 		return (0);
 	if (!(splitpath = split_path(splitacc)))
-		return (error_glob("t", &splitacc)); // NORMALEMENT ok
-	if (!splitacc_into_lst(lst, splitacc))// NORMALEMENT ok
-		return (error_glob("Tt", &splitpath, &splitacc)); // NORMALEMENT ok
+		return (error_glob("t", &splitacc));
+	if (!splitacc_into_lst(lst, splitacc))
+		return (error_glob("Tt", &splitpath, &splitacc));
 	if (!(glob = get_glob(splitpath, splitacc)))
-		return (error_glob("Tt", &splitpath, &splitacc)); // NORMALEMENT ok
-//	print_triple_glob(glob);
+		return (error_glob("Tt", &splitpath, &splitacc));
 	ft_free_tab(&splitacc);
-	free_splitpath(&splitpath); // Surement pas doublon mais on sait jamais
-	if (!process_glob(glob, lst)) // NORMALEMENT ok
-		return (error_glob("Ttg", &splitpath, &splitacc, &glob));// NORMALEMENT ok
+	free_splitpath(&splitpath);
+	if (!process_glob(glob, lst))
+		return (error_glob("Ttg", &splitpath, &splitacc, &glob));
 	free_triple_glob(&glob);
 	return (1);
 }
@@ -147,62 +115,12 @@ int				exp_glob(t_strid *strid, t_list **lst, t_expf *expf)
 	(*lst)->content_size = ft_strlen((*lst)->content);
 	(*lst)->next = NULL;
 	(*lst)->parent = NULL;
-	if (detect_globbing((*lst)->content)) // a modifier
+	if (detect_globbing((*lst)->content))
 	{
 		if (!get_match(lst))
-			return (SH_MALLOC); // ??
+			return (SH_MALLOC);
 	}
 	while (lst && *lst && (*lst)->parent)
 		*lst = (*lst)->parent;
 	return (0);
 }
-/*
-t_list	*first;
-first = *lst;
-while (first)
-{
-	dprintf(1, "lst->content %s\n", first->content);
-	dprintf(1, "lst->content_size %zu\n", first->content_size);
-	first = first->next;
-}
-
-typedef struct		s_list
-{
-	void			*content;
-	size_t			content_size;
-	struct s_list	*next;
-	struct s_list	*parent;
-}					t_list;
-
-typedef strcut		s_args
-{
-	char	*arg;
-	t_args	*next;
-	t_args	*prev;
-}					t_args;
-
-typedef struct		s_strid
-{
-	char			*str;
-	char			*next;
-	int				len;
-	int				ifound;
-	int				jump;
-	int				i;
-	int				j;
-}					t_strid;
-
-typedef struct		s_expf
-{
-	t_exp			*expansions;
-	size_t			len;
-	void			*data;
-	int				onlyfirst;
-}					t_expf;
-
-typedef struct		s_exp
-{
-	char			*name;
-	t_expfunc		func;
-}					t_exp;
-*/

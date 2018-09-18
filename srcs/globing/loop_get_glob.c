@@ -6,14 +6,15 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/28 22:40:43 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/15 18:12:15 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/18 16:41:51 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "globing.h"
 #include "ft_str.h"
 
-static int	(*g_setup_glob[4])(t_glob **glob, char *splitpath, char *splitacc, int *k) = {
+static int	(*g_setup_glob[4])(t_glob **glob, char *splitpath,
+								char *splitacc, int *k) = {
 	&setup_glob_normal,
 	&setup_glob_stars,
 	&setup_glob_question,
