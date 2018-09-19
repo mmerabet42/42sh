@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 17:42:32 by jraymond          #+#    #+#             */
-/*   Updated: 2018/09/12 21:15:54 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/19 12:49:13 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ void			son_fork(t_ast *ast, void *res, t_iterf *iterf)
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGTTIN, SIG_DFL);
-	signal(SIGTTOU, SIG_IGN);
+	signal(SIGTTOU, SIG_DFL);
 	pid = getpid();
-//	setpgid(0, 0);
+	setpgid(0, 0);
 	args = ret_args(ast);
 	if (handle_bgproc(pid, args, BG_RUN) == -1)
 		exit(126);

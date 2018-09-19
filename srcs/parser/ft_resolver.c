@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 16:37:58 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/18 22:13:59 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/19 13:57:57 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ int	ft_strexpand(const char *origin, t_list **res, int i, t_expf *expf)
 			strid.len = (pos == -1 ? (int)ft_strlen(origin) : pos);
 		ft_strncpy(strid.str, origin, strid.len)[strid.len] = '\0';
 		strid.next_str = origin + strid.len;
+		strid.jump = 0;
 		if ((pos = strexpand1(&strid, expf, &lres)))
 			return (pos);
 		origin += strid.len + strid.jump;
-		strid.jump = 0;
 		++strid.j;
 	}
 	ft_lstpush_p(res, lres);

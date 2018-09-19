@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/18 22:13:57 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/19 13:58:39 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static t_op			g_ops[] = {
 static t_exp		g_exps[] = {
 	{"\\\\*[@=1]", exp_var},
 	{"$*[aA0_-zZ9_]:$?", exp_var},
-	{"$*[0-9]:$#", exp_arg},
+	{"$*[0-9]:$#:$@", exp_arg},
 	{"*[$(?);(?);`?`;${?};\"*\";'*'@b]", exp_cmd},
 	{"*[$((?));(?);\"*\";'*'@b]", exp_arth},
 	{"~", exp_tild},
@@ -52,7 +52,7 @@ static t_exp		g_exps[] = {
 
 	{EXP_BRACES, NULL},
 	{EXP_SUBSHELL, NULL},
-	{"", exp_glob}
+//	{"", exp_glob}
 };
 
 static t_expf		g_expf = {

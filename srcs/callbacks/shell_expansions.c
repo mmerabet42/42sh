@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 18:29:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/18 22:07:34 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/19 13:58:36 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int			exp_tild(t_strid *sid, t_list **res, t_expf *expf)
 	if (name && !sid->j)
 		*res = ft_lstcreate(ft_strdup(ft_getenv(name, g_shell->envp)), 0);
 	else
-		*res = sid->next;
+		*res = ft_lstcreate(ft_strdup("~"), 0);
 	return (0);
 }
 
