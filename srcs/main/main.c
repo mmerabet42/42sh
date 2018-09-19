@@ -161,7 +161,7 @@ static void	main_execution(int c, char *line)
 		if (!line[0] && c == 13 && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
 		head = ft_lexer(line, &g_lexerf);
-//		ft_astprint(head, 0);
+	//	ft_astprint(head, 0);
 		if ((ret = check_syntax(head)))
 			ft_printf_fd(2, "syntax error\n");
 		if (!ret

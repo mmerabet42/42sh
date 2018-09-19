@@ -89,7 +89,40 @@ static int	shell_error_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		return (2);
 	return (0);
 }
+/*
+static int	shell_hdoc_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
+{
+	int		fd;
+	char	hdoc_file[;
 
+
+
+	if (!(hdoc_file = ft_strjoin_clr(HDOC_TMP_FILE, ft_itoa(n), 1)))
+		return (0);
+	if ((n = open(hdoc_file, O_WRONLY | O_TRUNC | O_CREAT, 0666)) != -1)
+		return (read_heredoc(n, hdoc_file, ast, ptr));
+	while (ft_strclr(line))
+	{
+		ft_printf("heredoc> ");
+		c = ft_readraw(line, 500);
+		ft_putchar('\n');
+		if (c == 3 || c == 4)
+		{
+			free(hdoc_file);
+			close(fd);
+			return (c);
+		}
+		if (ft_strequ(line, ast->right->name))
+			break ;
+		ft_putendl_fd(line, fd);
+	}
+	ptr[1] = '\0';
+	free(ast->right->name);
+	ast->right->name = hdoc_file;
+	ast->right->args->argv[0] = ast->right->name;
+	close(fd);
+}
+*/
 static t_astfunc	g_callbacks[] = {
 	{"&&:||:|:&:;", shell_error_cb, NULL, -2},
 	{"*<<*", NULL, repair_hdoc, 0},
