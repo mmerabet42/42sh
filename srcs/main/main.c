@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/19 13:58:39 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/19 19:55:24 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static t_op			g_ops[] = {
 static t_exp		g_exps[] = {
 	{"\\\\*[@=1]", exp_var},
 	{"$*[aA0_-zZ9_]:$?", exp_var},
-	{"$*[0-9]:$#:$@", exp_arg},
+	{"$*[0-9]:$#:$@:$@*[0-9]", exp_arg},
 	{"*[$(?);(?);`?`;${?};\"*\";'*'@b]", exp_cmd},
 	{"*[$((?));(?);\"*\";'*'@b]", exp_arth},
 	{"~", exp_tild},
@@ -52,7 +52,7 @@ static t_exp		g_exps[] = {
 
 	{EXP_BRACES, NULL},
 	{EXP_SUBSHELL, NULL},
-//	{"", exp_glob}
+	{"", exp_glob}
 };
 
 static t_expf		g_expf = {
@@ -71,7 +71,7 @@ static t_astfunc	g_shell_callbacks[] = {
 	{EXP_SUBSHELL, shell_lists_cb, NULL, 3},
 	{"*[$\\[*\\];\"*\";'*'@b]", shell_arth_cb, NULL, 3},
 	{"", shell_cmd_cb, NULL, 3},
-	{"if:then", NULL, shell_cond_cb, 0},
+	{"while:if:then", NULL, shell_cond_cb, 0},
 	{"else:not:!", shell_else_cb, shell_else_cb, -1},
 	{"&&:||", shell_andor_seco_cb, NULL, -1},
 	{"&", NULL, shell_bckgrnd_cb, 0},
@@ -161,11 +161,9 @@ static void	main_execution(int c, char *line)
 		if (!line[0] && c == 13 && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
 		head = ft_lexer(line, &g_lexerf);
-	//	ft_astprint(head, 0);
-		if ((ret = check_syntax(head)))
-			ft_printf_fd(2, "syntax error\n");
-		if (!ret
-				&& (ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
+		if (check_syntax(head))
+			g_shell->exitcode = 1;
+		else if ((ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
 		{
 			ft_printshret(ret, line);
 			if (ret != SH_EXIT)

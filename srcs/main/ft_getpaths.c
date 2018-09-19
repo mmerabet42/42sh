@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:27 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/10 22:37:13 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/19 19:52:43 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	*ft_strshret(int shret)
 			return (g_shellerrs[i].name);
 		++i;
 	}
-	return ("");
+	return (NULL);
 }
 
 int		ft_printshret(int shret, char *name)

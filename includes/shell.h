@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/17 22:14:01 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/19 19:55:26 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef enum	e_shret
 	SH_ESUCCESS, SH_NDIR, SH_PIPFAIL, SH_DUPFAIL, SH_FORKFAIL, SH_EXECERR,
 	SH_MAXBGPROC, SH_NFILE, SH_CONDWTHEN, SH_THENWCOND, SH_ELSEWCOND,
 	SH_HDOCWFAIL, SH_HDOCRFAIL, SH_HDOCWORD, SH_OPENFILE, SH_CMDERR,
-	SH_BADFD, SH_MALLOC, SH_BADEXPR, SH_EXPRERR,
+	SH_BADFD, SH_MALLOC, SH_BADEXPR, SH_HDOCSTOP, SH_EXPRERR,
 	TK_CMD, TK_OP, TK_EQUAL, TK_REDIR, TK_PIPE, TK_ANDOR, TK_SEMICOLON,
 	TK_LEFT, TK_RIGHT, TK_LLEFT, TK_LRIGHT
 }				t_shret;
