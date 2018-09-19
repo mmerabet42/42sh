@@ -47,7 +47,8 @@ _PARSER_FSO	=	$(_PARSER_FS:.c=.o)
 PARSER_FSO	=	$(PARSER_FS:.c=.o)
 
 _SHCB_FS	=	shell_command.c shell_pipe.c shell_arithmetic.c shell_condition.c \
-				shell_equal.c shell_redir.c shell_redir1.c shell_expansions.c shell_expansions1.c
+				shell_equal.c shell_redir.c shell_redir1.c shell_expansions.c shell_expansions1.c \
+				shell_error.c
 SHCB_FS		=	$(addprefix $(SRCD)callbacks/,$(_SHCB_FS))
 _SHCB_FSO	=	$(_SHCB_FS:.c=.o)
 SHCB_FSO	=	$(SHCB_FS:.c=.o)

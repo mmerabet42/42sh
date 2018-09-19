@@ -162,7 +162,9 @@ static void	main_execution(int c, char *line)
 			return ;
 		head = ft_lexer(line, &g_lexerf);
 //		ft_astprint(head, 0);
-		if (!repair_hdoc(head, 0)
+		if ((ret = check_syntax(head)))
+			ft_printf_fd(2, "syntax error\n");
+		if (!ret
 				&& (ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
 		{
 			ft_printshret(ret, line);

@@ -48,8 +48,8 @@ static int	is_unary(t_ast *ast, void **op, t_astfunc *func, t_iterf *iterf)
 			efail = iterf->opmissing_err;
 	}
 	else if (!(efail = func->func(ast, op, ast->extra_param, iterf)))
-		if (!(efail = ft_astiter(ast, ast->extra_param, iterf)))
-			efail = ft_astiter(ast, ast->extra_param, iterf);
+		if (!(efail = ft_astiter(ast->left, ast->extra_param, iterf)))
+			efail = ft_astiter(ast->right, ast->extra_param, iterf);
 	return (efail);
 }
 

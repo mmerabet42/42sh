@@ -175,8 +175,6 @@ int					shell_else_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
 int					shell_equal_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
-int					shell_error_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
 
 int					shell_then_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);

@@ -130,7 +130,7 @@ void				printprompt(int i);
 t_func				*get_function(char *name);
 int					check_function(t_ast *ast, void *res, t_iterf *iterf);
 void				redir_printerror(t_redir *r, int err, void **op);
-int					repair_hdoc(t_ast *ast, int n);
+//int					repair_hdoc(t_ast *ast, int n);
 int					replace_fd(t_redir *r, int *closed_fd);
 t_list				*list_redirections(t_ast **ast, t_expf *expf);
 
