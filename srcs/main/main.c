@@ -161,6 +161,7 @@ static void	main_execution(int c, char *line)
 		if (!line[0] && c == 13 && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
 		head = ft_lexer(line, &g_lexerf);
+//		ft_astprint(head, 0);
 		if (!repair_hdoc(head, 0)
 				&& (ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
 		{

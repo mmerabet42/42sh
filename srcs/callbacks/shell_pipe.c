@@ -45,6 +45,7 @@ static pid_t	new_fork(t_ast *ast, void *res, t_iterf *iterf, int fd[3])
 		if (!fd[2])
 			dup2(fd[!ir], !ir);
 		handle_pgid();
+		setpgid(0, 0);
 		ft_astiter(ast, res, iterf);
 		tcsetpgrp(0, save);
 		close(fd[!ir]);
@@ -73,9 +74,9 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		return (SH_FORKFAIL);
 	close(fd[1]);
 	close(fd[0]);
-	waitpid(pidr, res, 0);
 	if (!fd[2])
 		waitpid(pidl, NULL, 0);
+	waitpid(pidr, res, 0);
 	*(int *)res = WEXITSTATUS(*(int *)res);
 	return (0);
 }

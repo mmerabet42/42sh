@@ -2,10 +2,6 @@
 
 int main(int argc, char **argv)
 {
-	int	*ptr;
-	
-	ptr = 1;
-	if (ptr == -1)
-		printf("Ok bro\n");
+	printf("arg: '%s'\n", argv[argc - 1]);
 	return (0);
 }
