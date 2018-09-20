@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/15 18:03:23 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/17 15:54:06 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/20 17:29:03 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int			builtin_cd(int argc, char **argv)
 	if (argc == 1
 			&& (acc = ft_chdirl(g_shell->homepwd, g_shell->pwd, 2048)) != SH_OK)
 		return (ft_printf_fd(2, "%s: %s: %s\n",
-					argv[0], ft_strshret(acc), (g_shell->homepwd) ? 1 : 1));
+					argv[0], ft_strshret(acc), g_shell->homepwd));
 	else if (argc > 1)
 	{
 		if ((argc = lorp(&argv)) == -1)
