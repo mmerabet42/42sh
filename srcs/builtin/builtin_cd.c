@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/15 18:03:23 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/20 17:29:03 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/20 17:35:38 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int			builtin_cd(int argc, char **argv)
 			return (1);
 		}
 		if (ft_strequ(argv[0], "-"))
-			ft_printf("%s\n", name);
+			ft_printf_fd(2, "21sh: OLDPWD is not set.\n", name);
 	}
 	ft_setenv("OLDPWD", ft_getenv("PWD", g_shell->envp), &g_shell->envp);
 	ft_setenv("PWD", g_shell->pwd, &g_shell->envp);
