@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/15 18:03:23 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/20 17:35:38 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/20 19:49:17 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,33 @@ static int	lorp(char ***argv)
 	return (lp);
 }
 
+static int	goto_home(char *name)
+{
+	int	acc;
+
+	if (!g_shell->homepwd)
+	{
+		ft_printf_fd(2, "%s: HOME not set\n", name);
+		return (1);
+	}
+	if ((acc = ft_chdirl(g_shell->homepwd, g_shell->pwd, 2048)) == SH_OK)
+	{
+		ft_setenv("OLDPWD", ft_getenv("PWD", g_shell->envp), &g_shell->envp);
+		ft_setenv("PWD", g_shell->pwd, &g_shell->envp);
+		return (0);
+	}
+	ft_printf_fd(2, "%s: %s: %s\n", name, ft_strshret(acc), g_shell->homepwd);
+	return (1);
+}
+
 int			builtin_cd(int argc, char **argv)
 {
 	int		acc;
 	char	*name;
 
 	name = NULL;
-	if (argc == 1
-			&& (acc = ft_chdirl(g_shell->homepwd, g_shell->pwd, 2048)) != SH_OK)
-		return (ft_printf_fd(2, "%s: %s: %s\n",
-					argv[0], ft_strshret(acc), g_shell->homepwd));
+	if (argc == 1)
+		return (goto_home(argv[0]));
 	else if (argc > 1)
 	{
 		if ((argc = lorp(&argv)) == -1)
@@ -55,12 +72,14 @@ int			builtin_cd(int argc, char **argv)
 		if (ft_strequ((name = argv[0]), "-"))
 			name = ft_getenv("OLDPWD", g_shell->envp);
 		if ((acc = ft_chdir(name, g_shell->pwd, 2048, argc)) != SH_OK)
-		{
-			ft_printf_fd(2, "cd: %s: %s\n", ft_strshret(acc), name);
-			return (1);
-		}
+			return (!!ft_printf_fd(2, "cd: %s: %s\n", ft_strshret(acc), name));
 		if (ft_strequ(argv[0], "-"))
-			ft_printf_fd(2, "21sh: OLDPWD is not set.\n", name);
+		{
+			if (name)
+				ft_printf("%s\n", name);
+			else
+				return (!!ft_printf_fd(2, "cd: OLDPWD not set\n"));
+		}
 	}
 	ft_setenv("OLDPWD", ft_getenv("PWD", g_shell->envp), &g_shell->envp);
 	ft_setenv("PWD", g_shell->pwd, &g_shell->envp);
