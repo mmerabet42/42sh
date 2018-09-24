@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 21:09:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 22:49:47 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/24 17:59:35 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ int			shell_equal_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		if (!ft_astvalid(ast->right))
 			ft_setenv(lst->content, "", &g_shell->envp);
 		else
-			shell_equal_cb2(ast->right, lst->content, (t_allf *)iterf->data, lst2);
+			shell_equal_cb2(ast->right, lst->content, (t_allf *)iterf->data,
+					lst2);
 	}
 	ft_lstdel(&lst, content_delfunc);
 	*(int *)res = 0;

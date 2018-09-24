@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/19 19:55:24 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/24 18:00:18 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ static void	main_execution(int c, char *line)
 		if (!line[0] && c == 13 && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
 		head = ft_lexer(line, &g_lexerf);
-		if (check_syntax(head))
+		if (check_syntax(head, &g_expf))
 			g_shell->exitcode = 1;
 		else if ((ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
 		{

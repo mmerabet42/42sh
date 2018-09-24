@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/19 19:55:26 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/24 18:00:20 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,11 +130,10 @@ void				printprompt(int i);
 t_func				*get_function(char *name);
 int					check_function(t_ast *ast, void *res, t_iterf *iterf);
 void				redir_printerror(t_redir *r, int err, void **op);
-//int					repair_hdoc(t_ast *ast, int n);
 int					replace_fd(t_redir *r, int *closed_fd);
 t_list				*list_redirections(t_ast **ast, t_expf *expf);
 
-int					check_syntax(t_ast *ast);
+int					check_syntax(t_ast *ast, t_expf *expf);
 
 char				*ft_getenv(char *name, char **envp);
 int					ft_modenv(char *str, char ***envp);

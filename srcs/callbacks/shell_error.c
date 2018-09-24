@@ -6,70 +6,15 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/17 21:52:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/19 19:55:22 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/24 17:30:36 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_str.h"
-#include <fcntl.h>
 #include "ft_types.h"
 #include "ft_io.h"
 #include "ft_mem.h"
-#include "../../logger/incs/logger.h"
-
-static int	go_hdoc(t_ast *ast, int fd)
-{
-	char	line[500];
-	int		c;
-
-	while (ft_strclr(line))
-	{
-		ft_printf("heredoc> ");
-		c = ft_readraw(line, 500);
-		ft_putchar('\n');
-		if (c == 3 || c == 4)
-		{
-			while (c == 3 && ast->parent)
-				if (ft_strmatch((ast = ast->parent)->name, "*<<"))
-					return (2);
-			return (c == 4 || !ast->parent ? 1 : 2);
-		}
-		if (ft_strequ(line, ast->right->name))
-			break ;
-		ft_putendl_fd(line, fd);
-	}
-	return (0);
-}
-
-static int	shell_hdoc_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
-{
-	static int	n;
-	int			fd;
-	int			ret;
-	char		*hdoc_file;
-
-	(void)iterf;
-	(void)op;
-	(void)res;
-	*(t_ast **)res = ast;
-	if (!ft_astvalid(ast->right))
-		return (SH_BADEXPR);
-	if (!(hdoc_file = ft_strjoin_clr(HDOC_TMP_FILE, ft_itoa(n++), 1)))
-		return (SH_MALLOC);
-	if ((fd = open(hdoc_file, O_WRONLY | O_TRUNC | O_CREAT, 0666)) == -1)
-		return (SH_OPENFILE);
-	if (!(ret = go_hdoc(ast, fd)))
-	{
-		ft_strstr(ast->name, "<<")[1] = '\0';
-		*ft_memdel((void **)&ast->right->name) = hdoc_file;
-		ast->right->args->argv[0] = ast->right->name;
-	}
-	else
-		free(hdoc_file);
-	close(fd);
-	return (!ret || ret == 2 ? 0 : SH_HDOCSTOP);
-}
 
 static int	shell_error_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
@@ -126,13 +71,14 @@ static t_iterf		g_syntax_checker = {
 	sizeof(t_ast *)
 };
 
-int			check_syntax(t_ast *ast)
+int			check_syntax(t_ast *ast, t_expf *expf)
 {
 	t_ast	*res;
 	int		ret;
 	char	*err;
 
 	res = NULL;
+	g_syntax_checker.data = (void *)expf;
 	if ((ret = ft_astiter(ast, &res, &g_syntax_checker)))
 	{
 		if ((err = ft_strshret(ret)))
