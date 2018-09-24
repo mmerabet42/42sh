@@ -2,6 +2,7 @@
 
 int main(int argc, char **argv)
 {
-	printf("arg: '%s'\n", argv[argc - 1]);
+	while (*argv)
+		printf("arg: '%s'\n", *argv++);
 	return (0);
 }

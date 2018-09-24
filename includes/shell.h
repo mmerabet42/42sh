@@ -21,6 +21,8 @@
 # include "expr.h"
 # include "job_control.h"
 
+# include "../logger/incs/logger.h"
+
 # define DLM_REDP1 "<<:<<<:*[0-9]<<<:<:>:*[0-9]<<:>>:*[0-9]>>:*[<>@=1]&*[0-9]"
 # define DLM_REDP2 DLM_REDP1 ":*[<>@=1]&-:*[0-9]*[<>@=1]&:*[0-9]*[<>@=1]&-"
 # define DLM_REDP DLM_REDP2 ":*[<>@=1]&:*[0-9]*[<>@=1]&*[0-9]:*[0-9]*[<>]"

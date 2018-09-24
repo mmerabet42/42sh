@@ -52,7 +52,7 @@ static t_exp		g_exps[] = {
 
 	{EXP_BRACES, NULL},
 	{EXP_SUBSHELL, NULL},
-	{"", exp_glob}
+//	{"", exp_glob}
 };
 
 static t_expf		g_expf = {

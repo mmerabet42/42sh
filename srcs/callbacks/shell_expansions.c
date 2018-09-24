@@ -14,7 +14,6 @@
 #include "ft_types.h"
 #include "ft_str.h"
 
-#include "../../logger/incs/logger.h"
 int			exp_var(t_strid *sid, t_list **res, t_expf *expf)
 {
 	char	*value;

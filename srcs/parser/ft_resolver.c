@@ -14,7 +14,6 @@
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "ft_printf.h"
-#include "../../logger/incs/logger.h"
 
 static int	strexpand1(t_strid *s, t_expf *expf, t_list **res)
 {
@@ -40,9 +39,7 @@ static int	strexpand1(t_strid *s, t_expf *expf, t_list **res)
 			ft_lstdel(&cur, content_delfunc);
 			return (efail);
 		}
-		if (!*res && !cur)
-			*res = ft_lstcreate(ft_strdup(s->str), 0);
-		else if (!*res)
+		if (!*res)
 			*res = cur;
 		else if (cur)
 		{

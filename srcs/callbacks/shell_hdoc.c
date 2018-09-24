@@ -40,6 +40,7 @@ static int	interpret_line(char *line, char *eof, t_expf *expf)
 		res = lst->content;
 	if (ft_strequ(res, eof))
 		ret = 1;
+	ft_strcpy(line, res);
 	ft_lstdel(&lst, content_delfunc);
 	return (ret);
 }
