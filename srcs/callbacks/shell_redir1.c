@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/12 20:53:55 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/15 23:21:49 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/24 15:24:58 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,13 @@ int		replace_fd(t_redir *r, int *closed_fd)
 {
 	int	tmp;
 
-	if (r->fdb == -1 && close(r->fda) != -1)
+	if (r->fdz == -2)
+		return (0);
+	if (r->fdb == -1)
+	{
+		close(r->fda);
 		*closed_fd |= (1 << (r->fda));
+	}
 	else if (r->fdb != -1)
 	{
 		if ((tmp = r->fdz) == r->fdb)

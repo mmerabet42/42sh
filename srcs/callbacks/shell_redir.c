@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 17:21:51 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/15 23:20:56 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/24 15:32:53 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "ft_mem.h"
 #include <fcntl.h>
 #include <sys/wait.h>
-#include "../../logger/incs/logger.h"
 
 static void	restore_fds(void *c, size_t s)
 {
@@ -25,7 +24,9 @@ static void	restore_fds(void *c, size_t s)
 
 	(void)s;
 	r = (t_redir *)c;
-	if (r->checked && r->fdz != -2)
+	if (r->fdz == -2 && ft_memdel((void **)&c))
+		return ;
+	else if (r->checked)
 	{
 		if (r->rep)
 		{
@@ -85,7 +86,8 @@ static void	store_fds(t_list *elem)
 	t_redir	*r;
 
 	r = (t_redir *)elem->content;
-	r->fdz = dup(r->fda);
+	if ((r->fdz = dup(r->fda)) == -1)
+		r->fdz = -2;
 }
 
 int			shell_redir_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
