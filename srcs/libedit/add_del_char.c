@@ -1,0 +1,95 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   add_del_char.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/11 13:28:32 by gdufay            #+#    #+#             */
+/*   Updated: 2018/07/17 11:06:10 by gdufay           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libedit.h"
+
+void		add_char_between(t_cmdedit *cmd, t_cursor cursor)
+{
+	t_cmdedit	*tmp;
+	int			rememx;
+	int			rememy;
+
+	exec_t("cd");
+	tmp = cmd;
+	rememx = cursor.x + 2;
+	rememy = cursor.y;
+	while (tmp->next)
+	{
+		write_char(tmp->c);
+		if (cursor.x >= cursor.xmax - 1)
+		{
+			mv_bnl();
+			cursor.y += 1;
+		}
+		cursor.x = (cursor.x < cursor.xmax - 1 ? cursor.x + 1 : 0);
+		tmp = tmp->next;
+	}
+	while (cursor.y-- > rememy)
+		exec_t("up");
+	exec_t("cr");
+	mv_until_end(rememx);
+}
+
+static void	gain_de_place(t_cmdedit *cmd, t_cmdedit *carac)
+{
+	if (cmd->prev)
+		cmd->prev->next = carac;
+	carac->prev = cmd->prev;
+	cmd->prev = carac;
+	carac->next = cmd;
+}
+
+void		add_char(char *buf, t_cmdedit *cmd, t_cursor *cursor)
+{
+	int			i;
+	t_cmdedit	*carac;
+
+	i = -1;
+	while (cmd && buf[++i])
+	{
+		if (buf[i] == '\n')
+		{
+			del_char(&cmd, cursor);
+			continue ;
+		}
+		if (!(carac = create_cmdedit(buf[i])))
+			return ;
+		gain_de_place(cmd, carac);
+		if (cmd->next)
+			add_char_between(carac, *cursor);
+		else
+			write_char(buf[i]);
+		if (cursor->x >= cursor->xmax - 1)
+		{
+			cursor->y++;
+			mv_bnl();
+		}
+		cursor->x = (cursor->x < cursor->xmax - 1 ? cursor->x + 1 : 0);
+	}
+}
+
+t_cmdedit	*del_char(t_cmdedit **cmd, t_cursor *cursor)
+{
+	t_cmdedit	*tmp;
+
+	if (!(*cmd)->next)
+		return (*cmd);
+	tmp = *cmd;
+	if ((*cmd)->prev)
+		(*cmd)->prev->next = (*cmd)->next;
+	(*cmd)->next->prev = (*cmd)->prev;
+	*cmd = (*cmd)->next;
+	free(tmp);
+	add_char_between(*cmd, *cursor);
+	exec_t("le");
+	return (*cmd);
+}

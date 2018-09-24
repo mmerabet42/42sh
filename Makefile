@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/09/17 22:30:22 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/09/24 17:48:31 by gdufay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ LIBFT		=	$(LIBFTD)/libft.a
 SRCD		=	srcs/
 
 INCLUDES	=	includes/expr.h includes/job_control.h includes/parser.h \
-				includes/readraw.h includes/shell.h includes/globing.h
+				includes/readraw.h includes/shell.h includes/globing.h \
+				includes/libedit.h
 
 _PROMPT_FS	=	ft_readraw.c selectmode.c move_char.c move_history.c \
 				move_word.c move_end.c printprompt.c
@@ -66,6 +67,15 @@ _GLOB_FS	=	check_match_functions.c detect_globbing.c error_glob.c exp_glob.c fil
 GLOB_FS		=	$(addprefix $(SRCD)globing/,$(_GLOB_FS))
 _GLOB_FSO	=	$(_GLOB_FS:.c=.o)
 GLOB_FSO	=	$(GLOB_FS:.c=.o)
+
+_LIBEDIT_FS =	add_del_char.c check.c \
+				copy_paste.c edit_hst.c ft_loop.c init_libedit.c	\
+				list.c mv_by_word.c mv_cursor.c parser_edit.c signal.c \
+				termcap.c autocomplete.c t_complete.c find_and_fill_complete.c\
+LIBEDIT_FS	=	$(addprefix $(SRCD)libedit/,$(_LIBEDIT_FS))
+_LIBEDIT_FSO=	$(_LIBEDIT_FS:.c=.o)
+LIBEDIT_FSO	=	$(LIBEDIT_FS:.c=.o)
+
 
 _MAIN_FS	=	main.c ft_env.c ft_env2.c ft_getcursor.c ft_exec.c ft_getpaths.c \
 				ft_parsepath.c list_redirections.c history.c shell_init.c shell_begin.c shell_end.c

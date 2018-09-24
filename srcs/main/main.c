@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/19 19:55:24 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/24 17:40:13 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,17 +149,16 @@ static int	check_cmd_starter(void)
 	return (0);
 }
 
-static void	main_execution(int c, char *line)
+static void	main_execution(char *line)
 {
 	t_ast	*head;
 	int		ret;
 
-	if (c == 4 && !(g_shell->running = 0))
-		ft_strcpy(ft_strclr(line), "exit");
-	if (c != 3)
+	if (*line != 3)
 	{
-		if (!line[0] && c == 13 && !(g_shell->exitcode = 0) && !check_bgend())
+		if (!line[0] && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
+		//end
 		head = ft_lexer(line, &g_lexerf);
 		if (check_syntax(head))
 			g_shell->exitcode = 1;
@@ -174,7 +173,7 @@ static void	main_execution(int c, char *line)
 	}
 	else
 		g_shell->exitcode = 1;
-	if (c != 3 && c != 4)
+	if (*line != 3 && *line != 4)
 		addhistory(line);
 }
 
@@ -182,26 +181,33 @@ int			main(int argc, char **argv, char **envp)
 {
 //	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(argv[1], argv[2]));
 //	return (0);
-	char	line[8192];
-	int		c;
+	char	*line;
+	int		cursor;
 
 	if (logger_init(D_TRACE, "/tmp/out.log") != 0)
 		ft_printf_fd(2, "failed to open the logger\n");
 	shell_begin(init_structs(argv[0]), argc, argv, envp);
 	if (check_script() || check_cmd_starter())
 		return (shell_end());
-	ft_bzero(line, 8192);
+	//begin
 	while (g_shell->running)
 	{
 		printprompt(1);
+		ft_getcursor(&cursor, NULL);
 		g_shell->kill_builtin = 0;
-		if ((c = ft_readraw(ft_strclr(line), 8192)))
+		if ((line = ft_loop_init(cursor, 0)))
 		{
 			ft_putchar('\n');
-			main_execution(c, line);
+			main_execution(line);
 		}
 	}
 	ft_makeraw(0);
 	logger_close();
 	return (shell_end());
 }
+
+// historique
+// taille du prompt dans param loop_init
+// $TERM a sauvegarder des le depart
+// ./21sh < file
+// // update g_shell
