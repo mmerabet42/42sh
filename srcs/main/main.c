@@ -180,6 +180,8 @@ static void	main_execution(int c, char *line)
 
 int			main(int argc, char **argv, char **envp)
 {
+//	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(argv[1], argv[2]));
+//	return (0);
 	char	line[8192];
 	int		c;
 

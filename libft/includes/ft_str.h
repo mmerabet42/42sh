@@ -166,8 +166,7 @@ char				*ft_strbetweenstr(const char *s,
 									const char *a,
 									const char *b);
 int					ft_strbetweenps(char **s, const char *a, const char *b);
-char				*ft_strbetweenstr_ext(const char *s,
-									const char *ext);
+char				*ft_strbetweenstr_ext(const char *s, const char *ext);
 int					ft_strbetweenps_ext(char **s, const char *ext);
 
 char				*ft_strjoin(const char *a, const char *b);
@@ -223,6 +222,16 @@ typedef struct		s_strmchi
 extern int			g_iread;
 extern int			g_explicitlev;
 extern int			g_ifound;
+
+typedef int	(*t_regex_func)(const char **regex, const char **str,
+						const char *arg);
+typedef struct		s_regex_check
+{
+	char			*name;
+	t_regex_func	func;
+}					t_regex_check;
+
+int					ft_regex(const char *regex, const char *str);
 
 t_mchi				*ft_getmchi(const char *match);
 void				ft_delmchi(t_mchi *head);
