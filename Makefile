@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/09/25 13:08:19 by gdufay           ###   ########.fr        #
+#    Updated: 2018/09/25 17:02:50 by gdufay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ GLOB_FSO	=	$(GLOB_FS:.c=.o)
 _LIBEDIT_FS =	add_del_char.c check.c printprompt.c \
 				copy_paste.c edit_hst.c ft_loop.c init_libedit.c \
 				list.c mv_by_word.c mv_cursor.c parser_edit.c signal.c \
-				termcap.c 
+				termcap.c autocomplete.c t_complete.c find_and_fill_complete.c
 LIBEDIT_FS	=	$(addprefix $(SRCD)libedit/,$(_LIBEDIT_FS))
 _LIBEDIT_FSO=	$(_LIBEDIT_FS:.c=.o)
 LIBEDIT_FSO	=	$(LIBEDIT_FS:.c=.o)

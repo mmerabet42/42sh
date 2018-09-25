@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/09 16:01:07 by gdufay            #+#    #+#             */
-/*   Updated: 2018/07/10 14:27:30 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 17:24:49 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,25 +67,26 @@ char			*find_path(t_cmdedit *cmd)
 
 t_complete		*fill_complete_var(char *cmp)
 {
-	t_env		*tmp;
+	char		**tmp;
 	size_t		len;
 	t_complete	*head;
 	t_complete	*complete;
 	char		*s;
 
-	if (!g_environ || !cmp)
+	if (!g_shell || !g_shell->envp || !cmp)
 		return (NULL);
-	tmp = *g_environ;
+	tmp = g_shell->envp;
 	len = ft_strlen(cmp);
 	head = NULL;
-	while (tmp && tmp->name)
+	while (tmp && *tmp)
 	{
-		if (!(s = ft_strjoin("$", tmp->name)))
+		if (!(s = ft_strjoin("$", *tmp)))
 			return (head);
-		if (!ft_strncmp(cmp, tmp->name, len))
+		s[ft_strchr(*tmp, '=') - *tmp + 1] = 0;
+		if (!ft_strncmp(cmp, *tmp, len))
 			add_t_complete(&head, &complete, s);
 		ft_strdel(&s);
-		tmp = tmp->next;
+		tmp += 1;
 	}
 	return (head);
 }
@@ -95,12 +96,12 @@ t_complete		*fill_complete_exec(char *path, char *cmp)
 	char			**paths;
 	register int	i;
 	t_complete		*head;
-	t_env			*tmp;
+	char			*tmp;
 
 	paths = NULL;
 	if (!path)
-		if (!g_environ || !cmp || !(tmp = get_elem_lstenv("PATH", *g_environ))
-				|| !tmp->value || !(paths = ft_strsplit(tmp->value, ':')))
+		if (!g_shell->envp || !cmp || !(tmp = ft_getenv("PATH", g_shell->envp))
+			|| !(paths = ft_strsplit(tmp, ':')))
 			return (NULL);
 	i = -1;
 	head = NULL;

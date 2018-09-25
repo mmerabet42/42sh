@@ -6,13 +6,13 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 12:27:01 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 13:11:58 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 17:02:43 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libedit.h"
 
-/*static void			clean_autoc(t_cmdedit **cmd)
+static void			clean_autoc(t_cmdedit **cmd)
 {
 	t_cmdedit	*tmp;
 
@@ -24,7 +24,7 @@
 		tmp->is_autoc = 0;
 		tmp = tmp->prev;
 	}
-}*/
+}
 
 static t_cmdedit	*gain_de_place(char *buf, t_cmdedit *cmd, t_cursor *cursor)
 {
@@ -33,10 +33,10 @@ static t_cmdedit	*gain_de_place(char *buf, t_cmdedit *cmd, t_cursor *cursor)
 		cmd = move_cursor(cmd, cursor, 'D');
 		cmd = del_char(&cmd, cursor);
 	}
-	/*if (buf[0] == '\t')
+	if (buf[0] == '\t')
 		cmd = autocomplete(cmd, cursor);
-	else*/
-		//clean_autoc(&cmd);
+	else
+		clean_autoc(&cmd);
 	return (cmd);
 }
 
