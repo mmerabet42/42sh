@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/11 13:19:23 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 16:19:32 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 16:55:30 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,15 @@ void		mv_left(t_cursor *cursor)
 	cursor->x = (cursor->x == 1 ? cursor->xmax : cursor->x - 1);
 	if (cursor->y == 1 && cursor->x == cursor->xmax)
 		cursor->x -= cursor->origin;
+	if (cursor->y > 1 && cursor->x == cursor->xmax)
+		cursor->x -= 1;
 }
 
 void		mv_right(t_cursor *cursor)
 {
 	int		max;
 
-	max = cursor->y == 1 ? cursor->xmax - cursor->origin : cursor->xmax;
+	max = cursor->y == 1 ? cursor->xmax - cursor->origin : cursor->xmax - 1;
 	if (cursor->x == max)
 	{
 		cursor->y++;
@@ -67,7 +69,7 @@ t_cmdedit	*mv_multline(t_cmdedit *cmd, t_cursor *cursor, char mv)
 {
 	int i;
 
-	i = -1;
+	i = 0;
 	while (++i < cursor->xmax && ((mv == 'A' && cmd->prev)
 				|| (mv == 'B' && cmd->next)))
 		cmd = move_cursor(cmd, cursor, (mv == 'A' ? 'D' : 'C'));

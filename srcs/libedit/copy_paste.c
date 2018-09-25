@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/12 10:21:15 by gdufay            #+#    #+#             */
-/*   Updated: 2018/04/16 13:43:31 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 16:27:03 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,17 @@ t_cmdedit	*copy_edit(t_cmdedit **cmd, t_cmdedit **cp, t_cursor *cursor)
 
 t_cmdedit	*paste_edit(t_cmdedit *cmd, t_cmdedit *cp, t_cursor *cursor)
 {
+	char	buf[2];
+
 	if (!cp)
 		return (cmd);
 	while (cp->prev)
 		cp = cp->prev;
+	buf[1] = 0;
 	while (cp->next)
 	{
-		add_char(&cp->c, cmd, cursor);
+		buf[0] = cp->c;
+		add_char(buf, cmd, cursor);
 		cp = cp->next;
 	}
 	return (cmd);
