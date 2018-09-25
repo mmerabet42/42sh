@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/19 19:55:26 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/25 11:31:45 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <unistd.h>
 # include <stdarg.h>
 # include "ft_list.h"
-# include "readraw.h"
 # include "parser.h"
 # include "expr.h"
 # include "job_control.h"

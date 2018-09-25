@@ -6,52 +6,61 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/11 13:19:23 by gdufay            #+#    #+#             */
-/*   Updated: 2018/07/17 11:06:02 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 15:59:38 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libedit.h"
+#include "libedit.h"
 
 t_cmdedit	*move_cursor(t_cmdedit *cmd, t_cursor *cursor, char mv)
 {
 	if (mv == 'C' && cmd->next)
-		cmd = mv_right(cmd, cursor);
-	else if (mv == 'D' && cmd->prev)
-		cmd = mv_left(cmd, cursor);
+	{
+		cmd = cmd->next;
+		mv_right(cursor);
+	}
+	else if (mv == 'D' && cmd->prev && (cursor->y > 1 || cursor->x > 1))
+	{
+		cmd = cmd->prev;
+		mv_left(cursor);
+	}
 	else if ((mv == 'A' && cmd->prev) || (mv == 'B' && cmd->next))
-		cmd = mv_multline(cmd, cursor, mv);
+		cmd = mv_multline(cmd, cursor, (mv == 'A' ? 'D' : 'C'));
 	else
 		ft_putstr("\a");
 	return (cmd);
 }
 
-t_cmdedit	*mv_left(t_cmdedit *cmd, t_cursor *cursor)
+void		mv_left(t_cursor *cursor)
 {
-	cmd = cmd->prev;
-	if (!cursor->x)
+	if (cursor->x == 1)
 	{
 		exec_t("up");
-		mv_until_end(cursor->xmax);
+		mv_until_end(cursor->xmax - 1);
 		cursor->y--;
 	}
 	else
+	{
 		exec_t("le");
-	cursor->x -= (!cursor->x ? -cursor->xmax + 1 : 1);
-	return (cmd);
+	}
+	cursor->x = (cursor->x == 1 ? cursor->xmax : cursor->x - 1);
+	if (cursor->y == 1 && cursor->x == cursor->xmax)
+		cursor->x -= cursor->origin;
 }
 
-t_cmdedit	*mv_right(t_cmdedit *cmd, t_cursor *cursor)
+void		mv_right(t_cursor *cursor)
 {
-	cmd = cmd->next;
-	if (cursor->x >= cursor->xmax - 1)
+	int		max;
+
+	max = cursor->y == 1 ? cursor->xmax - cursor->origin : cursor->xmax;
+	if (cursor->x == max)
 	{
 		cursor->y++;
 		mv_bnl();
 	}
 	else
 		exec_t("nd");
-	cursor->x += (cursor->x >= cursor->xmax - 1 ? -cursor->x : 1);
-	return (cmd);
+	cursor->x += (cursor->x == max ? -cursor->x + 1 : 1);
 }
 
 t_cmdedit	*mv_multline(t_cmdedit *cmd, t_cursor *cursor, char mv)
@@ -61,6 +70,6 @@ t_cmdedit	*mv_multline(t_cmdedit *cmd, t_cursor *cursor, char mv)
 	i = -1;
 	while (++i < cursor->xmax && ((mv == 'A' && cmd->prev)
 				|| (mv == 'B' && cmd->next)))
-		cmd = (mv == 'A' ? mv_left : mv_right)(cmd, cursor);
+		cmd = move_cursor(cmd, cursor, mv);
 	return (cmd);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libedit.h"
+#include "libedit.h"
 
 t_cmdedit	*mv_history(t_cmdedit **cmd, t_cursor *cursor, char c, t_hst **hst)
 {

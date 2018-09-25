@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/11 13:28:32 by gdufay            #+#    #+#             */
-/*   Updated: 2018/07/17 11:06:10 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 16:02:22 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void		add_char_between(t_cmdedit *cmd, t_cursor cursor)
 
 	exec_t("cd");
 	tmp = cmd;
-	rememx = cursor.x + 2;
+	rememx = cursor.x + (cursor.y ? 0 : cursor.origin);
 	rememy = cursor.y;
 	while (tmp->next)
 	{
@@ -52,7 +52,9 @@ void		add_char(char *buf, t_cmdedit *cmd, t_cursor *cursor)
 {
 	int			i;
 	t_cmdedit	*carac;
+	int			max;
 
+	max = cursor->y == 1 ? cursor->xmax - cursor->origin : cursor->xmax;
 	i = -1;
 	while (cmd && buf[++i])
 	{
@@ -68,12 +70,12 @@ void		add_char(char *buf, t_cmdedit *cmd, t_cursor *cursor)
 			add_char_between(carac, *cursor);
 		else
 			write_char(buf[i]);
-		if (cursor->x >= cursor->xmax - 1)
+		if (cursor->x == max)
 		{
 			cursor->y++;
 			mv_bnl();
 		}
-		cursor->x = (cursor->x < cursor->xmax - 1 ? cursor->x + 1 : 0);
+		cursor->x += (cursor->x == max ? -cursor->x + 1 : 1);
 	}
 }
 

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libedit.h"
+#include "libedit.h"
 
 t_complete	*create_t_complete(char *name, t_complete *next)
 {

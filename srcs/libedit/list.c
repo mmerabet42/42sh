@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libedit.h"
+#include "libedit.h"
 
 void		ft_free_t_cmdedit(t_cmdedit **cmd)
 {

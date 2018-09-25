@@ -6,19 +6,24 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 11:44:12 by gdufay            #+#    #+#             */
-/*   Updated: 2018/07/11 14:52:55 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 14:28:10 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBEDIT_H
 # define LIBEDIT_H
 
-# include "../libedit/libft/libft.h"
-# include "sh21.h"
+# include "shell.h"
+# include "ft_str.h"
+# include "ft_io.h"
+# include "ft_mem.h"
 
 # include <curses.h>
 # include <term.h>
 # include <sys/ioctl.h>
+# include <unistd.h>
+# include <sys/dir.h>
+# include <sys/types.h>
 
 /*
 **	------------- TYPEDEF AND STRUCT -----------------
@@ -78,17 +83,19 @@ t_cmdedit			*paste_edit(t_cmdedit *cmd, t_cmdedit *cp,
 **	------------- UTILS -----------------
 */
 
-char				*ft_loop_init(char *prompt, int retry, t_hst **hst,
-		t_env *lstenv);
+char				*ft_loop_init(int prompt, int retry);
 char				*list_to_str(t_cmdedit **cmd);
-int					ft_new_term(t_env *lstenv);
+int					ft_new_term(void);
 int					ft_clean_term(void);
-int					init_cursor(char *prompt, t_cursor *cursor);
+int					init_cursor(int prompt, t_cursor *cursor);
 int					ft_check_quote(char *s);
 void				exec_t(char *s);
 void				sighandler(int sig);
 t_cmdedit			*ft_parser_edit(char *buf, t_cmdedit *cmd,
-		t_cursor *cursor, t_hst **hst);
+		t_cursor *cursor);
+void				printprompt(int i);
+int					ft_putc(int c);
+int					ft_isws(int c);
 
 /*
 **	------------- AUTOCOMPLETE -----------------
@@ -128,8 +135,8 @@ void				ft_free_t_hst(t_hst **hst);
 */
 
 t_cmdedit			*move_cursor(t_cmdedit *cmd, t_cursor *cursor, char mv);
-t_cmdedit			*mv_right(t_cmdedit *cmd, t_cursor *cursor);
-t_cmdedit			*mv_left(t_cmdedit *cmd, t_cursor *cursor);
+void				mv_right(t_cursor *cursor);
+void				mv_left(t_cursor *cursor);
 t_cmdedit			*mv_multline(t_cmdedit *cmd, t_cursor *cursor, char mv);
 t_cmdedit			*mv_by_word(t_cmdedit *cmd, t_cursor *cursor, char mv);
 t_cmdedit			*mv_exterior(t_cmdedit *cmd, t_cursor *cursor, int touch);

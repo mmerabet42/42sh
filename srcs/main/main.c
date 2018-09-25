@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/24 17:40:13 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 13:23:57 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "ft_math.h"
 #include "ft_printf_ext.h"
 #include "globing.h"
+#include "libedit.h"
 #include <unistd.h>
 #include <limits.h>
 #include <fcntl.h>
@@ -194,6 +195,7 @@ int			main(int argc, char **argv, char **envp)
 	{
 		printprompt(1);
 		ft_getcursor(&cursor, NULL);
+		//printf("cursor: %d", cursor);
 		g_shell->kill_builtin = 0;
 		if ((line = ft_loop_init(cursor, 0)))
 		{
@@ -209,5 +211,4 @@ int			main(int argc, char **argv, char **envp)
 // historique
 // taille du prompt dans param loop_init
 // $TERM a sauvegarder des le depart
-// ./21sh < file
 // // update g_shell

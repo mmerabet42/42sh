@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libedit.h"
+#include "libedit.h"
 
 t_cmdedit	*copy_edit(t_cmdedit **cmd, t_cmdedit **cp, t_cursor *cursor)
 {

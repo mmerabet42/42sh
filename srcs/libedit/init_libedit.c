@@ -6,34 +6,34 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 11:50:56 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/24 16:42:47 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 14:33:27 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libedit.h"
+#include "libedit.h"
 
-int		init_cursor(char *prompt, t_cursor *cursor)
+int		init_cursor(int prompt, t_cursor *cursor)
 {
 	struct winsize	ws;
 
 	if (ioctl(0, TIOCGWINSZ, &ws) == -1)
 		return (-1);
-	cursor->origin = ft_strlen(prompt);
-	cursor->x = cursor->origin;
-	cursor->y = 0;
+	cursor->origin = prompt;
+	cursor->x = 1;
+	cursor->y = 1;
 	cursor->ymax = cursor->y;
 	cursor->xmax = ws.ws_col;
 	return (0);
 }
 
-int		ft_new_term(t_env *lstenv)
+int		ft_new_term(void)
 {
-	t_env			*elem_term;
+	char			*elem_term;
 	struct termios	term;
 
-	if (!(elem_term = get_elem_lstenv("TERM", lstenv)))
+	if (!(elem_term = ft_getenv("TERM", g_shell->envp)))
 		return (-1);
-	if (tgetent(NULL, elem_term->value) == -1)
+	if (tgetent(NULL, elem_term) == -1)
 		return (-1);
 	if (tcgetattr(0, &term) == -1)
 		return (-1);

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/17 21:52:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/19 19:55:22 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/25 13:25:10 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,30 @@
 #include "ft_types.h"
 #include "ft_io.h"
 #include "ft_mem.h"
+#include "libedit.h"
 #include "../../logger/incs/logger.h"
 
 static int	go_hdoc(t_ast *ast, int fd)
 {
-	char	line[500];
-	int		c;
+	char	*line;
+	int		cursor;
 
-	while (ft_strclr(line))
+	while (1)
 	{
-		ft_printf("heredoc> ");
-		c = ft_readraw(line, 500);
+		ft_printf("heredoc>");
+		ft_getcursor(&cursor, NULL);
+		if (!(line = ft_loop_init(cursor, 0)))
+			return (1);
 		ft_putchar('\n');
-		if (c == 3 || c == 4)
+		if (*line == 3 || !ft_strcmp(line, "exit"))
+			break ;
+		/*if (c == 3 || c == 4)
 		{
 			while (c == 3 && ast->parent)
 				if (ft_strmatch((ast = ast->parent)->name, "*<<"))
 					return (2);
 			return (c == 4 || !ast->parent ? 1 : 2);
-		}
+		}*/
 		if (ft_strequ(line, ast->right->name))
 			break ;
 		ft_putendl_fd(line, fd);
@@ -93,7 +98,7 @@ static int	shell_error_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 }
 
 static int	shell_conditionals_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf)
+		t_iterf *iterf)
 {
 	(void)op;
 	(void)iterf;

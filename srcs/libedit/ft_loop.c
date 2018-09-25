@@ -6,13 +6,26 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 11:33:35 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/24 16:42:37 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 14:33:29 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libedit.h"
+#include "libedit.h"
+#include "shell.h"
 
-t_cmdedit	*ft_main_loop(t_cmdedit *cmd, t_cursor *cursor, t_hst **hst)
+int		ft_putc(int c)
+{
+	write(0, &c, 1);
+	return (0);
+}
+
+inline int	ft_isws(int c)
+{
+	return (c == ' ' || c == '\t' || c == '\v'
+			|| c == '\n' || c == '\f' || c == '\r');
+}
+
+t_cmdedit	*ft_main_loop(t_cmdedit *cmd, t_cursor *cursor)
 {
 	char	buf[8];
 	int		ret;
@@ -24,22 +37,25 @@ t_cmdedit	*ft_main_loop(t_cmdedit *cmd, t_cursor *cursor, t_hst **hst)
 		buf[ret] = 0;
 		if (buf[0] == '\n')
 			break ;
-		if (!(cmd = ft_parser_edit(buf, cmd, cursor, hst)))
+		if (!(cmd = ft_parser_edit(buf, cmd, cursor)))
 			break ;
 	}
 	while (cmd && cmd->next)
-		cmd = mv_right(cmd, cursor);
+		cmd = move_cursor(cmd, cursor, 'C');
 	return (cmd);
 }
 
-static void	gain_de_place(t_env *lstenv, char **s)
+static void	gain_de_place(char **s)
 {
 	static char	*t;
 	char		*u;
 	char		*v;
+	int			cursor;
 
 	ft_putchar('\n');
-	u = ft_loop_init("quote>", 1, NULL, lstenv);
+	ft_printf("quote>");
+	ft_getcursor(&cursor, NULL);
+	u = ft_loop_init(cursor, 1);
 	v = ft_strjoin(*s, "\n");
 	t = ft_strjoin(v, u);
 	ft_strdel(s);
@@ -54,28 +70,23 @@ static void	gain_de_place(t_env *lstenv, char **s)
 	ft_strdel(&v);
 }
 
-char		*ft_loop_init(char *prompt, int retry, t_hst **hst, t_env *lstenv)
+char		*ft_loop_init(int prompt, int retry)
 {
 	t_cmdedit	*cmd;
 	t_cursor	cursor;
 	char		*s;
 
-	ft_putstr((g_statut_exit ? "\033[31m" : "\033[32m"));
-	ft_putstr(prompt);
-	ft_putstr("\033[0m");
-	if (!(cmd = create_cmdedit(' ')))
-		return (NULL);
 	if (init_cursor(prompt, &cursor) == -1)
 		return (NULL);
-	if (ft_new_term(lstenv) == -1)
+	if (ft_new_term() == -1)
 		return (NULL);
-	cmd = ft_main_loop(cmd, &cursor, hst);
+	if (!(cmd = create_cmdedit(' ')))
+		return (NULL);
+	cmd = ft_main_loop(cmd, &cursor);
 	if (ft_clean_term() == -1 || !(s = list_to_str(&cmd)))
 		return (NULL);
 	while (!ft_check_quote((s)) && !retry)
-		gain_de_place(lstenv, &s);
-	if (s && *s && s[ft_strlen(s) - 1] != 3)
-		add_hst(s, hst);
+		gain_de_place(&s);
 	ft_clean_term();
 	return (s);
 }
