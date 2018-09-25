@@ -6,14 +6,14 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 11:33:35 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 14:33:29 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 17:30:32 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libedit.h"
 #include "shell.h"
 
-int		ft_putc(int c)
+int			ft_putc(int c)
 {
 	write(0, &c, 1);
 	return (0);

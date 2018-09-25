@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/11 13:28:32 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 16:54:27 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 17:33:26 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@ static void	gain_de_place(t_cmdedit *cmd, t_cmdedit *carac)
 	carac->next = cmd;
 }
 
+static void	extends_add_char(t_cursor *cursor)
+{
+	cursor->y++;
+	mv_bnl();
+}
+
 void		add_char(char *buf, t_cmdedit *cmd, t_cursor *cursor)
 {
 	int			i;
@@ -73,10 +79,7 @@ void		add_char(char *buf, t_cmdedit *cmd, t_cursor *cursor)
 		else
 			write_char(buf[i]);
 		if (cursor->x == max)
-		{
-			cursor->y++;
-			mv_bnl();
-		}
+			extends_add_char(cursor);
 		cursor->x += (cursor->x == max ? -cursor->x + 1 : 1);
 	}
 }
