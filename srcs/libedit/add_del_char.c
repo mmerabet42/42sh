@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/11 13:28:32 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 16:02:22 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 16:09:50 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,22 @@ void		add_char_between(t_cmdedit *cmd, t_cursor cursor)
 	t_cmdedit	*tmp;
 	int			rememx;
 	int			rememy;
+	int			max;
 
+	max = cursor.y == 1 ? cursor.xmax - cursor.origin : cursor.xmax;
 	exec_t("cd");
 	tmp = cmd;
-	rememx = cursor.x + (cursor.y ? 0 : cursor.origin);
+	rememx = cursor.x + (cursor.y == 1 ? cursor.origin : 1);
 	rememy = cursor.y;
 	while (tmp->next)
 	{
 		write_char(tmp->c);
-		if (cursor.x >= cursor.xmax - 1)
+		if (cursor.x == max)
 		{
+			cursor.y++;
 			mv_bnl();
-			cursor.y += 1;
 		}
-		cursor.x = (cursor.x < cursor.xmax - 1 ? cursor.x + 1 : 0);
+		cursor.x += (cursor.x == max ? -cursor.x + 1 : 1);
 		tmp = tmp->next;
 	}
 	while (cursor.y-- > rememy)

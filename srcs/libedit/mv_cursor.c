@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/11 13:19:23 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 15:59:38 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/25 16:19:32 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_cmdedit	*move_cursor(t_cmdedit *cmd, t_cursor *cursor, char mv)
 		mv_left(cursor);
 	}
 	else if ((mv == 'A' && cmd->prev) || (mv == 'B' && cmd->next))
-		cmd = mv_multline(cmd, cursor, (mv == 'A' ? 'D' : 'C'));
+		cmd = mv_multline(cmd, cursor, mv);
 	else
 		ft_putstr("\a");
 	return (cmd);
@@ -70,6 +70,6 @@ t_cmdedit	*mv_multline(t_cmdedit *cmd, t_cursor *cursor, char mv)
 	i = -1;
 	while (++i < cursor->xmax && ((mv == 'A' && cmd->prev)
 				|| (mv == 'B' && cmd->next)))
-		cmd = move_cursor(cmd, cursor, mv);
+		cmd = move_cursor(cmd, cursor, (mv == 'A' ? 'D' : 'C'));
 	return (cmd);
 }
