@@ -1,15 +1,16 @@
 #include "ft_str.h"
 #include "ft_printf.h"
-/*
-static int	default_match(const char **regex, const char **str, const char *arg)
+
+static int	default_match(const char *regex, const char **str, const char *arg)
 {
 	
 }
-*/
+
 static int	expanded_wildcard(const char **regex, const char **str, int *len)
 {
 	int		jmp;
 	char	*fct;
+	int		ret;
 
 	(void)str;
 	(void)len;
@@ -18,10 +19,23 @@ static int	expanded_wildcard(const char **regex, const char **str, int *len)
 		fct = ft_strnchrl(*regex, '@', jmp);
 		if (ft_strchr("=><]", fct[1]))
 		{
-			
+			ret = default_match(regex, str, len);
 		}
+		/*
+		"upper:?[A-Z]"
+		"lower:?[a-z]"
+		"digit:?[0-9]"
+		"alpha:?{?[@upper]|?[@lower}"
+		"alnum:?{?[@alpha]|?[@digit]}"
+		"islower:
+		
+		"?[H@tolower]"
 
+		"case:*{?[#_@islower]&?{?[#_-$_=32@expr]|?[$_-#_=32@expr}}"
 
+		
+		"*[hello@case]" "Hello" "HeLLo" "helLo"
+*/
 		// ft_printf("at: '%d' '%s'\n", jmp, ft_strnchrl(*regex, '@', jmp));
 		// *[argument@function_name{=><}{0-9}]
 		// ?[a-z] == *[a-z@=] == *[a-z@=1]

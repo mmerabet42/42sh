@@ -52,7 +52,7 @@ static t_exp		g_exps[] = {
 
 	{EXP_BRACES, NULL},
 	{EXP_SUBSHELL, NULL},
-//	{"", exp_glob}
+	{"", exp_glob}
 };
 
 static t_expf		g_expf = {
@@ -180,8 +180,8 @@ static void	main_execution(int c, char *line)
 
 int			main(int argc, char **argv, char **envp)
 {
-//	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(argv[1], argv[2]));
-//	return (0);
+	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(argv[1], argv[2]));
+	return (0);
 	char	line[8192];
 	int		c;
 
