@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/27 12:06:12 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/27 14:15:09 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ static void	main_execution(char *line)
 	}
 	else
 		g_shell->exitcode = 1;
-	if (*line != 3 && *line != 4)
+	if (*line != 3)
 		addhistory(line);
 }
 

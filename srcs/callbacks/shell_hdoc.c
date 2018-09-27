@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 17:16:11 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/24 17:59:12 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/27 14:14:31 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ static int	interpret_line(char *line, char *eof, t_expf *expf)
 
 static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 {
-	char	line[500];
+	char	*line;
 	char	*eof;
 	t_list	*lst;
-	int		c;
+	int		cursor;
 
 	lst = NULL;
 	ft_strexpand(ast->right->name, &lst, -1, expf);
@@ -60,9 +60,11 @@ static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 	while (ft_strclr(line))
 	{
 		ft_putstr("heredoc> ");
-		c = ft_readraw(line, 500);
+		ft_getcursor(&cursor, NULL);
+		if (!(line = ft_loop_init(cursor, 0)))
+			break ;
 		ft_putchar('\n');
-		if (c == 3 || c == 4)
+		if (*line == 3 ||  !ft_strcmp(line, "exit"))
 			return (end_sig(lst, c, ast));
 		if (interpret_line(line, eof, expf))
 			break ;
