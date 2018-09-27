@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 12:27:01 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 17:02:43 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/27 10:58:07 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_cmdedit			*ft_parser_edit(char *buf, t_cmdedit *cmd, t_cursor *cursor)
 		cmd = end_of_emit(&cmd);
 	else if (buf[0] == 3)
 		cmd = end_of_text(&cmd);
-	//else if (buf[2] == 'A' || buf[2] == 'B')
-	//	cmd = mv_history(&cmd, cursor, buf[2], hst);
+	else if (buf[2] == 'A' || buf[2] == 'B')
+		cmd = mv_history(&cmd, cursor, buf[2]);
 	return (gain_de_place(buf, cmd, cursor));
 }

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/25 13:23:57 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/27 12:02:31 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,6 @@ static void	main_execution(char *line)
 	{
 		if (!line[0] && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
-		//end
 		head = ft_lexer(line, &g_lexerf);
 		if (check_syntax(head))
 			g_shell->exitcode = 1;
@@ -190,25 +189,22 @@ int			main(int argc, char **argv, char **envp)
 	shell_begin(init_structs(argv[0]), argc, argv, envp);
 	if (check_script() || check_cmd_starter())
 		return (shell_end());
-	//begin
 	while (g_shell->running)
 	{
 		printprompt(1);
 		ft_getcursor(&cursor, NULL);
-		//printf("cursor: %d", cursor);
 		g_shell->kill_builtin = 0;
 		if ((line = ft_loop_init(cursor, 0)))
 		{
 			ft_putchar('\n');
 			main_execution(line);
 		}
+		else
+			break ;
 	}
 	ft_makeraw(0);
 	logger_close();
 	return (shell_end());
 }
 
-// historique
-// taille du prompt dans param loop_init
 // $TERM a sauvegarder des le depart
-// // update g_shell

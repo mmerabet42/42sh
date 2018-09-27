@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 11:44:12 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 14:28:10 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/27 11:59:01 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,11 +124,7 @@ int					is_sep(char c);
 **	------------- HISTORY -----------------
 */
 
-t_cmdedit			*mv_history(t_cmdedit **cmd, t_cursor *cursor, char c,
-		t_hst **hst);
-t_hst				*create_t_hst(char *s);
-void				add_hst(char *s, t_hst **hst);
-void				ft_free_t_hst(t_hst **hst);
+t_cmdedit			*mv_history(t_cmdedit **cmd, t_cursor *cursor, char c);
 
 /*
 **	------------- MOVE CURSOR -----------------
