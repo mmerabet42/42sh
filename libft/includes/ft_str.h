@@ -223,6 +223,19 @@ extern int			g_iread;
 extern int			g_explicitlev;
 extern int			g_ifound;
 
+typedef struct		s_regex_info
+{
+	const char		*str_begin;
+	const char		*rgx_begin;
+	const char		*str;
+	const char		*regex;
+	const char		*arg;
+	int				len;
+	const char		*rule_name;
+	int				cond;
+	int				n;
+}					t_regex_info;
+
 typedef int	(*t_regex_func)(const char *regex, const char **str,
 						const char *arg);
 typedef struct		s_regex_check
@@ -231,6 +244,7 @@ typedef struct		s_regex_check
 	t_regex_func	func;
 }					t_regex_check;
 
+int					regex_exec(t_regex_info *regex_info);
 int					ft_regex(const char *regex, const char *str);
 
 t_mchi				*ft_getmchi(const char *match);
