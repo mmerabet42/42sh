@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/17 21:52:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/24 17:30:36 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/27 12:07:33 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,58 @@
 #include "ft_types.h"
 #include "ft_io.h"
 #include "ft_mem.h"
+#include "libedit.h"
+#include "../../logger/incs/logger.h"
+
+static int	go_hdoc(t_ast *ast, int fd)
+{
+	char	*line;
+	int		cursor;
+
+	while (1)
+	{
+		ft_printf("heredoc>");
+		ft_getcursor(&cursor, NULL);
+		if (!(line = ft_loop_init(cursor, 0)))
+			return (1);
+		ft_putchar('\n');
+		if (*line == 3 || !ft_strcmp(line, "exit"))
+			break ;
+		if (ft_strequ(line, ast->right->name))
+			break ;
+		ft_putendl_fd(line, fd);
+	}
+	return (0);
+}
+
+static int	shell_hdoc_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
+{
+	static int	n;
+	int			fd;
+	int			ret;
+	char		*hdoc_file;
+
+	(void)iterf;
+	(void)op;
+	(void)res;
+	*(t_ast **)res = ast;
+	if (!ft_astvalid(ast->right))
+		return (SH_BADEXPR);
+	if (!(hdoc_file = ft_strjoin_clr(HDOC_TMP_FILE, ft_itoa(n++), 1)))
+		return (SH_MALLOC);
+	if ((fd = open(hdoc_file, O_WRONLY | O_TRUNC | O_CREAT, 0666)) == -1)
+		return (SH_OPENFILE);
+	if (!(ret = go_hdoc(ast, fd)))
+	{
+		ft_strstr(ast->name, "<<")[1] = '\0';
+		*ft_memdel((void **)&ast->right->name) = hdoc_file;
+		ast->right->args->argv[0] = ast->right->name;
+	}
+	else
+		free(hdoc_file);
+	close(fd);
+	return (!ret || ret == 2 ? 0 : SH_HDOCSTOP);
+}
 
 static int	shell_error_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
@@ -38,7 +90,7 @@ static int	shell_error_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 }
 
 static int	shell_conditionals_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf)
+		t_iterf *iterf)
 {
 	(void)op;
 	(void)iterf;
