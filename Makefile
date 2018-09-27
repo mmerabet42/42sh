@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/09/24 18:04:10 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/09/27 12:08:19 by gdufay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,13 +19,8 @@ LIBFT		=	$(LIBFTD)/libft.a
 SRCD		=	srcs/
 
 INCLUDES	=	includes/expr.h includes/job_control.h includes/parser.h \
-				includes/readraw.h includes/shell.h includes/globing.h
-
-_PROMPT_FS	=	ft_readraw.c selectmode.c move_char.c move_history.c \
-				move_word.c move_end.c printprompt.c
-PROMPT_FS	=	$(addprefix $(SRCD)prompt/,$(_PROMPT_FS))
-_PROMPT_FSO	=	$(_PROMPT_FS:.c=.o)
-PROMPT_FSO	=	$(PROMPT_FS:.c=.o)
+				includes/readraw.h includes/shell.h includes/globing.h \
+				includes/libedit.h
 
 _JBCNTRL_FS	=	check_bgend.c info_bg.c handle_bgsign.c handle_bgstatus.c \
 				handle_pgid.c exec_cmd_background.c freelst_bg.c ret_astargs.c exec_btin_bin.c
@@ -67,6 +62,15 @@ GLOB_FS		=	$(addprefix $(SRCD)globing/,$(_GLOB_FS))
 _GLOB_FSO	=	$(_GLOB_FS:.c=.o)
 GLOB_FSO	=	$(GLOB_FS:.c=.o)
 
+_LIBEDIT_FS =	add_del_char.c check.c printprompt.c \
+				copy_paste.c edit_hst.c ft_loop.c init_libedit.c \
+				list.c mv_by_word.c mv_cursor.c parser_edit.c signal.c \
+				termcap.c autocomplete.c t_complete.c find_and_fill_complete.c
+LIBEDIT_FS	=	$(addprefix $(SRCD)libedit/,$(_LIBEDIT_FS))
+_LIBEDIT_FSO=	$(_LIBEDIT_FS:.c=.o)
+LIBEDIT_FSO	=	$(LIBEDIT_FS:.c=.o)
+
+
 _MAIN_FS	=	main.c ft_env.c ft_env2.c ft_getcursor.c ft_exec.c ft_getpaths.c \
 				ft_parsepath.c list_redirections.c history.c shell_init.c shell_begin.c shell_end.c
 MAIN_FS		=	$(addprefix $(SRCD),$(_MAIN_FS))
@@ -74,9 +78,9 @@ _MAIN_FSO	=	$(_MAIN_FS:.c=.o)
 MAIN_FSO	=	$(MAIN_FS:.c=.o)
 
 ICLD		=	-Iincludes -I$(LIBFTD)/includes
-SRCS		=	$(MAIN_FS) $(PROMPT_FS) $(JBCNTRL_FS) $(BLTN_FS) \
+SRCS		=	$(MAIN_FS) $(LIBEDIT_FS) $(JBCNTRL_FS) $(BLTN_FS) \
 				$(PARSER_FS) $(SHCB_FS) $(EXPR_FS) $(GLOB_FS)
-_OBJS		=	$(_MAIN_FSO) $(_PROMPT_FSO) $(_JBCNTRL_FSO) $(_BLTN_FSO) \
+_OBJS		=	$(_MAIN_FSO) $(_LIBEDIT_FSO) $(_JBCNTRL_FSO) $(_BLTN_FSO) \
 				$(_PARSER_FSO) $(_SHCB_FSO) $(_EXPR_FSO) $(_GLOB_FSO)
 OBJD		=	.objs/
 OBJS		=	$(addprefix $(SRCD),$(_OBJS))
@@ -95,7 +99,7 @@ all:
 
 $(NAME): $(LIBFT) $(OBJB)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) $(FRAMEWORKS) ./logger/liblogger.a -o $(NAME)
+	@$(CC) $(CFLAGS) -ltermcap $(OBJB) $(LIBFT) $(FRAMEWORKS) ./logger/liblogger.a -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
 $(LIBFT):
@@ -139,6 +143,11 @@ $(OBJD)%.o: $(SRCD)expr/%.c $(INCLUDES) Makefile
 	@$(CC) $(CFLAGS) -o $@ -c $< $(ICLD)
 
 $(OBJD)%.o: $(SRCD)globing/%.c $(INCLUDES) Makefile
+	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
+	@mkdir -p $(OBJD)
+	@$(CC) $(CFLAGS) -o $@ -c $< $(ICLD)
+
+$(OBJD)%.o: $(SRCD)libedit/%.c $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CFLAGS) -o $@ -c $< $(ICLD)

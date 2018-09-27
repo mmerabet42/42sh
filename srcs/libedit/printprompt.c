@@ -6,14 +6,13 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 20:10:31 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/25 11:53:10 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/18 16:18:38 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_str.h"
 #include "ft_printf.h"
-#include "libedit.h"
 
 static void	usualprompt(void)
 {

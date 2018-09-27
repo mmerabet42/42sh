@@ -1,0 +1,5 @@
+*.swp
+*.o
+42sh
+*.a
+logger/
