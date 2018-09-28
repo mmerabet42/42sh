@@ -19,9 +19,6 @@
 #include <signal.h>
 #include <fcntl.h>
 
-#include "../logger/incs/logger.h"
-#include "errno.h"
-
 static	t_list		*error_fg(char **argv, int i)
 {
 	if (!i)
@@ -67,16 +64,12 @@ static void			check_retfork(int ret, pid_t pid)
 	else if (WIFSTOPPED(ret))
 	{
 		if (WSTOPSIG(ret) == SIGTTIN)
-			log_trace("ouiiiiiiiiiiii\n");
-		handle_bgstat(pid, BG_STOP);
+			handle_bgstat(pid, BG_STOP);
 	}
 	else if (!WIFEXITED(ret))
 		handle_bgstat(pid, BG_KILL);
 	else if (WIFEXITED(ret))
-	{
-		log_trace("end ok\n");
 		handle_bgstat(pid, BG_END);
-	}
 }
 
 int					builtin_fg(int argc, char **argv)

@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/02 22:30:11 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/18 16:44:05 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/28 15:46:37 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,6 @@ static int		get_match(t_list **lst)
 int				exp_glob(t_strid *strid, t_list **lst, t_expf *expf)
 {
 	(void)expf;
-	if (!strid->i)
-		return (0);
 	if (!(*lst = (t_list *)malloc(sizeof(t_list))))
 		return (SH_MALLOC);
 	if (!((*lst)->content = ft_strdup(strid->str)))
@@ -115,6 +113,8 @@ int				exp_glob(t_strid *strid, t_list **lst, t_expf *expf)
 	(*lst)->content_size = ft_strlen((*lst)->content);
 	(*lst)->next = NULL;
 	(*lst)->parent = NULL;
+	if (!strid->i)
+		return (0);
 	if (detect_globbing((*lst)->content))
 	{
 		if (!get_match(lst))

@@ -16,8 +16,6 @@
 #include "ft_printf.h"
 #include <unistd.h>
 
-t_shell	*g_shell;
-
 char	**ft_getpaths(char **envp)
 {
 	char	*paths;
@@ -80,6 +78,8 @@ static t_op	g_shellerrs[] = {
 	{"could not open file", SH_OPENFILE},
 	{"bad file descriptor", SH_BADFD},
 	{"parse error", SH_BADEXPR},
+	{"HOME not set", SH_NHOME},
+	{"OLDPWD not set", SH_NOLDPWD},
 	{"failed to open temporary file for heredoc (writing)", SH_HDOCWFAIL},
 	{"failed to open temporary file for heredoc (reading)", SH_HDOCRFAIL},
 	{"missing WORD delimiter for heredoc", SH_HDOCWORD},

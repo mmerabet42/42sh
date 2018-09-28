@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:40:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/09/03 20:55:01 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/24 20:10:46 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ int					nbproc_inbg(t_list *b_list)
 	return (x);
 }
 
-int					handle_bgproc(pid_t pid_fork, char **cmd, int status)
+int					handle_bgproc(pid_t pid_fork, char **cmd,
+									int status, int opt)
 {
-	static int	numproc;
 	t_list		*elem;
 	t_inffork	*new;
 	int			ret;
@@ -65,13 +65,13 @@ int					handle_bgproc(pid_t pid_fork, char **cmd, int status)
 	if ((ret = nbproc_inbg(g_shell->bgproc)) == -1)
 		return (-1);
 	if (ret == 0)
-		numproc = 1;
+		g_shell->numproc = 1;
 	else
-		++numproc;
-	new = init_infproc(numproc, pid_fork, cmd);
+		++g_shell->numproc;
+	new = init_infproc(g_shell->numproc, pid_fork, cmd);
 	elem = init_t_list(new, sizeof(t_inffork));
 	ft_lstpush_p(&g_shell->bgproc, elem);
-	if (getpid() != pid_fork)
+	if (getpid() != pid_fork && opt)
 		handle_bgsign(elem, 0);
 	handle_bgstat(pid_fork, status);
 	return (0);

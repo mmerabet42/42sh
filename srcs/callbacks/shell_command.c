@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/18 22:09:14 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/28 15:37:24 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-#include "../../logger/incs/logger.h"
 static int	shell_cmd_cb2(char *buff, void *res, t_ast *ast, t_args *args)
 {
 	struct stat	st;
@@ -121,6 +120,7 @@ int			shell_lists_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	t_ast	*head;
 
 	(void)op;
+	g_shell->bits &= ~(1 << 1);
 	ptr = ft_strend(ast->name);
 	tmp = *ptr;
 	*ptr = '\0';

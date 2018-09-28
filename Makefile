@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/09/27 12:08:19 by gdufay           ###   ########.fr        #
+#    Updated: 2018/09/28 15:40:36 by sle-rest         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ LIBFT		=	$(LIBFTD)/libft.a
 SRCD		=	srcs/
 
 INCLUDES	=	includes/expr.h includes/job_control.h includes/parser.h \
-				includes/readraw.h includes/shell.h includes/globing.h \
+				includes/shell.h includes/globing.h \
 				includes/libedit.h
 
 _JBCNTRL_FS	=	check_bgend.c info_bg.c handle_bgsign.c handle_bgstatus.c \
@@ -43,7 +43,7 @@ PARSER_FSO	=	$(PARSER_FS:.c=.o)
 
 _SHCB_FS	=	shell_command.c shell_pipe.c shell_arithmetic.c shell_condition.c \
 				shell_equal.c shell_redir.c shell_redir1.c shell_expansions.c shell_expansions1.c \
-				shell_error.c shell_hdoc.c
+				shell_error.c shell_hdoc.c shell_seco.c
 SHCB_FS		=	$(addprefix $(SRCD)callbacks/,$(_SHCB_FS))
 _SHCB_FSO	=	$(_SHCB_FS:.c=.o)
 SHCB_FSO	=	$(SHCB_FS:.c=.o)
@@ -71,9 +71,9 @@ _LIBEDIT_FSO=	$(_LIBEDIT_FS:.c=.o)
 LIBEDIT_FSO	=	$(LIBEDIT_FS:.c=.o)
 
 
-_MAIN_FS	=	main.c ft_env.c ft_env2.c ft_getcursor.c ft_exec.c ft_getpaths.c \
+_MAIN_FS	=	ft_env.c main.c ft_env2.c ft_getcursor.c ft_exec.c ft_getpaths.c \
 				ft_parsepath.c list_redirections.c history.c shell_init.c shell_begin.c shell_end.c
-MAIN_FS		=	$(addprefix $(SRCD),$(_MAIN_FS))
+MAIN_FS		=	$(addprefix $(SRCD)main/,$(_MAIN_FS))
 _MAIN_FSO	=	$(_MAIN_FS:.c=.o)
 MAIN_FSO	=	$(MAIN_FS:.c=.o)
 
@@ -99,7 +99,7 @@ all:
 
 $(NAME): $(LIBFT) $(OBJB)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) -ltermcap $(OBJB) $(LIBFT) $(FRAMEWORKS) ./logger/liblogger.a -o $(NAME)
+	@$(CC) $(CFLAGS) -ltermcap $(OBJB) $(LIBFT) $(FRAMEWORKS) -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
 $(LIBFT):
@@ -108,11 +108,6 @@ lib:
 	@make -C $(LIBFTD)
 
 $(OBJD)%.o: $(SRCD)main/%.c $(INCLUDES) Makefile
-	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
-	@mkdir -p $(OBJD)
-	@$(CC) $(CFLAGS) -o $@ -c $< $(ICLD)
-
-$(OBJD)%.o: $(SRCD)prompt/%.c $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CFLAGS) -o $@ -c $< $(ICLD)

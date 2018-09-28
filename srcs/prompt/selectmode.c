@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/05 20:08:48 by jraymond          #+#    #+#             */
-/*   Updated: 2018/09/11 18:50:37 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/09/28 15:38:01 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 #include "ft_printf.h"
 #include "ft_io.h"
 #include "ft_str.h"
-
-#include "../logger/incs/logger.h"
 
 static void	handle_xy_cursor(t_bufferl *bl, int left)
 {

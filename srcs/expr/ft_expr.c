@@ -78,20 +78,22 @@ static int			expr_cmd_cb(t_ast *ast, void **op, void *res,
 	if (ast->args && ast->args->argc > 1)
 		return (EXPR_OPTMISS);
 	data = (t_exprdata *)ast->data;
+	*(EXPRT *)res = (EXPRT)0;
 	if (ft_isdigit(*ast->name))
 	{
-		if (ft_strmatch(ast->name, "**[aA_-zZ_]*"))
+		if (!ft_strforeach(ast->name, ft_isdigit))
 			return (EXPR_BADEXPR);
 		*(EXPRT *)res = (EXPRT)ft_atoll(ast->name);
 	}
 	else if (ft_isalpha(*ast->name)
-			&& !(ptr = ft_getenv(ast->name, *data->var_db)))
-		*(EXPRT *)res = (EXPRT)0;
-	else if (!ft_isalpha(*ast->name)
-			|| (!ft_isdigit(*ptr) && *ptr != '-' && *ptr != '+'))
-		return (EXPR_NOTINT);
-	else
+			&& (ptr = ft_getenv(ast->name, *data->var_db)))
+	{
+		if (!ft_strmatch_x(ptr, INT_RGX))
+			return (EXPR_NOTINT);
 		*(EXPRT *)res = (EXPRT)ft_atoll(ptr);
+	}
+	else
+		return (EXPR_NOTINT);
 	return (0);
 }
 

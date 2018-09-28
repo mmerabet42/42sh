@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 11:50:56 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 14:33:27 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/28 16:39:57 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ int		ft_new_term(void)
 		return (-1);
 	if (tcgetattr(0, &term) == -1)
 		return (-1);
-	term.c_lflag &= ~(ICANON | ECHO);
-	term.c_oflag &= ~OPOST;
+	term.c_lflag &= ~(ICANON | ECHO | ISIG);
+	term.c_iflag &= ~OPOST;
 	term.c_cc[VINTR] = -1;
-	if (tcsetattr(0, TCSADRAIN, &term) == -1)
+	if (tcsetattr(0, TCSANOW, &term) == -1)
 		return (-1);
 	return (0);
 }

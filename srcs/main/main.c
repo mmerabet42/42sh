@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/27 14:15:09 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/28 16:24:22 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 #include <limits.h>
 #include <fcntl.h>
 
-#include "../../logger/incs/logger.h"
 static t_op			g_ops[] = {
 	{"\\:=", OP_BINARY | OP_ASSOCRL},
 	{DLM_REDP, OP_BINARY},
@@ -179,13 +178,9 @@ static void	main_execution(char *line)
 
 int			main(int argc, char **argv, char **envp)
 {
-//	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(argv[1], argv[2]));
-//	return (0);
 	char	*line;
 	int		cursor;
 
-	if (logger_init(D_TRACE, "/tmp/out.log") != 0)
-		ft_printf_fd(2, "failed to open the logger\n");
 	shell_begin(init_structs(argv[0]), argc, argv, envp);
 	if (check_script() || check_cmd_starter())
 		return (shell_end());
@@ -202,7 +197,5 @@ int			main(int argc, char **argv, char **envp)
 		else
 			break ;
 	}
-	ft_makeraw(0);
-	logger_close();
 	return (shell_end());
 }

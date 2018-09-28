@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 17:16:11 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/27 14:14:31 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/28 15:39:40 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "ft_mem.h"
 #include "ft_types.h"
 #include <fcntl.h>
+#include "libedit.h"
 
 static int	end_sig(t_list *lst, int c, t_ast *ast)
 {
@@ -57,7 +58,7 @@ static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 	eof = ast->right->name;
 	if (lst && lst->content)
 		eof = lst->content;
-	while (ft_strclr(line))
+	while (1)
 	{
 		ft_putstr("heredoc> ");
 		ft_getcursor(&cursor, NULL);
@@ -65,7 +66,7 @@ static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 			break ;
 		ft_putchar('\n');
 		if (*line == 3 ||  !ft_strcmp(line, "exit"))
-			return (end_sig(lst, c, ast));
+			return (end_sig(lst, *line == 3 ? 3 : 4, ast));
 		if (interpret_line(line, eof, expf))
 			break ;
 		ft_putendl_fd(line, fd);

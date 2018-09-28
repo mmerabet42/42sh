@@ -41,7 +41,10 @@ typedef struct		s_inffork
 int					exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf);
 int					exec_btin_bin(t_ast *ast, void *res, t_iterf *iterf);
 int					handle_bgstat(pid_t pid, int status);
-int					handle_bgproc(pid_t pid_fork, char **cmd, int status);
+int					handle_bgproc(pid_t pid_fork,
+									char **cmd,
+									int status,
+									int opt);
 int					check_bgend(void);
 int					end_status(char *str);
 void				print_cmd_args(char **tab);
@@ -53,5 +56,7 @@ void				handle_pgid(void);
 void				freelst_bg(void);
 void				del(void *content, size_t size);
 void				sign_child(int sign);
+t_list				*ret_sign(int opt);
+void				debug_sign();
 
 #endif

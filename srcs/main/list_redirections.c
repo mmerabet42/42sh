@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_redparser.c                                     :+:      :+:    :+:   */
+/*   list_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/26 16:10:49 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 22:49:23 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/28 15:37:00 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include "ft_types.h"
 #include "ft_mem.h"
 #include "ft_io.h"
-
-#include "../../logger/incs/logger.h"
 
 static t_list	*implement_args(t_ast *cmd, t_ast *red, t_redir *r,
 							t_expf *expf)
@@ -34,13 +32,11 @@ static t_list	*implement_args(t_ast *cmd, t_ast *red, t_redir *r,
 	ft_astcresolver(right, expf);
 	r->names = right->cargs;
 	r->file = (right->cargs->argv ? right->cargs->argv[0] : NULL);
-	if (right->args && (ptr = right->args->argv) && right->args->argc > 0)
+	if (right->args && (ptr = right->args->argv) && (r->rep || *ptr))
 	{
 		args = cmd->args;
 		if (!r->rep && *ptr)
 			++ptr;
-		else if (!r->rep)
-			return (ft_lstnew(r, sizeof(t_redir)));
 		while (*ptr && (s = ft_strdup(*ptr)) && ++ptr)
 			args->argv = ft_memjoin_clr(args->argv,
 				sizeof(char *) * args->argc++, &s, sizeof(char *));

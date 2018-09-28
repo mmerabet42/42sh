@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 16:36:17 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/12 12:18:01 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/28 16:21:49 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,6 @@ void	ft_makeraw(int setb)
 		tcgetattr(0, &origt);
 		ft_memcpy(&newt, &origt, sizeof(struct termios));
 		newt.c_lflag &= ~(ICANON | ECHO | ISIG);
-		newt.c_iflag &= ~ICRNL;
-		newt.c_cflag &= ~CREAD;
 		newt.c_cc[VMIN] = 1;
 		newt.c_cc[VTIME] = 0;
 		tcsetattr(0, TCSANOW, &newt);

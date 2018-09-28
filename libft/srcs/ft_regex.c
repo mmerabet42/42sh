@@ -16,6 +16,7 @@ static int	expanded_wildcard(t_regex_info *regex_info, int *len)
 	(void)len;
 	if ((jmp = ft_strbetweenps_ext((char **)&regex_info->regex, "[?];(*)")) != -1)
 	{
+		ret = 0;
 		fct = ft_strnchrl(regex_info->regex, '@', jmp);
 		if (ft_strchr("=><]", fct[1]))
 		{

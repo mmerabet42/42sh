@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/27 12:07:56 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/28 15:36:53 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 # include "parser.h"
 # include "expr.h"
 # include "job_control.h"
-
-# include "../logger/incs/logger.h"
 
 # define DLM_REDP1 "<<:<<<:*[0-9]<<<:<:>:*[0-9]<<:>>:*[0-9]>>:*[<>@=1]&*[0-9]"
 # define DLM_REDP2 DLM_REDP1 ":*[<>@=1]&-:*[0-9]*[<>@=1]&:*[0-9]*[<>@=1]&-"
@@ -48,15 +46,11 @@ typedef enum	e_shret
 	SH_ESUCCESS, SH_NDIR, SH_PIPFAIL, SH_DUPFAIL, SH_FORKFAIL, SH_EXECERR,
 	SH_MAXBGPROC, SH_NFILE, SH_CONDWTHEN, SH_THENWCOND, SH_ELSEWCOND,
 	SH_HDOCWFAIL, SH_HDOCRFAIL, SH_HDOCWORD, SH_OPENFILE, SH_CMDERR,
+	SH_NOLDPWD, SH_NHOME,
 	SH_BADFD, SH_MALLOC, SH_BADEXPR, SH_HDOCSTOP, SH_EXPRERR,
 	TK_CMD, TK_OP, TK_EQUAL, TK_REDIR, TK_PIPE, TK_ANDOR, TK_SEMICOLON,
 	TK_LEFT, TK_RIGHT, TK_LLEFT, TK_LRIGHT
 }				t_shret;
-
-typedef enum	e_optret
-{
-	OPT_END, OPT_UNKNOWN, OPT_ALAST, OPT_OK, OPT_MISSING, OPT_EMPTY, OPT_EQUAL
-}				t_optret;
 
 typedef enum	e_exprerr
 {
@@ -118,6 +112,7 @@ typedef struct		s_shell
 	int				width;
 	int				height;
 	int				bits;
+	short			numproc;
 	t_list			*funcs;
 	t_allf			*allf;
 	t_list			*history;
@@ -125,6 +120,7 @@ typedef struct		s_shell
 	t_list			*bgproc;
 	t_list			*lstmodif_pid;
 	pid_t			curpid;
+	pid_t			shellpid;
 }					t_shell;
 
 void				printprompt(int i);
@@ -201,5 +197,6 @@ int					builtin_bg(int argc, char **argv);
 
 extern int			g_dontfree;
 extern t_shell		*g_shell;
+extern t_allf		g_allf;
 
 #endif

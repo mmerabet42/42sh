@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/01 14:51:21 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/17 14:54:15 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/09/16 20:32:06 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,21 @@ static	int		lstlen(void)
 	return (x);
 }
 
-static	t_list	*ret_sign(int opt)
+t_list			*ret_sign(int opt)
 {
 	t_list	*lst;
 
 	lst = g_shell->bgproc;
 	if (opt)
+	{
 		while (lst && ((t_inffork *)lst->content)->sign != '+')
 			lst = lst->next;
+	}
 	else
+	{
 		while (lst && ((t_inffork *)lst->content)->sign != '-')
 			lst = lst->next;
+	}
 	return (lst);
 }
 

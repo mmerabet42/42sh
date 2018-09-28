@@ -18,6 +18,7 @@
 # define EXPR_DLM_VARV "*[aA_-zZ_@=1]*[aA0_-zZ9_]:*[aA_-zZ_@=1]"
 # define EXPR_DLM_VAR "*[0-9]*[aA_-zZ_]:" EXPR_DLM_VARV
 # define EXPR_DLM_EQU "*[+\\-*/%&|^@=1]=:="
+# define INT_RGX "*[ ]*[0-9]:*[0-9]:*[ ]*[\\-+@=1]*[0-9]:*[\\-+@=1]*[0-9]"
 # define EXPRT long
 
 typedef struct		s_exprdata

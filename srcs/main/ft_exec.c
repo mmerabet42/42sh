@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 17:21:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/18 17:10:18 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/24 20:14:45 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ int		fork_father(pid_t pidl)
 	t_list	*elem;
 	int		ret;
 
+	g_shell->bits &= ~(1 << 1);
 	ret = 0;
-	handle_bgproc(pidl, g_shell->curargs->argv, BG_RUN);
+	handle_bgproc(pidl, g_shell->curargs->argv, BG_RUN, 0);
 	elem = ft_lstend(g_shell->bgproc);
 	waitpid(pidl, &ret, WUNTRACED);
 	signal(SIGCHLD, sign_child);
@@ -33,6 +34,7 @@ int		fork_father(pid_t pidl)
 	if (WIFSTOPPED(ret))
 	{
 		handle_bgstat(pidl, BG_STOP);
+		handle_bgsign(elem, 0);
 		return (WSTOPSIG(ret));
 	}
 	if (g_shell->bgproc == elem)
@@ -40,6 +42,7 @@ int		fork_father(pid_t pidl)
 	else
 		elem->parent->next = NULL;
 	ft_lstdelone(&elem, del);
+	g_shell->numproc--;
 	return (WEXITSTATUS(ret));
 }
 
@@ -48,7 +51,12 @@ int		ft_exec(char *name, char **argv, char **envp, pid_t *pid)
 	pid_t	pidl;
 
 	signal(SIGCHLD, SIG_DFL);
-	if (!(pidl = fork()))
+	if ((g_shell->bits & (1 << 1)))
+	{
+		execve(name, argv, envp);
+		exit(126);
+	}
+	else if (!(pidl = fork()))
 	{
 		handle_pgid();
 		execve(name, argv, envp);

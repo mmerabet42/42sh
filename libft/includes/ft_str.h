@@ -52,7 +52,9 @@ char				*ft_strstr(const char *a, const char *b);
 char				*ft_strnstr(const char *a, const char *b, size_t n);
 char				*ft_strpbrk(const char *s, const char *charset);
 int					ft_strpbrk_pos(const char *s, const char *charset);
-int					ft_strnpbrk_pos(const char *s, const char *charset, size_t n);
+int					ft_strnpbrk_pos(const char *s,
+								const char *charset,
+								size_t n);
 int					ft_strnrpbrk_pos(const char *s,
 								const char *charset,
 								size_t n);
@@ -153,6 +155,7 @@ int					ft_strcount(const char *s, char a);
 int					ft_strcountstr(const char *s, const char *a);
 char				*ft_strrep(const char *s, char a, char b);
 char				*ft_strrepc(char *s, char a, char b);
+char				*ft_strrepc_str(char *s, const char *a, const char *b);
 char				*ft_strrepstr(const char *s, const char *a, const char *b);
 char				*ft_strrep_clr(char *s, char a, char b);
 char				*ft_strrepstr_clr(char *s, const char *a, const char *b);
@@ -166,7 +169,8 @@ char				*ft_strbetweenstr(const char *s,
 									const char *a,
 									const char *b);
 int					ft_strbetweenps(char **s, const char *a, const char *b);
-char				*ft_strbetweenstr_ext(const char *s, const char *ext);
+char				*ft_strbetweenstr_ext(const char *s,
+									const char *ext);
 int					ft_strbetweenps_ext(char **s, const char *ext);
 
 char				*ft_strjoin(const char *a, const char *b);

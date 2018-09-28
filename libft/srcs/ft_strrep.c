@@ -53,3 +53,21 @@ char	*ft_strrepc(char *s, char a, char b)
 	}
 	return (s);
 }
+
+char	*ft_strrepc_str(char *s, const char *a, const char *b)
+{
+	char	*it;
+	int		pos;
+	int		len;
+
+	if (!(it = s))
+		return (NULL);
+	len = ft_strlen(b);
+	while (*it)
+	{
+		if ((pos = ft_strchr_pos(a, *it)) != -1 && pos < len)
+			*it = b[pos];
+		++it;
+	}
+	return (s);
+}

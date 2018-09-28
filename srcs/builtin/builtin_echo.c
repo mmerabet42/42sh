@@ -15,10 +15,14 @@
 #include "ft_mem.h"
 #include "ft_io.h"
 
-static void	goecho(char **argv, int ops, char *sep, int fd)
+static void	goecho(char **save, char **argv, int ops, char *sep)
 {
 	char	*l;
+	int		fd;
 
+	if (argv != save && ft_strequ(*(argv - 1), "--"))
+		--argv;
+	fd = (ops & (1 << 2) ? 2 : 1);
 	while (*argv)
 	{
 		l = NULL;
@@ -47,7 +51,7 @@ static int	checkerror(t_opt *opt, char ***argv, int ret)
 	}
 	else if (opt->cur == NULL && ret == OPT_UNKNOWN)
 		return (0);
-	else if (ret == OPT_UNKNOWN)
+	else if (ret == OPT_UNKNOWN || ret == OPT_EMPTY)
 	{
 		--*argv;
 		return (0);
@@ -60,8 +64,9 @@ int			builtin_echo(int argc, char **argv)
 	t_opt	opt;
 	int		ops;
 	char	*sep;
+	char	**save;
 
-	++argv;
+	save = ++argv;
 	ops = 0;
 	sep = " ";
 	while ((argc = ft_getopt(&argv, "rneEc.1", &opt)) != OPT_END)
@@ -79,6 +84,6 @@ int			builtin_echo(int argc, char **argv)
 		else if (opt.c == 'c' && opt.n == 1)
 			sep = *opt.ptr;
 	}
-	goecho(argv, ops, sep, (ops & (1 << 2) ? 2 : 1));
+	goecho(save, argv, ops, sep);
 	return (0);
 }

@@ -33,6 +33,11 @@ typedef struct		s_opt
 	char			*clong;
 }					t_opt;
 
+typedef enum	e_optret
+{
+	OPT_END, OPT_UNKNOWN, OPT_ALAST, OPT_OK, OPT_MISSING, OPT_EMPTY, OPT_EQUAL
+}				t_optret;
+
 typedef struct		s_strid
 {
 	char			str[500];

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_initshell.c                                     :+:      :+:    :+:   */
+/*   shell_begin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/15 23:31:39 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/28 15:37:11 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@
 #include <locale.h>
 #include <sys/signal.h>
 #include <sys/wait.h>
-
-#include "../logger/incs/logger.h"
 
 void			sign_child(int sign)
 {
@@ -40,19 +38,12 @@ void			sign_child(int sign)
 				handle_bgstat(pid, BG_RUN);
 			else if (WIFSTOPPED(ret))
 			{
-				if (WSTOPSIG(ret) == SIGTTIN)
-					log_trace("Ce programme est a chier TTIN\n");
-				else if (WSTOPSIG(ret) == SIGTTOU)
-					log_trace("Ce programme est a chier TTOU\n");
 				handle_bgstat(pid, BG_STOP);
 			}
 			else if (!WIFEXITED(ret))
 				handle_bgstat(pid, BG_KILL);
 			else if (WIFEXITED(ret))
-			{
-				log_trace("end ok\n");
 				handle_bgstat(pid, BG_END);
-			}
 		}
 		elem = elem->next;
 	}
@@ -62,7 +53,6 @@ static	void	sign_handler(int sign)
 {
 	char	*tmp;
 
-	(void)sign;
 	if (sign == -1)
 	{
 		signal(SIGINT, sign_handler);
@@ -74,11 +64,9 @@ static	void	sign_handler(int sign)
 	if (sign == SIGINT)
 	{
 		g_shell->kill_builtin = 1;
+		kill(-g_shell->curpid, 1);
 		if (g_shell->script)
-		{
-			shell_end();
 			exit(0);
-		}
 	}
 	else if (sign == SIGWINCH)
 	{
@@ -111,16 +99,15 @@ static	void	initenvp(char **envp)
 	g_shell->envp[i] = NULL;
 }
 
-t_allf			g_allf;
-
 int				shell_begin(char *name, int argc, char **argv, char **envp)
 {
 	static	t_args	args;
 	char			*tmp;
 
-	sign_handler(-1);
 	if (!(g_shell = (t_shell *)ft_memalloc(sizeof(t_shell))))
 		ft_exit(EXIT_FAILURE, "Failed to begin shell. Exiting\n");
+	g_shell->shellpid = getpid();
+	sign_handler(-1);
 	setlocale(LC_ALL, "");
 	init_gshell(envp, name);
 	args.argc = argc;
