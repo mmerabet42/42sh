@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:06 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/17 13:56:47 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/01 14:41:39 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static t_builtin	g_builtins[] = {
 	{"return", builtin_return}, {"function", builtin_function},
 	{"source", builtin_source},
 	{"jobs", builtin_jobs}, {"fg", builtin_fg}, {"bg", builtin_bg},
+	{"unset", builtin_unsetenv}, {"export", builtin_export}
 };
 
 static size_t		g_builtins_size = sizeof(g_builtins) / sizeof(t_builtin);

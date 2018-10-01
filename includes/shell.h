@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/28 15:36:53 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/01 14:47:46 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,7 @@ int					builtin_false(int argc, char **argv);
 int					builtin_jobs(int argc, char **argv);
 int					builtin_fg(int argc, char **argv);
 int					builtin_bg(int argc, char **argv);
+int					builtin_export(int argc, char **argv);
 
 extern int			g_dontfree;
 extern t_shell		*g_shell;
