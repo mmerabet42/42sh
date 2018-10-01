@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/11 13:28:32 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 17:33:26 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/01 11:50:44 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,11 @@ void		add_char(char *buf, t_cmdedit *cmd, t_cursor *cursor)
 	t_cmdedit	*carac;
 	int			max;
 
-	max = cursor->y == 1 ? cursor->xmax - cursor->origin : cursor->xmax - 1;
 	i = -1;
 	while (cmd && buf[++i])
 	{
+		max = cursor->y == 1 ? cursor->xmax - cursor->origin
+			: cursor->xmax - 1;
 		if (buf[i] == '\n')
 		{
 			del_char(&cmd, cursor);

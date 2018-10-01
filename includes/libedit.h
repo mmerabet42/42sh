@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 11:44:12 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/27 11:59:01 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/01 12:02:43 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ void				write_char(char c);
 void				add_char(char *buf, t_cmdedit *cmd, t_cursor *cursor);
 void				add_char_between(t_cmdedit *cmd, t_cursor cursor);
 void				ft_free_t_cmdedit(t_cmdedit **cmd);
-t_cmdedit			*end_of_emit(t_cmdedit **cmd);
-t_cmdedit			*end_of_text(t_cmdedit **cmd);
+t_cmdedit			*handle_controld(t_cmdedit **cmd, t_cursor *cursor);
+t_cmdedit			*end_of_text(t_cmdedit **cmd, t_cursor *cursor);
 t_cmdedit			*create_cmdedit(char c);
 t_cmdedit			*del_char(t_cmdedit **cmd, t_cursor *cursor);
 t_cmdedit			*copy_edit(t_cmdedit **cmd, t_cmdedit **cp,

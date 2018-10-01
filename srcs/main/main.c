@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/28 16:24:22 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/01 11:26:03 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ int			main(int argc, char **argv, char **envp)
 		{
 			ft_putchar('\n');
 			main_execution(line);
+			ft_strdel(&line);
 		}
 		else
 			break ;
