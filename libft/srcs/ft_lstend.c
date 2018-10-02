@@ -6,11 +6,12 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/11 18:48:50 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/12 21:47:16 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/02 19:50:48 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_list.h"
+#include <stdio.h>
 
 t_list	*ft_lstend(t_list *lst)
 {

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   shell_pipe2.c                                      :+:      :+:    :+:   */
+/*   shell_pipe.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/02 19:35:39 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/02 20:09:23 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ static pid_t	son_fork(pid_t pgrp, int fd[3], t_ast *ast, t_iterf *iterf)
 	}
 	return (0);
 }
-
+*/
 static void		print_tab_pipe(t_list *begin)
 {
 	t_list	*elem;
@@ -123,7 +123,7 @@ static void		print_tab_pipe(t_list *begin)
 			log_debug("%s\n", ((t_ast *)elem->content)->name);
 		elem = elem->next;
 	}
-}*/
+}
 
 /*static pid_t	new_fork(t_ast *ast, t_iterf *iterf, int fd[3], int *a)
 {
@@ -151,10 +151,11 @@ static void		swap1(int *fd)
 	fd[3] = -1;
 }
 
-static int		son_action(int *fd, int *a, t_list *elem)
+static int		son_action(int *fd, int a, t_list *elem)
 {
 	if (!a && fd[2] == -1)
 	{
+	log_trace("a %d, fd[2] %d fd[3] %d\n", a ,fd[2] ,fd[3]);
 		close(fd[0]);
 		dup2(fd[1], 0);
 	}
@@ -173,7 +174,6 @@ static int		son_action(int *fd, int *a, t_list *elem)
 			dup2(fd[0], 1);
 		}
 	}
-	(*a)++;
 	return (0);
 }
 
@@ -185,32 +185,46 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	int		fd[4];
 	int		a;
 	static int	first;
+	static int	pgrp;
 
 	(void)op;
 	g_shell->bits |= (1 << 1);
+	tabpipe = NULL;
 	if ((a = handle_ast_pipe(ast, &tabpipe)))
 		return (a);
+	print_tab_pipe(tabpipe);
 	elem = tabpipe;
 	a = 0;
+	fd[0] = -1;
+	fd[1] = -1;
+	fd[2] = -1;
+	fd[3] = -1;
 	while (elem)
 	{
 		a = a == 2 ? 0 : a;
 		if (!a && pipe(fd) == -1)
 			return (SH_PIPFAIL);
-		else if (elem->next)
+		else if (elem->next && elem->next->next)
 			if (pipe((fd + 2)) == -1)
 				return (SH_PIPFAIL);
 		if (!(pid = fork()))
 		{
-			son_action(fd, &a, elem);
+			setpgid(pid, (!pgrp ? getpgrp() : pgrp));
+			son_action(fd, a, elem);
 			ft_astiter((t_ast *)elem->content, res, iterf);
 			exit(*(int *)res);
 		}
 		else if (pid == -1)
 			return (SH_FORKFAIL);
-//		setpgid(pid, (!pgrp ? (pgrp = pid) : pgrp));
+		if (first)
+			pgrp = pid;
+		setpgid(pid, pgrp);
 		if (!first && ++first)
+		{
+			tcsetpgrp(0, pgrp);
 			waitpid(pid, res, WUNTRACED);
+		}
+		a++;
 		if (a == 2 && elem->next)
 			swap1(fd);
 		elem = elem->next;
