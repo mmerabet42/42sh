@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/02 20:09:23 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/02 21:08:07 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,8 @@ static int		son_action(int *fd, int a, t_list *elem)
 {
 	if (!a && fd[2] == -1)
 	{
-	log_trace("a %d, fd[2] %d fd[3] %d\n", a ,fd[2] ,fd[3]);
+//		log_trace("a %d, fd[2] %d fd[3] %d\n", a ,fd[2] ,fd[3]);
+		log_trace("debut -> pgrp: %d pid -> %d\n", getpgrp(), getpid());
 		close(fd[0]);
 		dup2(fd[1], 0);
 	}
@@ -163,6 +164,7 @@ static int		son_action(int *fd, int a, t_list *elem)
 	{
 		if (fd[2] != -1 && elem->next)
 		{
+			log_trace("milieu -> pgrp: %d  pid -> %d\n", getpgrp(), getpid());
 			close(fd[2]);
 			close(fd[1]);
 			dup2(fd[3], 0);
@@ -170,12 +172,15 @@ static int		son_action(int *fd, int a, t_list *elem)
 		}
 		else
 		{
+			log_trace("fin -> pgrp: %d  pid -> %d\n", getpgrp(), getpid());
 			close(fd[1]);
 			dup2(fd[0], 1);
 		}
 	}
 	return (0);
 }
+
+#include <errno.h>
 
 int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
@@ -184,8 +189,8 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	pid_t	pid;
 	int		fd[4];
 	int		a;
-	static int	first;
-	static int	pgrp;
+	int		first;
+	int		pgrp;
 
 	(void)op;
 	g_shell->bits |= (1 << 1);
@@ -195,6 +200,8 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	print_tab_pipe(tabpipe);
 	elem = tabpipe;
 	a = 0;
+	pgrp = 0;
+	first = 0;
 	fd[0] = -1;
 	fd[1] = -1;
 	fd[2] = -1;
@@ -209,15 +216,17 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 				return (SH_PIPFAIL);
 		if (!(pid = fork()))
 		{
-			setpgid(pid, (!pgrp ? getpgrp() : pgrp));
+			if (setpgid(0, (!pgrp ? 0 : pgrp)) == -1)
+				log_trace("ERROR: %s\n", strerror(errno));
 			son_action(fd, a, elem);
 			ft_astiter((t_ast *)elem->content, res, iterf);
 			exit(*(int *)res);
 		}
 		else if (pid == -1)
 			return (SH_FORKFAIL);
-		if (first)
+		if (!first)
 			pgrp = pid;
+		log_trace("pgrp_father: %d\n", pgrp);
 		setpgid(pid, pgrp);
 		if (!first && ++first)
 		{
