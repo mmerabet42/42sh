@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/03 18:10:24 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/03 20:08:42 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,34 +151,57 @@ static void		swap1(int *fd)
 	fd[3] = -1;
 }
 
+/*static void			printfd(int *fd)
+{
+	int	x;
+
+	x = -1;
+	while (++x < 4)
+		log_debug("fd[%d]: %d\n", x, fd[x]);
+}*/
+
 static int		son_action(int *fd, t_list *elem)
 {
 	if (!elem->next)
 	{
 		log_trace("debut -> pid: %d pgrp -> %d\n", getpid(), getpgrp());
-		dup2(fd[1], 1);
 		close(fd[0]);
+		dup2(fd[1], 1);
+		close(fd[1]);
 	}
 	else if (elem->next && elem->parent)
 	{
 		log_trace("milieu -> pid: %d pgrp -> %d\n", getpid(), getpgrp());
-		dup2(fd[3], 1);
-		dup2(fd[0], 0);
 		close(fd[2]);
 		close(fd[1]);
+		dup2(fd[3], 1);
+		dup2(fd[0], 0);
+		close(fd[3]);
+		close(fd[0]);
 	}
 	else
 	{
-		if (fd[2] == -1)
-			log_trace("bien -1\n");
 		log_trace("fin -> pid: %d pgrp -> %d\n", getpid(), getpgrp());
-		dup2(fd[0], 0);
 		close(fd[1]);
+		dup2(fd[0], 0);
+		close(fd[0]);
 	}
 	return (0);
 }
 
 #include <errno.h>
+
+void			closefd(int *fd)
+{
+	int		x;
+
+	x = -1;
+	while (++x < 4)
+	{
+		if (fd[x] != -1)
+			close(fd[x]);
+	}
+}
 
 int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
@@ -186,17 +209,15 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	t_list	*elem;
 	pid_t	pid;
 	int		fd[4];
-	int		a;
 	int		pgrp;
 
 	(void)op;
 	g_shell->bits |= (1 << 1);
 	tabpipe = NULL;
-	if ((a = handle_ast_pipe(ast, &tabpipe)))
-		return (a);
+	if ((pgrp = handle_ast_pipe(ast, &tabpipe)))
+		return (pgrp);
 	print_tab_pipe(tabpipe);
 	elem = ft_lstend(tabpipe);
-	a = 0;
 	pgrp = 0;
 	fd[0] = -1;
 	fd[1] = -1;
@@ -204,18 +225,14 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	fd[3] = -1;
 	while (elem)
 	{
-		if (!a && pipe(fd) == -1)
+		if (!pgrp && pipe(fd) == -1)
 			return (SH_PIPFAIL);
-		else if (elem->parent && elem->parent->parent)
+		else if (elem->parent && elem->next)
 			if (pipe((fd + 2)) == -1)
 				return (SH_PIPFAIL);
-		a = a == 2 ? 0 : a;
 		if (!(pid = fork()))
 		{
-			if (setpgid(0, pgrp) == -1)
-				log_trace("SON_ERROR: pid: %d pgrp: %d\n", getpid(), pgrp);
-			else
-				log_trace("SON_SUCCESS: pid: %d pgrp: %d\n", getpid(), pgrp);
+			setpgid(0, pgrp);
 			son_action(fd, elem);
 			ft_astiter((t_ast *)elem->content, res, iterf);
 			exit(*(int *)res);
@@ -223,18 +240,15 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		else if (pid == -1)
 			return (SH_FORKFAIL);
 		setpgid(pid, (!pgrp ? pid : pgrp));
+//		closefd(fd);
 		if (!pgrp) /* add condition if no in bckground*/
 		{
 			pgrp = pid;
 			tcsetpgrp(0, pgrp);
 		}
-		a++;
 		elem->content_size = pid;
-		if (a == 2 && elem->parent)
-		{
-			log_trace("name: %s\n", ((t_ast *)elem->content)->name);
+		if (elem->next && elem->parent && elem->parent->parent)
 			swap1(fd);
-		}
 		elem = elem->parent;
 	}
 	elem = ft_lstend(tabpipe);
@@ -244,6 +258,7 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		elem = elem->parent;
 	}
 	tcsetpgrp(0, getpgrp());
+	g_shell->bits |= ~(1 << 1);
 	return (0);
 }
 
