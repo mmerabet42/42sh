@@ -6,12 +6,10 @@ int		check_redir(t_list **begin, t_ast *ast)
 	t_list	*elem;
 
 	elem = NULL;
-	log_debug("premier elem: %s\n", ast->name);
 	while (ast->parent && ast->parent->type == TK_REDIR)
 	{
 		if (!(elem = ft_lstnew(NULL, 0)))
 			return (SH_MALLOC);
-		log_debug("elem[x]: %s\n", ast->name);
 		elem->content = ast;
 		if (!*begin)
 			*begin = elem;
@@ -19,7 +17,6 @@ int		check_redir(t_list **begin, t_ast *ast)
 			ft_lstpush(*begin, elem);
 		ast = ast->parent;
 	}
-	log_debug("Fin\n");
 	return (0);
 }
 
