@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/03 16:33:57 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/04 13:57:00 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/04 15:33:07 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ int			shell_equal(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	len = content - ast->cname;
 	ft_strncpy(name, ast->cname, len < 1024 ? len : 1023);
 	name[len < 1024 ? len : 1023] = 0;
-	ft_setenv(name, content + 1, &g_shell->localp);
+	if (ft_getenv(name, g_shell->expor))
+		update_export(name, content + 1);
+	else
+		ft_setenv(name, content + 1, &g_shell->localp);
 	*(int *)res = 0;
 	return (0);
 }

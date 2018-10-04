@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/04 10:55:21 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/04 16:36:11 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ typedef struct		s_shell
 	char			**paths;
 	char			**envp;
 	char			**localp;
+	char			**expor;
 	int				running:1;
 	char			*history_file;
 	int				exitcode;
@@ -196,6 +197,8 @@ int					builtin_jobs(int argc, char **argv);
 int					builtin_fg(int argc, char **argv);
 int					builtin_bg(int argc, char **argv);
 int					builtin_export(int argc, char **argv);
+int					builtin_unset(int argc, char **argv);
+void				update_export(char *name, char *value);
 int					builtin_set(int argc, char **argv);
 
 extern int			g_dontfree;

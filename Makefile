@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/04 10:55:00 by gdufay           ###   ########.fr        #
+#    Updated: 2018/10/04 16:36:31 by gdufay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ JBCNTRL_FSO	=	$(JBCNTRL_FS:.c=.o)
 
 _BLTN_FS	=	builtins.c builtin_cd.c builtin_echo.c builtin_setenv.c builtin_source.c \
 				builtin_bool.c builtin_env.c builtin_jobs.c builtin_fg.c builtin_bg.c \
-				ft_isbuiltin.c builtin_export.c builtin_set.c
+				ft_isbuiltin.c builtin_export.c builtin_set.c builtin_unset.c
 BLTN_FS		=	$(addprefix $(SRCD)builtin/,$(_BLTN_FS))
 _BLTN_FSO	=	$(_BLTN_FS:.c=.o)
 BLTN_FSO	=	$(BLTN_FS:.c=.o)
