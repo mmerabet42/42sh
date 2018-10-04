@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/04 14:52:48 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/04 16:16:59 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,10 @@ static void		print_tab_pipe(t_list *begin)
 
 static void		swap1(int *fd)
 {
-	fd[0] = fd[2];
-	fd[1] = fd[3];
+	fd[0] = dup(fd[2]);
+	fd[1] = dup(fd[3]);
+	close(fd[2]);
+	close(fd[3]);
 	fd[2] = -1;
 	fd[3] = -1;
 }
@@ -165,14 +167,12 @@ static int		son_action(int *fd, t_list *elem)
 	if (!elem->next)
 	{
 		log_trace("debut -> pid: %d pgrp -> %d\n", getpid(), getpgrp());
-		printfd(fd);
 		close(fd[0]);
 		dup2(fd[1], 1);
 	}
 	else if (elem->next && elem->parent)
 	{
 		log_trace("milieu -> pid: %d pgrp -> %d\n", getpid(), getpgrp());
-		printfd(fd);
 		close(fd[2]);
 		close(fd[1]);
 		dup2(fd[3], 1);
@@ -181,7 +181,6 @@ static int		son_action(int *fd, t_list *elem)
 	else
 	{
 		log_trace("fin -> pid: %d pgrp -> %d\n", getpid(), getpgrp());
-		printfd(fd);
 		close(fd[1]);
 		dup2(fd[0], 0);
 	}
@@ -233,6 +232,7 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		if (!(pid = fork()))
 		{
 			setpgid(0, pgrp);
+			printfd(fd);
 			son_action(fd, elem);
 			ft_astiter((t_ast *)elem->content, res, iterf);
 			exit(*(int *)res);
@@ -247,15 +247,14 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 			tcsetpgrp(0, pgrp);
 		}
 		elem->content_size = pid;
-		if (elem->next && elem->parent)
-			swap1(fd);
 		elem = elem->parent;
+		if (elem && elem->next && elem->next->next)
+			swap1(fd);
 	}
 	elem = ft_lstend(tabpipe);
 	while (elem)
 	{
 		waitpid((pid_t)elem->content_size, res, WUNTRACED);
-		log_debug("FIN PROC: %d\n", (pid_t)elem->content_size);
 		elem = elem->parent;
 	}
 	tcsetpgrp(0, getpgrp());
