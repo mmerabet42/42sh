@@ -53,7 +53,7 @@ static int	regex_loop(t_regex_info *rgxi, t_regex_func *func, t_regex_rule *rule
 	}
 	if ((rule->cond == RGX_GREAT && i <= rule->l) || (rule->cond == RGX_EQUAL && i < rule->l))
 		return (-1);
-	if ((!i && ret == -1) || (lret == -1 && !(rgxi->option & RGX_END)))
+	if ((ret == -1 && !i) || (lret == -1 && !(rgxi->option & RGX_END)))
 		return (-1);
 	if (lret == -1)
 		return (len);
@@ -103,6 +103,7 @@ static int	expanded_wildcard(t_regex_info *rgxi, char type, int *len, int neg)
 
 	if ((jmp = ft_strbetweenps_ext((char **)&rgxi->regex, "[?]")) != -1)
 	{
+		ft_bzero(&rule, sizeof(t_regex_rule));
 		rule.type = type;
 		rule.neg = neg;
 		--jmp;
