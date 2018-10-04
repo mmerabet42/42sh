@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/04 14:25:29 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/04 14:50:10 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,14 +193,14 @@ static int		son_action(int *fd, t_list *elem)
 void			closefd(int *fd, t_list *elem)
 {
 	if (!elem->next)
-		close(fd[0]);
+		close(fd[1]);
 	else if (elem->next && elem->parent)
 	{
-		close(fd[2]);
-		close(fd[1]);
+		close(fd[3]);
+		close(fd[0]);
 	}
 	else
-		close(fd[1]);
+		close(fd[0]);
 }
 
 int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
@@ -240,7 +240,7 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		else if (pid == -1)
 			return (SH_FORKFAIL);
 		setpgid(pid, (!pgrp ? pid : pgrp));
-//		closefd(fd, elem);
+		closefd(fd, elem);
 		if (!pgrp) /* add condition if no in bckground*/
 		{
 			pgrp = pid;
@@ -255,6 +255,7 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	while (elem)
 	{
 		waitpid((pid_t)elem->content_size, res, WUNTRACED);
+		log_debug("FIN PROC: %d\n", (pid_t)elem->content_size);
 		elem = elem->parent;
 	}
 	tcsetpgrp(0, getpgrp());
