@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/24 17:32:26 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/03 16:38:41 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,8 @@ int					shell_cond_cb(t_ast *ast, void **op, void *res,
 int					shell_else_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
 int					shell_equal_cb(t_ast *ast, void **op, void *res,
+								t_iterf *iterf);
+int					shell_equal(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
 int					shell_hdoc_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);

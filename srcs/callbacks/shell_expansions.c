@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 18:29:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/19 14:03:24 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/04 14:15:55 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int			exp_var(t_strid *sid, t_list **res, t_expf *expf)
 			*res = ft_lstcreate(ft_itoa(g_shell->exitcode), 0);
 	}
 	else if ((value = ft_getenv(sid->str + 1, g_shell->envp)))
+		*res = ft_lstcreate(ft_strdup(value), 0);
+	else if ((value = ft_getenv(sid->str + 1, g_shell->localp)))
 		*res = ft_lstcreate(ft_strdup(value), 0);
 	sid->str[sid->len] = tmp;
 	return (0);
