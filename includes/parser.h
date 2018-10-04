@@ -40,7 +40,7 @@ typedef enum	e_optret
 
 typedef struct		s_strid
 {
-	char			str[500];
+	char			*str;
 	const char		*next_str;
 	t_list			*next;
 	t_list			*prev;

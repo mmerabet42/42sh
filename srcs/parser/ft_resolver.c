@@ -25,9 +25,9 @@ static int	strexpand1(t_strid *s, t_expf *expf, t_list **res)
 	if (s->ifound == -1 || !expf->expansions[s->ifound].func)
 	{
 		if (!*res)
-			*res = ft_lstcreate(ft_strdup(s->str), 0);
+			*res = ft_lstcreate(s->str, 0);
 		else if (end)
-			end->content = ft_strjoin_clr(end->content, s->str, 0);
+			end->content = ft_strjoin_clr(end->content, s->str, 2);
 	}
 	else if (expf->expansions[s->ifound].func)
 	{
@@ -35,10 +35,12 @@ static int	strexpand1(t_strid *s, t_expf *expf, t_list **res)
 		cur = NULL;
 		if ((efail = expf->expansions[s->ifound].func(s, &cur, expf)))
 		{
+			free(s->str);
 			ft_lstdel(res, content_delfunc);
 			ft_lstdel(&cur, content_delfunc);
 			return (efail);
 		}
+		free(s->str);
 		if (!*res)
 			*res = cur;
 		else if (cur)
@@ -70,7 +72,7 @@ int	ft_strexpand(const char *origin, t_list **res, int i, t_expf *expf)
 			strid.len = g_iread;
 		else
 			strid.len = (pos == -1 ? (int)ft_strlen(origin) : pos);
-		ft_strncpy(strid.str, origin, strid.len)[strid.len] = '\0';
+		strid.str = ft_strndup(origin, strid.len);
 		strid.next_str = origin + strid.len;
 		strid.jump = 0;
 		if ((pos = strexpand1(&strid, expf, &lres)))
