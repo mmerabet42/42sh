@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 17:21:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/03 15:26:06 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/04 13:42:51 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,13 @@ int		ft_exec(char *name, char **argv, char **envp, pid_t *pid)
 	signal(SIGCHLD, SIG_DFL);
 	if ((g_shell->bits & (1 << 1)))
 	{
+		log_trace("no FORK\n");
 		execve(name, argv, envp);
 		exit(126);
 	}
 	else if (!(pidl = fork()))
 	{
+		log_trace("FORK\n");
 		handle_pgid();
 		execve(name, argv, envp);
 		exit(126);

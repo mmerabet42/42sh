@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/03 20:08:42 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/04 14:25:29 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,56 +151,56 @@ static void		swap1(int *fd)
 	fd[3] = -1;
 }
 
-/*static void			printfd(int *fd)
+static void			printfd(int *fd)
 {
 	int	x;
 
 	x = -1;
 	while (++x < 4)
 		log_debug("fd[%d]: %d\n", x, fd[x]);
-}*/
+}
 
 static int		son_action(int *fd, t_list *elem)
 {
 	if (!elem->next)
 	{
 		log_trace("debut -> pid: %d pgrp -> %d\n", getpid(), getpgrp());
+		printfd(fd);
 		close(fd[0]);
 		dup2(fd[1], 1);
-		close(fd[1]);
 	}
 	else if (elem->next && elem->parent)
 	{
 		log_trace("milieu -> pid: %d pgrp -> %d\n", getpid(), getpgrp());
+		printfd(fd);
 		close(fd[2]);
 		close(fd[1]);
 		dup2(fd[3], 1);
 		dup2(fd[0], 0);
-		close(fd[3]);
-		close(fd[0]);
 	}
 	else
 	{
 		log_trace("fin -> pid: %d pgrp -> %d\n", getpid(), getpgrp());
+		printfd(fd);
 		close(fd[1]);
 		dup2(fd[0], 0);
-		close(fd[0]);
 	}
 	return (0);
 }
 
 #include <errno.h>
 
-void			closefd(int *fd)
+void			closefd(int *fd, t_list *elem)
 {
-	int		x;
-
-	x = -1;
-	while (++x < 4)
+	if (!elem->next)
+		close(fd[0]);
+	else if (elem->next && elem->parent)
 	{
-		if (fd[x] != -1)
-			close(fd[x]);
+		close(fd[2]);
+		close(fd[1]);
 	}
+	else
+		close(fd[1]);
 }
 
 int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
@@ -240,14 +240,14 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		else if (pid == -1)
 			return (SH_FORKFAIL);
 		setpgid(pid, (!pgrp ? pid : pgrp));
-//		closefd(fd);
+//		closefd(fd, elem);
 		if (!pgrp) /* add condition if no in bckground*/
 		{
 			pgrp = pid;
 			tcsetpgrp(0, pgrp);
 		}
 		elem->content_size = pid;
-		if (elem->next && elem->parent && elem->parent->parent)
+		if (elem->next && elem->parent)
 			swap1(fd);
 		elem = elem->parent;
 	}
@@ -258,7 +258,7 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		elem = elem->parent;
 	}
 	tcsetpgrp(0, getpgrp());
-	g_shell->bits |= ~(1 << 1);
+	g_shell->bits &= ~(1 << 1);
 	return (0);
 }
 
