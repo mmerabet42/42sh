@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/01 14:47:03 by gdufay           ###   ########.fr        #
+#    Updated: 2018/10/04 18:41:59 by sle-rest         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,7 +62,7 @@ GLOB_FS		=	$(addprefix $(SRCD)globing/,$(_GLOB_FS))
 _GLOB_FSO	=	$(_GLOB_FS:.c=.o)
 GLOB_FSO	=	$(GLOB_FS:.c=.o)
 
-_LIBEDIT_FS =	add_del_char.c check.c printprompt.c \
+_LIBEDIT_FS =	add_del_char.c check.c printprompt.c git_prompt.c \
 				copy_paste.c edit_hst.c ft_loop.c init_libedit.c \
 				list.c mv_by_word.c mv_cursor.c parser_edit.c signal.c \
 				termcap.c autocomplete.c t_complete.c find_and_fill_complete.c
