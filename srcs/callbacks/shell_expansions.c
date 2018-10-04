@@ -74,7 +74,7 @@ static t_exp	g_exps[] = {
 static t_expf	g_expf = {
 	g_exps, sizeof(g_exps), NULL, 0
 };
-
+#include "ft_printf.h"
 int			exp_quote(t_strid *sid, t_list **res, t_expf *expf)
 {
 	char	sep;
@@ -94,7 +94,7 @@ int			exp_quote(t_strid *sid, t_list **res, t_expf *expf)
 	{
 		lst = NULL;
 		ft_strexpand(sid->str + 1, &lst, -1, &g_expf);
-		*res = ft_lstcreate(lst->content, 0);
+		*res = ft_lstcreate((!lst ? ft_strnew(0) : lst->content), 0);
 		ft_lstdel(&lst, NULL);
 	}
 	sid->str[sid->len - 1] = sep;

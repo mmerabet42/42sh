@@ -12,7 +12,7 @@
 
 NAME		=	42sh
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra -g3 
+CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
@@ -99,7 +99,7 @@ all:
 
 $(NAME): $(LIBFT) $(OBJB)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) -ltermcap $(OBJB) $(LIBFT) $(FRAMEWORKS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) -ltermcap $(FRAMEWORKS) -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
 $(LIBFT):

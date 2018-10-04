@@ -52,7 +52,7 @@ static t_exp		g_exps[] = {
 
 	{EXP_BRACES, NULL},
 	{EXP_SUBSHELL, NULL},
-	{"", exp_glob}
+//	{"", exp_glob}
 };
 
 static t_expf		g_expf = {
@@ -159,6 +159,7 @@ static void	main_execution(char *line)
 		if (!line[0] && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
 		head = ft_lexer(line, &g_lexerf);
+	//	ft_astprint(head, 0);
 		if (check_syntax(head, &g_expf))
 			g_shell->exitcode = 1;
 		else if ((ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))

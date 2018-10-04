@@ -48,7 +48,8 @@ typedef enum	e_shret
 	SH_HDOCWFAIL, SH_HDOCRFAIL, SH_HDOCWORD, SH_OPENFILE, SH_CMDERR,
 	SH_NOLDPWD, SH_NHOME,
 	SH_BADFD, SH_MALLOC, SH_BADEXPR, SH_HDOCSTOP, SH_EXPRERR,
-	TK_CMD, TK_OP, TK_EQUAL, TK_REDIR, TK_PIPE, TK_ANDOR, TK_SEMICOLON,
+	TK_CMD, TK_OP, TK_EQUAL, TK_REDIR, TK_NOT, TK_PIPE, TK_AMPERSAND,
+	TK_ANDOR, TK_COMA, TK_IFWHILE, TK_THEN, TK_ELSE, TK_SEMICOLON,
 	TK_LEFT, TK_RIGHT, TK_LLEFT, TK_LRIGHT
 }				t_shret;
 
@@ -74,6 +75,13 @@ typedef struct		s_allf
 	t_iterf			*iterf;
 	t_expf			*expf;
 }					t_allf;
+
+typedef struct		s_pipe
+{
+	pid_t			pgid;
+	int				in;
+	int				out;
+}					t_pipe;
 
 typedef struct		s_redir
 {
