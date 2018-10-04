@@ -179,6 +179,8 @@ static void	main_execution(char *line)
 
 int			main(int argc, char **argv, char **envp)
 {
+	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(argv[1], argv[2], -1, 0));
+	return (0);
 	char	*line;
 	int		cursor;
 
