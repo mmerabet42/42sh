@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 21:25:03 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/09 23:45:02 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/05 11:01:28 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	builtin_setenv(int argc, char **argv)
 		}
 		else if (i + 1 < argc)
 			ft_memcpy(nava, &argv[i++], sizeof(char *) * 2);
-		ft_setenv(nava[0], nava[1], &g_shell->envp);
+		update_export(nava[0], nava[1]);
 		if (ft_strequ(nava[0], "HOME"))
 			g_shell->homepwd = ft_getenv("HOME", g_shell->envp);
 		else if (ft_strequ(nava[0], "USER"))
@@ -73,7 +73,7 @@ int	builtin_unsetenv(int argc, char **argv)
 	i = 0;
 	while (++i < argc)
 	{
-		ft_unsetenv(argv[i], &g_shell->envp);
+		ft_unset(argv[i]);
 		if (ft_strequ(argv[i], "HOME"))
 			g_shell->homepwd = NULL;
 		else if (ft_strequ(argv[i], "USER"))

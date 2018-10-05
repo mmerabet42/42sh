@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 14:42:10 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/04 16:23:11 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/05 10:54:18 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,23 @@ static int	handle_opt(char ***argv, int *argc, char *p)
 
 void		update_export(char *name, char *value)
 {
+	char	tmp;
+
 	if (!name)
 		return ;
-	if (!value)
-		value = ft_getenv(name, g_shell->localp);
+	tmp = 0;
+	if (!value && ft_getenv(name, g_shell->localp))
+	{
+		value = ft_strdup(ft_getenv(name, g_shell->localp));
+		tmp = 1;
+	}
 	ft_setenv(name, value ? value : "", &g_shell->expor);
 	if (value || ft_getenv(name, g_shell->envp))
 		ft_setenv(name, value ? value : "", &g_shell->envp);
 	if (value || ft_getenv(name, g_shell->localp))
 		ft_setenv(name, value ? value : "", &g_shell->localp);
+	if (tmp)
+		ft_strdel(&value);
 }
 
 int			builtin_export(int argc, char **argv)
