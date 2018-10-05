@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/05 20:37:00 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 23:02:32 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ static void		fork_father(t_pipe *a, t_list **elem)
 	creatpushelem(&((t_inffork *)a->head->content)->pids, a->pid);
 	*elem = (*elem)->parent;
 		if (*elem && (*elem)->next && (*elem)->next->next)
-		swap1(a->fd);
+			swap1(a->fd);
 }
 
 static int		handle_res(int res, pid_t pid)
@@ -177,7 +177,7 @@ static int		handle_res(int res, pid_t pid)
 	}
 	else if (WIFSTOPPED(res))
 	{
-		handle_bgstat(pid, BG_STOP);
+		handle_bgstat(pid, BG_STOP, 1);
 		handle_bgsign(ft_lstend(g_shell->bgproc), 0);
 		return (WSTOPSIG(res));
 	}

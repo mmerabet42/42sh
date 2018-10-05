@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 20:05:10 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 23:05:14 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@
 void			handle_retwait(int ret, pid_t pid)
 {
 	if (WIFCONTINUED(ret))
-		handle_bgstat(pid, BG_RUN);
+		handle_bgstat(pid, BG_RUN, 1);
 	else if (WIFSTOPPED(ret))
-		handle_bgstat(pid, BG_STOP);
+		handle_bgstat(pid, BG_STOP, 1);
 	else if (!WIFEXITED(ret))
-		handle_bgstat(pid, BG_KILL);
+		handle_bgstat(pid, BG_KILL, 1);
 	else if (WIFEXITED(ret))
-		handle_bgstat(pid, BG_END);
+		handle_bgstat(pid, BG_END, 1);
 }
 
 void			sign_child(int sign)

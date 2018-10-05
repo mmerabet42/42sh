@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 18:59:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 20:05:09 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 23:00:11 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct		s_inffork
 
 int					exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf);
 int					exec_btin_bin(t_ast *ast, void *res, t_iterf *iterf);
-int					handle_bgstat(pid_t pid, int status);
+int					handle_bgstat(pid_t pid, int status, int opt);
 int					handle_bgproc(pid_t pid_fork,
 									char **cmd,
 									int status,

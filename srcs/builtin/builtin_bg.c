@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/07 16:47:10 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/17 14:18:00 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 23:01:30 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int					builtin_bg(int argc, char **argv)
 		else
 		{
 			kill(((t_inffork *)elem->content)->pid, SIGCONT);
-			handle_bgstat(((t_inffork *)elem->content)->pid, BG_RUN);
+			handle_bgstat(((t_inffork *)elem->content)->pid, BG_RUN, 1);
 		}
 	}
 	return (0);

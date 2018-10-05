@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 17:21:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 19:43:52 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 23:03:30 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		fork_father(pid_t pidl)
 	tcsetpgrp(0, getpid());
 	if (WIFSTOPPED(ret))
 	{
-		handle_bgstat(pidl, BG_STOP);
+		handle_bgstat(pidl, BG_STOP, 1);
 		handle_bgsign(elem, 0);
 		return (WSTOPSIG(ret));
 	}
