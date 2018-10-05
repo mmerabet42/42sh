@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/09 12:59:20 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/17 18:20:24 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/05 10:35:16 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int			ft_setenv(char *name, char *value, char ***envp)
 		if (ename == *it)
 		{
 			if (!g_dontfree)
-				free(*it);
+				ft_strdel(it);
 			*it = ft_envitize(name, value);
 			return (1);
 		}

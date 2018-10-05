@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/15 23:32:59 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/15 23:38:06 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/04 16:22:23 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,16 @@ int			shell_end(void)
 	if ((ptr = g_shell->envp))
 		while (*ptr)
 			free(*ptr++);
+	if ((ptr = g_shell->localp))
+		while (*ptr)
+			free(*ptr++);
+	if ((ptr = g_shell->expor))
+		while (*ptr)
+			free(*ptr++);
 	free(g_shell->script);
 	free(g_shell->envp);
+	free(g_shell->localp);
+	free(g_shell->expor);
 	clearhistory(1);
 	free(g_shell->history_file);
 	ft_lstdel(&g_shell->funcs, del_func);

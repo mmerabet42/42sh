@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/01 11:26:03 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/05 11:09:30 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static t_exp		g_exps[] = {
 
 	{EXP_BRACES, NULL},
 	{EXP_SUBSHELL, NULL},
-//	{"", exp_glob}
+	//{"", exp_glob}
 };
 
 static t_expf		g_expf = {
@@ -70,6 +70,7 @@ static t_astfunc	g_shell_callbacks[] = {
 	{EXP_BRACES, shell_lists_cb, NULL, 3},
 	{EXP_SUBSHELL, shell_lists_cb, NULL, 3},
 	{"*[$\\[*\\];\"*\";'*'@b]", shell_arth_cb, NULL, 3},
+	{"*=*", shell_equal, NULL, 3},
 	{"", shell_cmd_cb, NULL, 3},
 	{"while:if:then", NULL, shell_cond_cb, 0},
 	{"else:not:!", shell_else_cb, shell_else_cb, -1},

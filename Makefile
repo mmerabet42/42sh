@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/04 18:41:59 by sle-rest         ###   ########.fr        #
+#    Updated: 2018/10/05 11:09:47 by gdufay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ JBCNTRL_FSO	=	$(JBCNTRL_FS:.c=.o)
 
 _BLTN_FS	=	builtins.c builtin_cd.c builtin_echo.c builtin_setenv.c builtin_source.c \
 				builtin_bool.c builtin_env.c builtin_jobs.c builtin_fg.c builtin_bg.c \
-				ft_isbuiltin.c builtin_export.c
+				ft_isbuiltin.c builtin_export.c builtin_set.c builtin_unset.c
 BLTN_FS		=	$(addprefix $(SRCD)builtin/,$(_BLTN_FS))
 _BLTN_FSO	=	$(_BLTN_FS:.c=.o)
 BLTN_FSO	=	$(BLTN_FS:.c=.o)
@@ -43,7 +43,7 @@ PARSER_FSO	=	$(PARSER_FS:.c=.o)
 
 _SHCB_FS	=	shell_command.c shell_pipe.c shell_arithmetic.c shell_condition.c \
 				shell_equal.c shell_redir.c shell_redir1.c shell_expansions.c shell_expansions1.c \
-				shell_error.c shell_hdoc.c shell_seco.c
+				shell_error.c shell_hdoc.c shell_seco.c shell_localvar.c
 SHCB_FS		=	$(addprefix $(SRCD)callbacks/,$(_SHCB_FS))
 _SHCB_FSO	=	$(_SHCB_FS:.c=.o)
 SHCB_FSO	=	$(SHCB_FS:.c=.o)
