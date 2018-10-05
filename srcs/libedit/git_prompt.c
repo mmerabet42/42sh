@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 16:52:56 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/10/04 18:30:45 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/05 17:27:15 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <unistd.h>
-# include <stdio.h> // a del
 
 static void	get_path_git(char *path_git, char *path_git_head)
 {
@@ -71,9 +70,10 @@ static int	loop_git_prompt(char *path_git_head, char ***git_prompt)
 	char	*tmp;
 	char	*buf;
 
+	tmp = NULL;
 	if ((fd = open(path_git_head, O_RDONLY)) == -1)
 		return (-1);
-	if (!get_next_line(fd, &buf))
+	if (get_next_line(fd, &buf) == -2)
 		return (-1);
 	close(fd);
 	if (!(*git_prompt = (char **)malloc(sizeof(char *) * 3)))
@@ -83,7 +83,7 @@ static int	loop_git_prompt(char *path_git_head, char ***git_prompt)
 	(*git_prompt)[2] = NULL;
 	if (!((*git_prompt)[0] = ft_strdup("git:(")))
 		return (free_git_prompt(git_prompt, &buf));
-	if (!(tmp = ft_strrchr(buf, '/') + 1))
+	if (!(tmp = ft_strrchr(buf, '/')) || !(*(++tmp)))
 		return (free_git_prompt(git_prompt, &buf));
 	if (!((*git_prompt)[1] = ft_strdup(tmp)))
 		return (free_git_prompt(git_prompt, &buf));
