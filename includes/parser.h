@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/01 21:46:02 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 20:35:25 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,15 @@ typedef struct		s_ast
 	struct s_ast	*left;
 	struct s_ast	*right;
 }					t_ast;
+
+typedef struct		s_pipe
+{
+	t_list			*tabpipe;
+	t_list			*head;
+	int				fd[4];
+	int				pgrp;
+	int				pid;
+}					t_pipe;
 
 typedef struct		s_inst
 {

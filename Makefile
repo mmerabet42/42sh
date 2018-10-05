@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/02 20:35:18 by jraymond         ###   ########.fr        #
+#    Updated: 2018/10/05 19:44:19 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ INCLUDES	=	includes/expr.h includes/job_control.h includes/parser.h \
 				includes/shell.h includes/globing.h \
 				includes/libedit.h
 
-_JBCNTRL_FS	=	check_bgend.c info_bg.c handle_bgsign.c handle_bgstatus.c \
+_JBCNTRL_FS	=	check_bgend.c info_bg.c handle_bgsign.c handle_bgstatus.c lst.c \
 				handle_pgid.c exec_cmd_background.c freelst_bg.c ret_astargs.c exec_btin_bin.c
 JBCNTRL_FS	=	$(addprefix $(SRCD)job_control/,$(_JBCNTRL_FS))
 _JBCNTRL_FSO=	$(_JBCNTRL_FS:.c=.o)

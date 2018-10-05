@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/04 19:54:59 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 20:05:10 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,22 @@
 #include <sys/signal.h>
 #include <sys/wait.h>
 
+void			handle_retwait(int ret, pid_t pid)
+{
+	if (WIFCONTINUED(ret))
+		handle_bgstat(pid, BG_RUN);
+	else if (WIFSTOPPED(ret))
+		handle_bgstat(pid, BG_STOP);
+	else if (!WIFEXITED(ret))
+		handle_bgstat(pid, BG_KILL);
+	else if (WIFEXITED(ret))
+		handle_bgstat(pid, BG_END);
+}
+
 void			sign_child(int sign)
 {
 	t_list	*elem;
+	t_pids	*pipe;
 	pid_t	pid;
 	int		ret;
 
@@ -32,18 +45,19 @@ void			sign_child(int sign)
 	while (elem)
 	{
 		pid = ((t_inffork *)elem->content)->pid;
-		if (sign == SIGCHLD && waitpid(pid, &ret, WNOHANG | WUNTRACED) == pid)
+		if (sign == SIGCHLD && pid > 0
+				&& waitpid(pid, &ret, WNOHANG | WUNTRACED) == pid)
+			handle_retwait(ret, pid);
+		else if (sign == SIGCHLD && pid == -1)
 		{
-			if (WIFCONTINUED(ret))
-				handle_bgstat(pid, BG_RUN);
-			else if (WIFSTOPPED(ret))
+			pipe = ((t_inffork *)elem->content)->pids;
+			if (waitpid(pipe->pid, &ret, WNOHANG | WUNTRACED) == pipe->pid)
 			{
-				handle_bgstat(pid, BG_STOP);
+				while (pipe &&
+						waitpid(pipe->pid, &ret, WNOHANG | WUNTRACED) == pipe->pid)
+					pipe = pipe->next;
+				handle_retwait(ret, getpgid(pipe->pid));
 			}
-			else if (!WIFEXITED(ret))
-				handle_bgstat(pid, BG_KILL);
-			else if (WIFEXITED(ret))
-				handle_bgstat(pid, BG_END);
 		}
 		elem = elem->next;
 	}

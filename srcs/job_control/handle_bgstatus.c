@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 13:31:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/17 14:55:00 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 20:03:04 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,18 @@ int					end_status(char *str)
 	return (-1);
 }
 
+int					if_pipe(t_list *elem, pid_t pid)
+{
+	t_pids	*i;
+
+	i = ((t_inffork *)elem->content)->pids;
+	while (i && i->pid != pid)
+		i = i->next;
+	if (i && i->pid == pid)
+		return (1);
+	return (0);
+}
+
 int					handle_bgstat(pid_t pid, int status)
 {
 	t_list	*elem;
@@ -48,7 +60,14 @@ int					handle_bgstat(pid_t pid, int status)
 	i = -1;
 	elem = g_shell->bgproc;
 	while (elem && ((t_inffork *)elem->content)->pid != pid)
+	{
+		if (((t_inffork *)elem->content)->pid == -1)
+			if (if_pipe(elem, pid) == 1)
+				break;
 		elem = elem->next;
+	}
+	if (!elem)
+		return (1);
 	if (((t_inffork *)elem->content)->status[0])
 		((t_inffork *)elem->content)->modif |= (1 << 0);
 	while (++i < g_bgstats_size)

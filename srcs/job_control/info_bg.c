@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:40:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/09/24 20:10:46 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 16:41:02 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static	t_inffork	*init_infproc(int x, pid_t pid, char **cmd)
 	if (!(new = (t_inffork *)ft_memalloc(sizeof(t_inffork))))
 		ft_exitf(EXIT_FAILURE, "21sh: %s\n", ft_strshret(SH_MALLOC));
 	new->x = x;
-	new->pid = pid;
+	new->pid = (g_shell->bits & (1 << 1)) ? -1 : pid;
 	new->cmd = ft_copyenv(cmd);
 	new->sign = ' ';
 	return (new);

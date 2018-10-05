@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 18:59:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/17 21:44:36 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/05 20:05:09 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@ typedef struct		s_bgstats
 	char			*message;
 }					t_bgstats;
 
+typedef struct		s_pids
+{
+	pid_t			pid;
+	struct s_pids	*parent;
+	struct s_pids	*next;
+}					t_pids;
+
 typedef struct		s_inffork
 {
 	int				x;
@@ -36,6 +43,7 @@ typedef struct		s_inffork
 	char			status[100];
 	char			**cmd;
 	unsigned int	modif : 1;
+	t_pids			*pids;
 }					t_inffork;
 
 int					exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf);
@@ -58,5 +66,7 @@ void				del(void *content, size_t size);
 void				sign_child(int sign);
 t_list				*ret_sign(int opt);
 void				debug_sign();
+
+int					creatpushelem(t_pids **head, pid_t pid);
 
 #endif

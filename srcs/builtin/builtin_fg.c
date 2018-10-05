@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/09/11 18:30:59 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 15:14:17 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int					builtin_fg(int argc, char **argv)
 		print_cmd_args2(((t_inffork *)elem->content)->cmd);
 		signal(SIGCHLD, SIG_DFL);
 		if (((t_inffork *)elem->content)->status[0] == 'S')
-			kill(((t_inffork *)elem->content)->pid, SIGCONT);
+			kill(((t_inffork *)elem->content)->pid, -SIGCONT);
 		tcsetpgrp(0, ((t_inffork *)elem->content)->pid);
 		waitpid(((t_inffork *)elem->content)->pid, &status, WUNTRACED);
 		check_retfork(status, ((t_inffork *)elem->content)->pid);
