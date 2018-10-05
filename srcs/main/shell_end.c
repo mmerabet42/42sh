@@ -6,11 +6,12 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/15 23:32:59 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/04 16:22:23 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/05 11:18:56 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
+#include "ft_str.h"
 
 static void	del_func(void *content, size_t size)
 {
@@ -26,28 +27,29 @@ static void	del_func(void *content, size_t size)
 	}
 }
 
+static void	ft_free_tab(char ***tab)
+{
+	register int i;
+
+	if (!tab && !*tab)
+		return ;
+	i = -1;
+	while ((*tab)[++i])
+		if ((*tab)[i])
+			ft_strdel(&(*tab)[i]);
+	free(*tab);
+}
+
+
 int			shell_end(void)
 {
-	char	**ptr;
 	int		exitcode;
 
-	if ((ptr = g_shell->paths))
-		while (*ptr)
-			free(*ptr++);
-	free(g_shell->paths);
-	if ((ptr = g_shell->envp))
-		while (*ptr)
-			free(*ptr++);
-	if ((ptr = g_shell->localp))
-		while (*ptr)
-			free(*ptr++);
-	if ((ptr = g_shell->expor))
-		while (*ptr)
-			free(*ptr++);
 	free(g_shell->script);
-	free(g_shell->envp);
-	free(g_shell->localp);
-	free(g_shell->expor);
+	ft_free_tab(&g_shell->paths);
+	ft_free_tab(&g_shell->localp);
+	ft_free_tab(&g_shell->envp);
+	ft_free_tab(&g_shell->expor);
 	clearhistory(1);
 	free(g_shell->history_file);
 	ft_lstdel(&g_shell->funcs, del_func);
