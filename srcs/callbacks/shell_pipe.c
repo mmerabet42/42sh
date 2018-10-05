@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/04 21:17:58 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/05 12:48:19 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ void			closefd(int *fd, t_list *elem)
 		close(fd[0]);
 }
 
+#include "errno.h"
+
 int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
 	t_list	*tabpipe;
@@ -148,17 +150,27 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 			swap1(fd);
 	}
 	elem = ft_lstend(tabpipe);
+	signal(SIGCHLD, SIG_DFL);
 	while (elem)
 	{
 		log_debug("WAITING...: %s pid: %d\n", ((t_ast *)elem->content)->name, elem->content_size);
 		if (waitpid((pid_t)elem->content_size, res, WUNTRACED) == -1)
-			log_debug("waitpid == -1\n");
+			log_debug("waitpid == -1: %s\n", strerror(errno));
 		log_debug("NAME_END: %s\n", ((t_ast *)elem->content)->name);
 		elem = elem->parent;
+	}
+	signal(SIGCHLD, sign_child);
+	if (WIFEXITED(res) ||  WIFSIGNALED(res))
+	{
+		elem = ft_lstend(g_shell->bgproc);
+		if (elem == g_shell->bgproc)
+			g_shell->bgproc = NULL;
+		ft_lstdelone(&elem, del);
 	}
 	log_debug("ouiiiiiiiiii\n");
 	if (!(g_shell->bits & (1 << 2)))
 		tcsetpgrp(0, getpgrp());
+	ft_lstdelone(&tabpipe, NULL);
 	g_shell->bits &= ~(1 << 1);
 	return (0);
 }
