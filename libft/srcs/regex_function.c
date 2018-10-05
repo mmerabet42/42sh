@@ -296,6 +296,13 @@ static int			recursive_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	return (regex_exec(&tmp));
 }
 
+static int			group_rgx(t_regex_info *rgxi, t_regex_rule *rule)
+{
+	(void)rgxi;
+	(void)rule;
+	return (0);
+}
+
 static t_regex_func	g_regexfs[] = {
 	{"DEFAULT", default_rgx},
 	{"OTHER", other_rgx},
@@ -309,8 +316,15 @@ static t_regex_func	g_regexfs[] = {
 	{"debug", debug_rgx},
 	{"R", recursive_rgx},
 	{"DQUOTE:\"*[\\\"|?![\"]@or?]\"", NULL},
-	{"QUOTE:'*!['@?]'", NULL},
+	{"QUOTE:'*[?![']@or?]'", NULL},
+	{"BSLASH:\\?", NULL},
 	{"S_BRACKET:?['\"]", NULL},
+	{"G", group_rgx},
+	{"LG", group_rgx},
+	{"BRACKET0:[*[?[@BRACKET1]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[]()\"'}]|?[@BRACKET0]@or?]]", NULL},
+	{"BRACKET1:(*[?[@BRACKET0]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]\"'}]|?[@BRACKET1]@or?])", NULL},
+	{"BRACKETZ:?[?[@BRACKET0]|?[@BRACKET1]@or]", NULL},
+	
 	{"BRACKET:(*[?[@DQUOTE]|?[@QUOTE]|?[?![()]&?![@S_BRACKET]@and]|?[@BRACKET]@or?])", NULL},
 	{"T:?[?[0=n!0@expr]|?[n:*[@alpha]@expr]@or]?[0=n!0@expr]*[@=n]*[@digit=n]?[?[@T]|@or]", NULL},
 	{"expr", expr_rgx},
@@ -332,15 +346,20 @@ static t_regex_func	g_regexfs[] = {
 };
 static size_t		g_regex_len = (sizeof(g_regexfs) / sizeof(t_regex_func));
 
-t_regex_func		*get_regex_func(const char *name, int len)
+t_regex_func		*get_regex_func(const char *name)
 {
-	size_t			i;
+	size_t	i;
+	int		len;
 
-	if (!*name || !len)
-		return (get_regex_func("DEFAULT", 7));
+	if (!name || !*name)
+		return (get_regex_func("DEFAULT"));
 	i = 0;
 	while (i < g_regex_len)
 	{
+		if (!g_regexfs[i].func)
+			len = ft_strchr_pos(g_regexfs[i].name, ':');
+		else
+			len = ft_strlen(g_regexfs[i].name);
 		if (ft_strnequ(name, g_regexfs[i].name, len))
 			return (&g_regexfs[i]);
 		++i;

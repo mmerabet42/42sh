@@ -70,7 +70,7 @@ static int	regex_start(t_regex_info *rgxi, t_regex_func *func, t_regex_rule *rul
 	{
 		rule->rule = func->name;
 		rule->len_rule = ft_strlen(rule->rule);
-		if (!(func = get_regex_func("OTHER", 5)))
+		if (!(func = get_regex_func("OTHER")))
 			return (-1);
 	}
 	if (rule->type == '*')
@@ -101,23 +101,30 @@ static int	expanded_wildcard(t_regex_info *rgxi, char type, int *len, int neg)
 	int	ret;
 	t_regex_rule	rule;
 
-	if ((jmp = ft_strbetweenps_ext((char **)&rgxi->regex, "[?]")) != -1)
+	rgxi->regex -= (neg ? 2 : 1);
+	if ((jmp = regex_bracket(rgxi->regex)) != -1)
 	{
 		ft_bzero(&rule, sizeof(t_regex_rule));
 		rule.type = type;
 		rule.neg = neg;
-		--jmp;
-		rule.arg = ++rgxi->regex;
+		neg = (neg ? 3 : 2);
+		rule.arg = rgxi->regex + neg;
+		ret = 1;
+		if (rgxi->regex[neg] == '{' && (ret = 2))
+			rule.arg = rgxi->regex + (neg + 1);
+		else if (rgxi->regex[neg] == '\\' && rgxi->regex[neg + 1] == '{')
+			rule.arg = rgxi->regex + ++neg;
 		rule.len_arg = ft_strnrchr_pos(rgxi->regex, '@', jmp);
 		rgxi->regex += jmp;
 		if (rule.len_arg == -1)
 		{
-			rule.len_arg = jmp - 1;
+			rule.len_arg = (int)(rgxi->regex - rule.arg) - ret;
 			rule.rule = "";
 			rule.len_rule = 0;
 		}
 		else
 		{
+			rule.len_arg -= neg + ret - 1;
 			rule.rule = rule.arg + rule.len_arg + 1;
 			rule.len_rule = ft_strpbrk_pos(rule.rule, "?=><]");
 			if (rule.rule[rule.len_rule] == '=')
@@ -138,7 +145,7 @@ static int	expanded_wildcard(t_regex_info *rgxi, char type, int *len, int neg)
 					rule.l = rgxi->var1[rule.rule[rule.len_rule + 1] - 65];
 			}
 		}
-		ret = regex_start(rgxi, get_regex_func(rule.rule, rule.len_rule), &rule, len);
+		ret = regex_start(rgxi, get_regex_func(rule.rule), &rule, len);
 		return (ret);
 	}
 	return (-1);
