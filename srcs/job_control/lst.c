@@ -31,3 +31,24 @@ int				creatpushelem(t_pids **head, pid_t pid)
 	}
 	return (0);
 }
+
+void			extractpids(t_pids **head, pid_t pid)
+{
+	t_pids	*elem;
+
+	elem = *head;
+	while (elem && elem->pid != pid)
+		elem = elem->next;
+	if (elem && elem == *head)
+	{
+		if ((*head = elem->next))
+			elem->next->parent = NULL;
+	}
+	else if (elem)
+	{
+		elem->parent->next = elem->next;
+		elem->next->parent = elem->parent;
+	}
+	if (elem)
+		ft_memdel((void **)&elem);
+}

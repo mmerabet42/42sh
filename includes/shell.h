@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/02 18:33:08 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/06 19:38:40 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ void				clearhistory(int save);
 void				movehistory(char c, char *line, size_t *cursor);
 
 int					ft_exec(char *name, char **argv, char **envp, pid_t *pid);
+void				sign_child(int sign);
 
 t_shret				ft_isbuiltin(char *name, t_args *args);
 int					isbuiltin(char *name);

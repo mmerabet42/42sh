@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/15 23:32:59 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/15 23:38:06 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/06 22:40:07 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int			shell_end(void)
 	if ((ptr = g_shell->envp))
 		while (*ptr)
 			free(*ptr++);
+	if (g_shell->bgproc)
+		freelst_bg();
 	free(g_shell->script);
 	free(g_shell->envp);
 	clearhistory(1);

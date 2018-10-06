@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/05 19:44:19 by jraymond         ###   ########.fr        #
+#    Updated: 2018/10/06 17:29:55 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ PARSER_FS	=	$(addprefix $(SRCD)parser/,$(_PARSER_FS))
 _PARSER_FSO	=	$(_PARSER_FS:.c=.o)
 PARSER_FSO	=	$(PARSER_FS:.c=.o)
 
-_SHCB_FS	=	shell_command.c shell_pipe.c shell_arithmetic.c shell_condition.c \
+_SHCB_FS	=	shell_command.c shell_pipe.c shell_pipe_bg.c shell_arithmetic.c shell_condition.c \
 				shell_equal.c shell_redir.c shell_redir1.c shell_expansions.c shell_expansions1.c \
 				shell_error.c shell_hdoc.c shell_seco.c handle_pipe.c
 SHCB_FS		=	$(addprefix $(SRCD)callbacks/,$(_SHCB_FS))
@@ -71,7 +71,7 @@ _LIBEDIT_FSO=	$(_LIBEDIT_FS:.c=.o)
 LIBEDIT_FSO	=	$(LIBEDIT_FS:.c=.o)
 
 
-_MAIN_FS	=	ft_env.c main.c ft_env2.c ft_getcursor.c ft_exec.c ft_getpaths.c \
+_MAIN_FS	=	ft_env.c main.c ft_env2.c ft_getcursor.c ft_exec.c ft_getpaths.c sign_chld.c \
 				ft_parsepath.c list_redirections.c history.c shell_init.c shell_begin.c shell_end.c
 MAIN_FS		=	$(addprefix $(SRCD)main/,$(_MAIN_FS))
 _MAIN_FSO	=	$(_MAIN_FS:.c=.o)

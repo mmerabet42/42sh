@@ -6,12 +6,13 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 23:05:14 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/06 17:28:10 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_str.h"
+#include "job_control.h"
 #include "ft_mem.h"
 #include "ft_io.h"
 #include "ft_types.h"
@@ -21,47 +22,6 @@
 #include <locale.h>
 #include <sys/signal.h>
 #include <sys/wait.h>
-
-void			handle_retwait(int ret, pid_t pid)
-{
-	if (WIFCONTINUED(ret))
-		handle_bgstat(pid, BG_RUN, 1);
-	else if (WIFSTOPPED(ret))
-		handle_bgstat(pid, BG_STOP, 1);
-	else if (!WIFEXITED(ret))
-		handle_bgstat(pid, BG_KILL, 1);
-	else if (WIFEXITED(ret))
-		handle_bgstat(pid, BG_END, 1);
-}
-
-void			sign_child(int sign)
-{
-	t_list	*elem;
-	t_pids	*pipe;
-	pid_t	pid;
-	int		ret;
-
-	elem = g_shell->bgproc;
-	while (elem)
-	{
-		pid = ((t_inffork *)elem->content)->pid;
-		if (sign == SIGCHLD && pid > 0
-				&& waitpid(pid, &ret, WNOHANG | WUNTRACED) == pid)
-			handle_retwait(ret, pid);
-		else if (sign == SIGCHLD && pid == -1)
-		{
-			pipe = ((t_inffork *)elem->content)->pids;
-			if (waitpid(pipe->pid, &ret, WNOHANG | WUNTRACED) == pipe->pid)
-			{
-				while (pipe &&
-						waitpid(pipe->pid, &ret, WNOHANG | WUNTRACED) == pipe->pid)
-					pipe = pipe->next;
-				handle_retwait(ret, getpgid(pipe->pid));
-			}
-		}
-		elem = elem->next;
-	}
-}
 
 static	void	sign_handler(int sign)
 {

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 18:59:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 23:00:11 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/06 19:09:58 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,14 @@ typedef struct		s_bgstats
 	char			*message;
 }					t_bgstats;
 
-typedef struct		s_pids
+typedef struct s_pids	t_pids;
+
+struct				s_pids
 {
 	pid_t			pid;
-	struct s_pids	*parent;
-	struct s_pids	*next;
-}					t_pids;
+	t_pids			*parent;
+	t_pids			*next;
+};
 
 typedef struct		s_inffork
 {
@@ -68,5 +70,6 @@ t_list				*ret_sign(int opt);
 void				debug_sign();
 
 int					creatpushelem(t_pids **head, pid_t pid);
+void				extractpids(t_pids **head, pid_t pid);
 
 #endif

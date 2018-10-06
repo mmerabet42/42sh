@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 17:42:32 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/04 18:19:45 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/06 17:13:30 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,29 @@ int				exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 	t_inffork	inf;
 
 	ft_bzero(&inf, sizeof(t_inffork));
-	if ((pid = fork()) == -1)
-		return (SH_FORKFAIL);
-	if (!pid)
+	if (ast->left->type == TK_PIPE + 1)
 	{
-		setpgid(0, 0);
-		son_fork(ast, res, iterf);
+		log_debug("TK_PIPE\n");
+		g_shell->bits |= (1 << 1);
+		g_shell->bits |= (1 << 2);
+		ft_astiter(ast->left, res, iterf);
+		ft_astiter(ast->right, res, iterf);
 	}
 	else
 	{
-		setpgid(pid, 0);
-		handle_bgproc(pid, ret_args(ast), BG_RUN, 1);
-		ft_astiter(ast->right, res, iterf);
+		if ((pid = fork()) == -1)
+			return (SH_FORKFAIL);
+		if (!pid)
+		{
+			setpgid(0, 0);
+			son_fork(ast, res, iterf);
+		}
+		else
+		{
+			setpgid(pid, 0);
+			handle_bgproc(pid, ret_args(ast), BG_RUN, 1);
+			ft_astiter(ast->right, res, iterf);
+		}
 	}
 	return (0);
 }
