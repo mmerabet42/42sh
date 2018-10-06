@@ -324,7 +324,7 @@ static t_regex_func	g_regexfs[] = {
 	{"BRACKET0:[*[?[@BRACKET1]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[]()\"'}]|?[@BRACKET0]@or?]]", NULL},
 	{"BRACKET1:(*[?[@BRACKET0]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]\"'}]|?[@BRACKET1]@or?])", NULL},
 	{"BRACKETZ:?[?[@BRACKET0]|?[@BRACKET1]@or]", NULL},
-	
+
 	{"BRACKET:(*[?[@DQUOTE]|?[@QUOTE]|?[?![()]&?![@S_BRACKET]@and]|?[@BRACKET]@or?])", NULL},
 	{"T:?[?[0=n!0@expr]|?[n:*[@alpha]@expr]@or]?[0=n!0@expr]*[@=n]*[@digit=n]?[?[@T]|@or]", NULL},
 	{"expr", expr_rgx},
@@ -346,13 +346,13 @@ static t_regex_func	g_regexfs[] = {
 };
 static size_t		g_regex_len = (sizeof(g_regexfs) / sizeof(t_regex_func));
 
-t_regex_func		*get_regex_func(const char *name)
+t_regex_func		*get_regex_func(const char *name, int len_rule)
 {
 	size_t	i;
 	int		len;
 
-	if (!name || !*name)
-		return (get_regex_func("DEFAULT"));
+	if (!len_rule || !name || !*name)
+		return (get_regex_func("DEFAULT", 7));
 	i = 0;
 	while (i < g_regex_len)
 	{
@@ -360,7 +360,7 @@ t_regex_func		*get_regex_func(const char *name)
 			len = ft_strchr_pos(g_regexfs[i].name, ':');
 		else
 			len = ft_strlen(g_regexfs[i].name);
-		if (ft_strnequ(name, g_regexfs[i].name, len))
+		if (ft_strnequ(name, g_regexfs[i].name, ft_max(len_rule, len)))
 			return (&g_regexfs[i]);
 		++i;
 	}

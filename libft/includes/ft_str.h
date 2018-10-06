@@ -264,10 +264,12 @@ typedef struct		s_regex_func
 	t_regex_funcptr	func;
 }					t_regex_func;
 
-int					regex_bracket(const char *str);
+int					regex_start(t_regex_info *rgxi, t_regex_func *func, t_regex_rule *rule, int *len);
+int					regex_wildcard(t_regex_info *rgxi, int *len);
+int					regex_bracket(const char *str, int *s);
 int					regex_exec(t_regex_info *regex_info);
 void				regex_init(t_regex_info *regex_info, const char *regex, const char *str);
-t_regex_func		*get_regex_func(const char *name);
+t_regex_func		*get_regex_func(const char *name, int len_rule);
 int					ft_regex(const char *regex, const char *str, int n, int opt);
 int					ft_lregex(int options, const char *a, const char *b, ...);
 

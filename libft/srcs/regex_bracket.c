@@ -11,14 +11,19 @@ static int	bracket_start(const char *str)
 
 static int	bracket_end(const char *str, int l)
 {
-	if (l && str[0] == '}' && str[1] == ']')
-		return (1);
-	else if (!l && str[0] == ']')
+	if (l)
+	{
+		while (*str == '}' && l--)
+			++str;
+		if (!l && *str == ']')
+			return (1);
+	}
+	else if (*str == ']')
 		return (1);
 	return (0);
 }
 
-int	regex_bracket(const char *str)
+int	regex_bracket(const char *str, int *s)
 {
 	int	i;
 	int	j;
@@ -27,20 +32,22 @@ int	regex_bracket(const char *str)
 	if (!(i = bracket_start(str)))
 		return (-1);
 	l = 0;
-	if (str[i] == '{' && ++i)
-		l = 1;
+	while (str[i] == '{' && ++l)
+		++i;
+	if (s)
+		*s = i;
 	while (str[i])
 	{
-		if (bracket_start(&str[i]) || bracket_end(&str[i], l))
+		if (bracket_end(&str[i], l))
+			return (i + l + 1);
+		else if (bracket_start(&str[i]))
 		{
-			if ((j = regex_bracket(&str[i])) == -1)
+			if ((j = regex_bracket(&str[i], NULL)) == -1)
 				break ;
 			i += j;
 		}
 		else
 			++i;
 	}
-	if (!bracket_end(&str[i], l))
-		return (-1);
-	return (i + (l ? 2 : 1));
+	return (-1);
 }

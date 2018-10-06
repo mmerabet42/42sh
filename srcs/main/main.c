@@ -179,6 +179,9 @@ static void	main_execution(char *line)
 
 int			main(int argc, char **argv, char **envp)
 {
+//	int	l;
+//	int	n = regex_bracket(argv[1], &l);
+//	ft_printf("bracket: '%s' %d %d\n", argv[1], n, l);
 	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(argv[1], argv[2], -1, 0));
 	return (0);
 	char	*line;
