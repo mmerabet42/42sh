@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/03 16:33:57 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/04 15:33:07 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/08 16:21:31 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,19 @@
 #include "ft_printf.h"
 #include "ft_str.h"
 
-int			shell_equal(t_ast *ast, void **op, void *res, t_iterf *iterf)
+void	manage_export(char *name, char *content)
+{
+	if (!name)
+		return ;
+	if (!content)
+		content = "";
+	if (ft_getenv(name, g_shell->expor))
+		update_export(name, content);
+	else
+		ft_setenv(name, content, &g_shell->localp);
+}
+
+int		shell_equal(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
 	char	name[1024];
 	char	*content;
@@ -26,10 +38,7 @@ int			shell_equal(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	len = content - ast->cname;
 	ft_strncpy(name, ast->cname, len < 1024 ? len : 1023);
 	name[len < 1024 ? len : 1023] = 0;
-	if (ft_getenv(name, g_shell->expor))
-		update_export(name, content + 1);
-	else
-		ft_setenv(name, content + 1, &g_shell->localp);
+	manage_export(name, content + 1);
 	*(int *)res = 0;
 	return (0);
 }

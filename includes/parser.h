@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/03 16:38:41 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/08 16:22:56 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,8 @@ int					shell_then_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
 int					shell_if_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
+
+void				manage_export(char *name, char *content);
 
 int					ft_parser(const char **str, t_args *args, t_parserf *pdef);
 void				ft_argsdel(t_args *args);

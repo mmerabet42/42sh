@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 16:52:56 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/10/05 17:27:15 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/08 10:18:37 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,8 @@ static void	get_path_git(char *path_git, char *path_git_head)
 		ft_strcat(path_git_head, path_git);
 		ft_strcat(path_git_head, "/HEAD");
 	}
-	else
+	else if ((pos = ft_strstr(path_git, "/.git")))
 	{
-		pos = ft_strstr(path_git, "/.git");
-		if (!pos)
-			return ;
 		while (pos && pos != path_git && *pos == '/')
 			pos--;
 		while (pos != path_git && *pos != '/')
@@ -48,7 +45,7 @@ static void	get_path_git(char *path_git, char *path_git_head)
 	}
 }
 
-int	free_git_prompt(char ***git_prompt, char **buf)
+int			free_git_prompt(char ***git_prompt, char **buf)
 {
 	int	i;
 
@@ -93,7 +90,7 @@ static int	loop_git_prompt(char *path_git_head, char ***git_prompt)
 	return (1);
 }
 
-char	**git_prompt(void)
+char		**git_prompt(void)
 {
 	char	path_git[PATH_MAX];
 	char	path_git_head[PATH_MAX];
@@ -114,7 +111,7 @@ char	**git_prompt(void)
 				return (git_prompt);
 		}
 		if (!ft_strcmp(path_git, "/.git"))
-				return (NULL);;
+			return (NULL);
 	}
 	return (NULL);
 }

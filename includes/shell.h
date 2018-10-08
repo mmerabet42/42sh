@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 11:01:05 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/08 16:40:04 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,12 @@ int					builtin_unset(int argc, char **argv);
 void				ft_unset(char *name);
 void				update_export(char *name, char *value);
 int					builtin_set(int argc, char **argv);
+int					builtin_read(int argc, char **argv);
+
+char				**ft_split_whitespaces(char *str);
+char				*ft_multi_strjoin(int n, ...);
+void				ft_strremove(char *s);
+void				ft_free_tab(char ***tab);
 
 extern int			g_dontfree;
 extern t_shell		*g_shell;

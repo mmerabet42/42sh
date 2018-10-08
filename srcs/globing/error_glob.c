@@ -6,28 +6,12 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/13 14:10:07 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/18 16:44:34 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/08 16:41:02 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "globing.h"
 #include "ft_str.h"
-
-void	ft_free_tab(char ***tab)
-{
-	int	i;
-
-	if (!tab && !(*tab))
-		return ;
-	i = 0;
-	while ((*tab)[i])
-	{
-		ft_strdel(&((*tab)[i]));
-		i++;
-	}
-	free(*tab);
-	*tab = NULL;
-}
 
 int		error_glob(char *format, ...)
 {
