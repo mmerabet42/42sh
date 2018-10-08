@@ -6,13 +6,13 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/06 17:29:55 by jraymond         ###   ########.fr        #
+#    Updated: 2018/10/08 22:47:39 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	42sh
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
+CFLAGS		=	-Wall -Werror -Wextra -g3
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
@@ -43,7 +43,7 @@ PARSER_FSO	=	$(PARSER_FS:.c=.o)
 
 _SHCB_FS	=	shell_command.c shell_pipe.c shell_pipe_bg.c shell_arithmetic.c shell_condition.c \
 				shell_equal.c shell_redir.c shell_redir1.c shell_expansions.c shell_expansions1.c \
-				shell_error.c shell_hdoc.c shell_seco.c handle_pipe.c
+				shell_error.c shell_hdoc.c shell_seco.c handle_pipe.c ret_pipecmd.c
 SHCB_FS		=	$(addprefix $(SRCD)callbacks/,$(_SHCB_FS))
 _SHCB_FSO	=	$(_SHCB_FS:.c=.o)
 SHCB_FSO	=	$(SHCB_FS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/06 15:05:34 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/08 22:30:08 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ typedef struct		s_pipe
 {
 	t_list			*tabpipe;
 	t_list			*head;
+	char			**all_cmd;
 	int				fd[4];
 	int				pgrp;
 	int				pid;
@@ -227,6 +228,7 @@ char				**ft_getoptl(char **argv,
 							const char *loption,
 							int lfirst);
 char				**ft_getoptv(char **argv, const char *options);
+int					ret_pipecmd(t_ast *ast, char ***cmd);
 
 int					ft_interpret(const char *command,
 							void *ptr,

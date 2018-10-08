@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/06 17:08:04 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/08 23:01:06 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,11 +113,14 @@ static int		init_struct(t_pipe *pipe, t_ast *ast)
 
 	x = -1;
 	g_shell->bits |= (1 << 1);
+	pipe->all_cmd = NULL;
 	ft_bzero(pipe, sizeof(t_pipe));
 	while (++x < 4)
 		pipe->fd[x] = -1;
 	if ((ret = handle_ast_pipe(ast, &pipe->tabpipe)))
 		return (ret);
+	if (ret_pipecmd(ast, &pipe->all_cmd) != 0)
+		return (SH_MALLOC);
 	return (0);
 }
 
@@ -152,7 +155,8 @@ static void		fork_father(t_pipe *a, t_list **elem)
 	if (!a->pgrp)
 	{
 		a->pgrp = a->pid;
-		handle_bgproc(a->pid, ((t_ast *)(*elem)->content)->args->argv, BG_RUN, 1);
+		handle_bgproc(a->pid, a->all_cmd, BG_RUN, 1);
+		free(a->all_cmd);
 		tcsetpgrp(0, a->pgrp);
 		a->head = ft_lstend(g_shell->bgproc);
 	}
@@ -191,11 +195,10 @@ static int		wait_fork(t_pipe *a, void *res)
 
 	elem = ((t_inffork *)a->head->content)->pids;
 	ret = 0;
+	ft_lstdel(&a->tabpipe, NULL);
 	while (elem)
 	{
-		if (waitpid(elem->pid, res, WUNTRACED) == -1)
-			log_debug("waitpid == -1\n");
-		log_debug("waitpid: %d", elem->pid);
+		waitpid(elem->pid, res, WUNTRACED);
 		elem = elem->next;
 	}
 	*(int *)res = handle_res(*(int *)res, ((t_inffork *)a->head->content)->pids->pid);
@@ -206,17 +209,26 @@ static int		wait_fork(t_pipe *a, void *res)
 	return (0);
 }
 
+static void		print1(char **cmd)
+{
+	while (*cmd)
+	{
+		log_debug("cmd: %s\n", *cmd);
+		cmd++;
+	}
+}
+
 int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
 	t_pipe	a;
 	t_list	*elem;
 	int		ret;
 
-	(void)op;
 	if (g_shell->bits & (1 << 2))
 		return (shell_pipe_bg(ast, op, res, iterf));
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);
+	print1(a.all_cmd);
 	elem = ft_lstend(a.tabpipe);
 	signal(SIGCHLD, SIG_DFL);
 	while (elem)
