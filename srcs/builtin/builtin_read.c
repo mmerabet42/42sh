@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/08 10:24:29 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/08 16:59:08 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/08 17:22:34 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,13 @@ static int	count_backslash(char *s)
 
 static int	handle_read(char **sp, char **argv)
 {
-	int		count;
 	char	*s;
 	char	*tmp;
 
 	if (!sp || !argv || (s = NULL))
 		return (0);
-	count = 0;
 	while (*sp || *argv)
 	{
-		if (*sp && !*(sp + 1))
-			count = count_backslash(*sp);
-		ft_strremove(*sp);
 		if (*argv && *sp)
 			manage_export(*argv++, *sp++);
 		else if (!*argv && *(argv - 1) && *sp)
@@ -77,29 +72,42 @@ static int	handle_read(char **sp, char **argv)
 		else if (*argv && !*sp)
 			manage_export(*argv++, "");
 	}
-	return (count % 2);
+	return (0);
+}
+
+static char	*expands_builtin(char *s1, char *s2)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(s1, s2);
+	ft_strdel(&s1);
+	return (tmp);
 }
 
 int			builtin_read(int argc, char **argv)
 {
 	char	*s;
+	char	*tmp;
 	char	**sp;
 	char	r;
-	int		cont;
 
-	(void)argc;
 	argv++;
 	r = 0;
-	if (handle_opt(&argv, &r))
+	if (!argc || handle_opt(&argv, &r) || (tmp = NULL))
 		return (1);
 	while (get_next_line(0, &s) > -1)
 	{
-		sp = ft_split_whitespaces(s);
-		ft_strdel(&s);
-		cont = handle_read(sp, argv);
-		ft_free_tab(&sp);
-		if (!cont || r)
+		tmp = expands_builtin(tmp, s);
+		if (!(count_backslash(s) % 2) || r)
 			break ;
+		ft_strdel(&s);
 	}
+	ft_strdel(&s);
+	if (!r)
+		ft_strremove(tmp);
+	sp = ft_split_whitespaces(tmp);
+	handle_read(sp, argv);
+	ft_free_tab(&sp);
+	ft_strdel(&tmp);
 	return (0);
 }
