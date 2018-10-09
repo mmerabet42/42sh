@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/15 23:32:59 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/08 14:31:48 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/09 10:20:40 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,18 @@ static void	del_func(void *content, size_t size)
 	}
 }
 
-static void	ft_free_tab(char ***tab)
+void		ft_free_tab(char ***tab)
 {
 	register int	i;
 
-	if (!tab && !*tab)
+	if (!tab)
 		return ;
 	i = -1;
 	while ((*tab)[++i])
 		if ((*tab)[i])
 			ft_strdel(&(*tab)[i]);
 	free(*tab);
+	*tab = NULL;
 }
 
 int			shell_end(void)
