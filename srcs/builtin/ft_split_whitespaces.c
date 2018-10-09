@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/08 16:32:13 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/08 16:36:55 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/09 10:16:08 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int		ft_count_words(char *str)
 	}
 	else
 		count = 0;
-	while (str[i])
+	while (str[i - 1] && str[i])
 	{
 		if (ft_is_sep(str[i]) == 0 && ft_is_sep(str[i - 1]) == 1)
 			count++;
