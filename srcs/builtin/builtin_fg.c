@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/05 23:01:59 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/09 14:51:04 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,28 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 static void			check_retfork(int ret, pid_t pid)
 {
 	if (WIFCONTINUED(ret))
+	{
+		log_debug("RUNNING\n");
 		handle_bgstat(pid, BG_RUN, 1);
+	}
 	else if (WIFSTOPPED(ret))
 	{
 		if (WSTOPSIG(ret) == SIGTTIN)
+		{
+			log_debug("STOPPED\n");
 			handle_bgstat(pid, BG_STOP, 1);
+		}
 	}
 	else if (!WIFEXITED(ret))
+	{
+		log_debug("KILLED\n");
 		handle_bgstat(pid, BG_KILL, 1);
+	}
 	else if (WIFEXITED(ret))
+	{
+		log_debug("FINISH\n");
 		handle_bgstat(pid, BG_END, 1);
+	}
 }
 
 static int			my_wait(t_list *elem)
@@ -109,9 +121,15 @@ int					builtin_fg(int argc, char **argv)
 		if (((t_inffork *)elem->content)->status[0] == 'S')
 		{
 			if (((t_inffork *)elem->content)->pid != -1)
+			{
+				log_debug("SIGCONT: %d\n", ((t_inffork *)elem->content)->pid);
 				kill(((t_inffork *)elem->content)->pid, SIGCONT);
+			}
 			else
+			{
+				log_debug(" - SIGCONT: %d\n", ((t_inffork *)elem->content)->pid);
 				kill(-((t_inffork *)elem->content)->pids->pid, SIGCONT);
+			}
 		}
 		status = my_wait(elem);
 		check_retfork(status, ((t_inffork *)elem->content)->pid);

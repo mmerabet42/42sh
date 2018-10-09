@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/06 22:40:06 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/09 14:36:59 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,14 @@ t_list			*delete_info(t_list *elem)
 
 t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
 {
+	pid_t	pid;
+
+	pid = struc->pid == -1 ? struc->pids->pid : struc->pid;
 	if (!*struc->cmd)
-		ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
+		ft_printf("[%d] '%d' %c %s\n", struc->x, pid, struc->sign,
 					struc->status);
 	else
-		ft_printf("[%d]  %c %s", struc->x, struc->sign,
+		ft_printf("[%d] '%d' %c %s", struc->x, pid, struc->sign,
 					struc->status);
 	print_cmd_args(struc->cmd);
 	struc->modif &= (0 << 0);

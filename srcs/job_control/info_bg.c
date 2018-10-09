@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:40:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/05 22:59:44 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/09 15:25:36 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,6 @@ int					handle_bgproc(pid_t pid_fork, char **cmd,
 	ft_lstpush_p(&g_shell->bgproc, elem);
 	if (getpid() != pid_fork && opt)
 		handle_bgsign(elem, 0);
-	handle_bgstat(pid_fork, status, 0);
+	handle_bgstat(pid_fork, status, opt);
 	return (0);
 }

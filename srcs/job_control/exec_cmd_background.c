@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 17:42:32 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/06 17:13:30 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/09 14:11:50 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void			son_fork(t_ast *ast, void *res, t_iterf *iterf)
 	g_shell->bits |= (1 << 1);
 	g_shell->bits |= (1 << 2);
 	ft_astiter(ast->left, res, iterf);
+	log_debug("left: %s\n", ast->left->name);
 	exit(0);
 }
 
@@ -50,7 +51,6 @@ int				exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 	ft_bzero(&inf, sizeof(t_inffork));
 	if (ast->left->type == TK_PIPE + 1)
 	{
-		log_debug("TK_PIPE\n");
 		g_shell->bits |= (1 << 1);
 		g_shell->bits |= (1 << 2);
 		ft_astiter(ast->left, res, iterf);

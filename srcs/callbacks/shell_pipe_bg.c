@@ -2,6 +2,7 @@
 #include "shell.h"
 #include "parser.h"
 #include "ft_mem.h"
+#include "ft_printf.h"
 
 #include <sys/wait.h>
 #include <time.h>
@@ -80,12 +81,17 @@ static void		fork_son(t_pipe *a, t_list *elem, void *res, t_iterf *iterf)
 
 static void		fork_father(t_pipe *a, t_list **elem)
 {
+	t_list	*elem1;
+
+	elem1 = NULL;
 	setpgid(a->pid, (!a->pgrp ? a->pid : a->pgrp));
 	closefd(a->fd, *elem);
 	if (!a->pgrp)
 	{
 		a->pgrp = a->pid;
 		handle_bgproc(a->pid, a->all_cmd, BG_RUN, 1);
+		elem1 = ft_lstend(g_shell->bgproc);
+		ft_printf("[%d] %d\n", ((t_inffork *)elem1->content)->x, a->pid);
 		free(a->all_cmd);
 		a->head = ft_lstend(g_shell->bgproc);
 	}

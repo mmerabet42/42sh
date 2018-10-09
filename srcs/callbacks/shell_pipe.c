@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/08 23:01:06 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/09 14:54:56 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,11 +204,12 @@ static int		wait_fork(t_pipe *a, void *res)
 	*(int *)res = handle_res(*(int *)res, ((t_inffork *)a->head->content)->pids->pid);
 	tcsetpgrp(0, getpgrp());
 	signal(SIGCHLD, sign_child);
+	g_shell->numproc--;
 	ft_lstdelone(&a->tabpipe, NULL);
 	g_shell->bits &= ~(1 << 1);
 	return (0);
 }
-
+/*
 static void		print1(char **cmd)
 {
 	while (*cmd)
@@ -216,7 +217,7 @@ static void		print1(char **cmd)
 		log_debug("cmd: %s\n", *cmd);
 		cmd++;
 	}
-}
+}*/
 
 int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
@@ -228,7 +229,7 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		return (shell_pipe_bg(ast, op, res, iterf));
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);
-	print1(a.all_cmd);
+//	print1(a.all_cmd);
 	elem = ft_lstend(a.tabpipe);
 	signal(SIGCHLD, SIG_DFL);
 	while (elem)
