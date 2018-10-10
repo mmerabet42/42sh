@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 17:16:11 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 15:16:51 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/28 15:39:40 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,12 @@ static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 		if (!(line = ft_loop_init(cursor, 0)))
 			break ;
 		ft_putchar('\n');
-		if (*line == 3)
-		{
-			ft_strdel(&line);
-			return (end_sig(lst, 3, ast));
-		}
-		if (interpret_line(line, eof, expf) || !ft_strcmp(line, "exit"))
+		if (*line == 3 ||  !ft_strcmp(line, "exit"))
+			return (end_sig(lst, *line == 3 ? 3 : 4, ast));
+		if (interpret_line(line, eof, expf))
 			break ;
 		ft_putendl_fd(line, fd);
-		ft_strdel(&line);
 	}
-	ft_strdel(&line);
 	ft_lstdel(&lst, content_delfunc);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/16 11:24:15 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/04 11:08:34 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/01 12:02:12 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static t_cmdedit	*fill_but_no_write(char *s)
 
 t_cmdedit			*handle_controld(t_cmdedit **cmd, t_cursor *cursor)
 {
-	if (!(*cmd)->prev && !(*cmd)->next)
+	if (!(*cmd)->prev)
 	{
 		ft_free_t_cmdedit(cmd);
 		*cmd = fill_but_no_write("exit ");

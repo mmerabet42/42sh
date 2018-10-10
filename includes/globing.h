@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/22 21:40:35 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/10/09 14:01:01 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/09/17 21:49:45 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <sys/dir.h>
 # include "ft_list.h"
 # include "parser.h"
+# include <stdio.h> // to del
 
 # define G_START 0
 # define G_END 1
@@ -90,25 +91,25 @@ char				***split_path(char **splitacc);
 */
 
 int					last_char_splitpaacc_slash(char *splitacc);
-int					loop_get_glob(char ***splitpath, t_glob ***glob,
-		char **splitacc, int i);
-int					setup_glob_normal(t_glob **glob, char *splitpath,
-		char *splitacc, int *k);
-int					setup_glob_stars(t_glob **glob, char *splitpath,
-		char *splitacc, int *k);
-int					setup_glob_question(t_glob **glob, char *splitpath,
-		char *splitacc, int *k);
-int					setup_glob_crochet(t_glob **glob, char *splitpath,
-		char *splitacc, int *k);
+int					loop_get_glob(char ***splitpath, t_glob ***glob, char **splitacc, int i);
+int					setup_glob_normal(t_glob **glob, char *splitpath, char *splitacc, int *k);
+int					setup_glob_stars(t_glob **glob, char *splitpath, char *splitacc, int *k);
+int					setup_glob_question(t_glob **glob, char *splitpath, char *splitacc, int *k);
+int					setup_glob_crochet(t_glob **glob, char *splitpath, char *splitacc, int *k);
+/*static int			(*g_setup_glob[4])(t_glob **glob, char *splitpath, char *splitacc, int *k) = {
+	&setup_glob_normal,
+	&setup_glob_stars,
+	&setup_glob_question,
+	&setup_glob_crochet
+};*/
 
 /*
 **	------------- GLOB_PROCESS -----------------
 */
 
-int					exp_glob(t_strid *strid, t_list **lst, t_expf *expf);
-int					ultimate_glob_process(t_glob **glob, t_list **lst,
-		char **dir);
-int					process_glob(t_glob ***glob, t_list **lst);
+int			exp_glob(t_strid *strid, t_list **lst, t_expf *expf);
+int			ultimate_glob_process(t_glob **glob, t_list **lst, char **dir);
+int			process_glob(t_glob ***glob, t_list **lst);
 
 /*
 **	------------- MATCH_GLOBBING -----------------
@@ -121,5 +122,11 @@ int					check_match_normal(t_glob **glob, char *name, int *i);
 int					check_match_stars(t_glob **glob, char *name, int *i);
 int					check_match_question(t_glob **glob, char *name, int *i);
 int					check_match_crochet(t_glob **glob, char *name, int *i);
+/*static int			(*g_check_match[4])(t_glob **glob, char *name, int *i) = {
+	&check_match_normal,
+	&check_match_stars,
+	&check_match_question,
+	&check_match_crochet
+};*/
 
 #endif

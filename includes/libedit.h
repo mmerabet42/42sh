@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 11:44:12 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/04 18:41:29 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/01 12:02:43 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ void				sighandler(int sig);
 t_cmdedit			*ft_parser_edit(char *buf, t_cmdedit *cmd,
 		t_cursor *cursor);
 void				printprompt(int i);
-char				**git_prompt(void);
-int					free_git_prompt(char ***git_prompt, char **buf);
 int					ft_putc(int c);
 int					ft_isws(int c);
 

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 18:25:06 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/08 14:30:04 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/09/27 11:54:00 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void		addhistory(char *line)
 	}
 	if (g_shell->history->parent)
 		g_shell->history->parent->next = lst;
-	lst->parent = g_shell->history->parent;
+	lst->parent	= g_shell->history->parent;
 	lst->next = g_shell->history;
 	g_shell->history->parent = lst;
 }

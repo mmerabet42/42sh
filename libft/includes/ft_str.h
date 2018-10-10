@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/30 20:55:08 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/02 21:45:14 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ char				*ft_strstr(const char *a, const char *b);
 char				*ft_strnstr(const char *a, const char *b, size_t n);
 char				*ft_strpbrk(const char *s, const char *charset);
 int					ft_strpbrk_pos(const char *s, const char *charset);
-int					ft_strnpbrk_pos(const char *s, const char *charset, size_t n);
+int					ft_strnpbrk_pos(const char *s,
+								const char *charset,
+								size_t n);
 int					ft_strnrpbrk_pos(const char *s,
 								const char *charset,
 								size_t n);
@@ -121,7 +123,6 @@ int					ft_strrchr_pos(const char *s, int c);
 char				*ft_strrstr(const char *a, const char *b);
 char				*ft_strnrstr(const char *a, const char *b, size_t n);
 int					ft_strchr_pos(const char *a, int b);
-int					ft_strnchr_pos(const char *a, int b, size_t n);
 int					ft_strchrl_pos(const char *a, int b);
 int					ft_strstr_pos(const char *a, const char *b);
 int					ft_strstrl_pos(const char *a, const char *b);
@@ -154,6 +155,7 @@ int					ft_strcount(const char *s, char a);
 int					ft_strcountstr(const char *s, const char *a);
 char				*ft_strrep(const char *s, char a, char b);
 char				*ft_strrepc(char *s, char a, char b);
+char				*ft_strrepc_str(char *s, const char *a, const char *b);
 char				*ft_strrepstr(const char *s, const char *a, const char *b);
 char				*ft_strrep_clr(char *s, char a, char b);
 char				*ft_strrepstr_clr(char *s, const char *a, const char *b);
@@ -167,7 +169,8 @@ char				*ft_strbetweenstr(const char *s,
 									const char *a,
 									const char *b);
 int					ft_strbetweenps(char **s, const char *a, const char *b);
-char				*ft_strbetweenstr_ext(const char *s, const char *ext);
+char				*ft_strbetweenstr_ext(const char *s,
+									const char *ext);
 int					ft_strbetweenps_ext(char **s, const char *ext);
 
 char				*ft_strjoin(const char *a, const char *b);
@@ -216,59 +219,37 @@ typedef struct		s_strmchi
 	t_mchi			*mchi;
 }					t_strmchi;
 
-extern int			g_iread;
-extern int			g_explicitlev;
-extern int			g_ifound;
-
 # define RGX_END 1
 # define RGX_BKSLSH 2
 # define RGX_N 4
 
-enum				e_regex_condtion
-{
-	RGX_GREAT = 1, RGX_LESS = 2, RGX_EQUAL = 3, RGX_MARK = 4
-};
-
-typedef struct		s_regex_rule
-{
-	const char		*rule;
-	const char		*arg;
-	int				len_arg;
-	int				len_rule;
-	int				cond;
-	int				l;
-	char			type;
-	int				neg;
-}					t_regex_rule;
+extern int			g_iread;
+extern int			g_explicitlev;
+extern int			g_ifound;
 
 typedef struct		s_regex_info
 {
-	const char		*param;
 	const char		*str_begin;
 	const char		*rgx_begin;
 	const char		*str;
 	const char		*regex;
-	int				*var0;
-	int				*var1;
-	int				len_param;
-	int				param_i;
+	const char		*arg;
 	int				len;
+	const char		*rule_name;
+	int				cond;
 	int				n;
-	int				option;
 }					t_regex_info;
 
-typedef int	(*t_regex_funcptr)(t_regex_info *regex_info, t_regex_rule *rule);
-typedef struct		s_regex_func
+typedef int	(*t_regex_func)(const char *regex, const char **str,
+						const char *arg);
+typedef struct		s_regex_check
 {
 	char			*name;
-	t_regex_funcptr	func;
-}					t_regex_func;
+	t_regex_func	func;
+}					t_regex_check;
 
 int					regex_exec(t_regex_info *regex_info);
-void				regex_init(t_regex_info *regex_info, const char *regex, const char *str);
-t_regex_func		*get_regex_func(const char *name, int len);
-int					ft_regex(const char *regex, const char *str, int n, int opt);
-int					ft_lregex(int options, const char *a, const char *b, ...);
+int					ft_regex(const char *regex, const char *str);
 
 t_mchi				*ft_getmchi(const char *match);
 void				ft_delmchi(t_mchi *head);

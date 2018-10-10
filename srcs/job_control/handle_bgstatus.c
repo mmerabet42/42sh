@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 13:31:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/17 14:55:00 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/10 14:48:42 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 /*
 ** x de end_status a 1 direct pour sauter le Running car c est pas un
-** fin de proc;
+** fin de proc; if !opt new process comming else just change.
 */
 
 static	t_bgstats	g_bgstat[] = {
@@ -40,7 +40,22 @@ int					end_status(char *str)
 	return (-1);
 }
 
-int					handle_bgstat(pid_t pid, int status)
+static int			lookpid_pipe(t_list *elem, pid_t pid, int opt)
+{
+	t_pids	*pids;
+
+	pids = ((t_inffork *)elem->content)->pids;
+	if (opt)
+	{
+		while (pids && pids->pid != pid)
+			pids = pids->next;
+		if (pids)
+			return (1);
+	}
+	return (0);
+}
+
+int					handle_bgstat(pid_t pid, int status, int opt)
 {
 	t_list	*elem;
 	size_t	i;
@@ -48,7 +63,12 @@ int					handle_bgstat(pid_t pid, int status)
 	i = -1;
 	elem = g_shell->bgproc;
 	while (elem && ((t_inffork *)elem->content)->pid != pid)
+	{
+		if (((t_inffork *)elem->content)->pid == -1 &&
+				lookpid_pipe(elem, pid, opt))
+			break ;
 		elem = elem->next;
+	}
 	if (((t_inffork *)elem->content)->status[0])
 		((t_inffork *)elem->content)->modif |= (1 << 0);
 	while (++i < g_bgstats_size)

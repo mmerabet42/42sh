@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/09/11 18:30:59 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/10 10:49:33 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,17 +59,43 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 
 static void			check_retfork(int ret, pid_t pid)
 {
+	int		p;
+
+	p = pid == -1 ? 1 : 0;
 	if (WIFCONTINUED(ret))
-		handle_bgstat(pid, BG_RUN);
+		handle_bgstat(pid, BG_RUN, p);
 	else if (WIFSTOPPED(ret))
 	{
 		if (WSTOPSIG(ret) == SIGTTIN)
-			handle_bgstat(pid, BG_STOP);
+			handle_bgstat(pid, BG_STOP, p);
 	}
 	else if (!WIFEXITED(ret))
-		handle_bgstat(pid, BG_KILL);
+		handle_bgstat(pid, BG_KILL, p);
 	else if (WIFEXITED(ret))
-		handle_bgstat(pid, BG_END);
+		handle_bgstat(pid, BG_END, p);
+}
+
+static int			my_wait(t_list *elem)
+{
+	int		status;
+	t_pids	*pids;
+
+	if (((t_inffork *)elem->content)->pid == -1)
+	{
+		tcsetpgrp(0, ((t_inffork *)elem->content)->pids->pid);
+		pids = ((t_inffork *)elem->content)->pids;
+		while (pids)
+		{
+			waitpid(pids->pid, &status, WUNTRACED);
+			pids = pids->next;
+		}
+	}
+	else
+	{
+		tcsetpgrp(0, ((t_inffork *)elem->content)->pid);
+		waitpid(((t_inffork *)elem->content)->pid, &status, WUNTRACED);
+	}
+	return (status);
 }
 
 int					builtin_fg(int argc, char **argv)
@@ -84,9 +110,13 @@ int					builtin_fg(int argc, char **argv)
 		print_cmd_args2(((t_inffork *)elem->content)->cmd);
 		signal(SIGCHLD, SIG_DFL);
 		if (((t_inffork *)elem->content)->status[0] == 'S')
-			kill(((t_inffork *)elem->content)->pid, SIGCONT);
-		tcsetpgrp(0, ((t_inffork *)elem->content)->pid);
-		waitpid(((t_inffork *)elem->content)->pid, &status, WUNTRACED);
+		{
+			if (((t_inffork *)elem->content)->pid != -1)
+				kill(((t_inffork *)elem->content)->pid, SIGCONT);
+			else
+				kill(-((t_inffork *)elem->content)->pids->pid, SIGCONT);
+		}
+		status = my_wait(elem);
 		check_retfork(status, ((t_inffork *)elem->content)->pid);
 		tcsetpgrp(0, getpgrp());
 		signal(SIGCHLD, sign_child);

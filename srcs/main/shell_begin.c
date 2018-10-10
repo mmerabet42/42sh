@@ -6,12 +6,13 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 10:21:35 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/10 13:22:57 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_str.h"
+#include "job_control.h"
 #include "ft_mem.h"
 #include "ft_io.h"
 #include "ft_types.h"
@@ -21,33 +22,6 @@
 #include <locale.h>
 #include <sys/signal.h>
 #include <sys/wait.h>
-
-void			sign_child(int sign)
-{
-	t_list	*elem;
-	pid_t	pid;
-	int		ret;
-
-	elem = g_shell->bgproc;
-	while (elem)
-	{
-		pid = ((t_inffork *)elem->content)->pid;
-		if (sign == SIGCHLD && waitpid(pid, &ret, WNOHANG | WUNTRACED) == pid)
-		{
-			if (WIFCONTINUED(ret))
-				handle_bgstat(pid, BG_RUN);
-			else if (WIFSTOPPED(ret))
-			{
-				handle_bgstat(pid, BG_STOP);
-			}
-			else if (!WIFEXITED(ret))
-				handle_bgstat(pid, BG_KILL);
-			else if (WIFEXITED(ret))
-				handle_bgstat(pid, BG_END);
-		}
-		elem = elem->next;
-	}
-}
 
 static	void	sign_handler(int sign)
 {
@@ -115,8 +89,6 @@ int				shell_begin(char *name, int argc, char **argv, char **envp)
 	g_shell->curargs = &args;
 	g_shell->allf = &g_allf;
 	initenvp(envp);
-	g_shell->expor = ft_copyenv(g_shell->envp);
-	g_shell->localp = ft_copyenv(g_shell->envp);
 	ft_bzero(g_shell->pwd, 2048);
 	if ((tmp = ft_getenv("PWD", g_shell->envp)))
 		ft_strcpy(g_shell->pwd, tmp);

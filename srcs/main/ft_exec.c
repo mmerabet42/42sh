@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 17:21:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/24 20:14:45 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/10 14:15:12 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,16 @@ int		fork_father(pid_t pidl)
 	t_list	*elem;
 	int		ret;
 
-	g_shell->bits &= ~(1 << 1);
 	ret = 0;
 	handle_bgproc(pidl, g_shell->curargs->argv, BG_RUN, 0);
 	elem = ft_lstend(g_shell->bgproc);
 	waitpid(pidl, &ret, WUNTRACED);
+	g_shell->bits &= ~(1 << 1);
 	signal(SIGCHLD, sign_child);
 	tcsetpgrp(0, getpid());
 	if (WIFSTOPPED(ret))
 	{
-		handle_bgstat(pidl, BG_STOP);
+		handle_bgstat(pidl, BG_STOP, 1);
 		handle_bgsign(elem, 0);
 		return (WSTOPSIG(ret));
 	}
