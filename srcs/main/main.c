@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 11:09:30 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/08 21:46:12 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static t_exp		g_exps[] = {
 
 	{EXP_BRACES, NULL},
 	{EXP_SUBSHELL, NULL},
-	//{"", exp_glob}
+	{"", exp_glob}
 };
 
 static t_expf		g_expf = {
@@ -70,7 +70,6 @@ static t_astfunc	g_shell_callbacks[] = {
 	{EXP_BRACES, shell_lists_cb, NULL, 3},
 	{EXP_SUBSHELL, shell_lists_cb, NULL, 3},
 	{"*[$\\[*\\];\"*\";'*'@b]", shell_arth_cb, NULL, 3},
-	{"*=*", shell_equal, NULL, 3},
 	{"", shell_cmd_cb, NULL, 3},
 	{"while:if:then", NULL, shell_cond_cb, 0},
 	{"else:not:!", shell_else_cb, shell_else_cb, -1},
@@ -160,7 +159,6 @@ static void	main_execution(char *line)
 		if (!line[0] && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
 		head = ft_lexer(line, &g_lexerf);
-	//	ft_astprint(head, 0);
 		if (check_syntax(head, &g_expf))
 			g_shell->exitcode = 1;
 		else if ((ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
@@ -183,6 +181,8 @@ int			main(int argc, char **argv, char **envp)
 	char	*line;
 	int		cursor;
 
+	if (logger_init(D_TRACE, "/tmp/out.log") != 0)
+		printf("failed to open the logger\n");
 	shell_begin(init_structs(argv[0]), argc, argv, envp);
 	if (check_script() || check_cmd_starter())
 		return (shell_end());
@@ -200,5 +200,6 @@ int			main(int argc, char **argv, char **envp)
 		else
 			break ;
 	}
+	logger_close();
 	return (shell_end());
 }

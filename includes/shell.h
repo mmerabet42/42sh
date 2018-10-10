@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/08 16:40:04 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/06 19:38:40 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@
 # include "parser.h"
 # include "expr.h"
 # include "job_control.h"
+
+
+
+# include "../logger/incs/logger.h"
+
+
 
 # define DLM_REDP1 "<<:<<<:*[0-9]<<<:<:>:*[0-9]<<:>>:*[0-9]>>:*[<>@=1]&*[0-9]"
 # define DLM_REDP2 DLM_REDP1 ":*[<>@=1]&-:*[0-9]*[<>@=1]&:*[0-9]*[<>@=1]&-"
@@ -48,8 +54,7 @@ typedef enum	e_shret
 	SH_HDOCWFAIL, SH_HDOCRFAIL, SH_HDOCWORD, SH_OPENFILE, SH_CMDERR,
 	SH_NOLDPWD, SH_NHOME,
 	SH_BADFD, SH_MALLOC, SH_BADEXPR, SH_HDOCSTOP, SH_EXPRERR,
-	TK_CMD, TK_OP, TK_EQUAL, TK_REDIR, TK_NOT, TK_PIPE, TK_AMPERSAND,
-	TK_ANDOR, TK_COMA, TK_IFWHILE, TK_THEN, TK_ELSE, TK_SEMICOLON,
+	TK_CMD, TK_OP, TK_EQUAL, TK_REDIR, TK_PIPE, TK_ANDOR, TK_SEMICOLON,
 	TK_LEFT, TK_RIGHT, TK_LLEFT, TK_LRIGHT
 }				t_shret;
 
@@ -75,13 +80,6 @@ typedef struct		s_allf
 	t_iterf			*iterf;
 	t_expf			*expf;
 }					t_allf;
-
-typedef struct		s_pipe
-{
-	pid_t			pgid;
-	int				in;
-	int				out;
-}					t_pipe;
 
 typedef struct		s_redir
 {
@@ -111,8 +109,6 @@ typedef struct		s_shell
 	char			*user;
 	char			**paths;
 	char			**envp;
-	char			**localp;
-	char			**expor;
 	int				running:1;
 	char			*history_file;
 	int				exitcode;
@@ -182,6 +178,7 @@ void				clearhistory(int save);
 void				movehistory(char c, char *line, size_t *cursor);
 
 int					ft_exec(char *name, char **argv, char **envp, pid_t *pid);
+void				sign_child(int sign);
 
 t_shret				ft_isbuiltin(char *name, t_args *args);
 int					isbuiltin(char *name);
@@ -204,17 +201,6 @@ int					builtin_false(int argc, char **argv);
 int					builtin_jobs(int argc, char **argv);
 int					builtin_fg(int argc, char **argv);
 int					builtin_bg(int argc, char **argv);
-int					builtin_export(int argc, char **argv);
-int					builtin_unset(int argc, char **argv);
-void				ft_unset(char *name);
-void				update_export(char *name, char *value);
-int					builtin_set(int argc, char **argv);
-int					builtin_read(int argc, char **argv);
-
-char				**ft_split_whitespaces(char *str);
-char				*ft_multi_strjoin(int n, ...);
-void				ft_strremove(char *s);
-void				ft_free_tab(char ***tab);
 
 extern int			g_dontfree;
 extern t_shell		*g_shell;

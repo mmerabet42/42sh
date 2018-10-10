@@ -6,12 +6,11 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/15 23:32:59 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/09 10:20:40 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/06 22:40:07 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-#include "ft_str.h"
 
 static void	del_func(void *content, size_t size)
 {
@@ -27,29 +26,22 @@ static void	del_func(void *content, size_t size)
 	}
 }
 
-void		ft_free_tab(char ***tab)
-{
-	register int	i;
-
-	if (!tab)
-		return ;
-	i = -1;
-	while ((*tab)[++i])
-		if ((*tab)[i])
-			ft_strdel(&(*tab)[i]);
-	free(*tab);
-	*tab = NULL;
-}
-
 int			shell_end(void)
 {
+	char	**ptr;
 	int		exitcode;
 
+	if ((ptr = g_shell->paths))
+		while (*ptr)
+			free(*ptr++);
+	free(g_shell->paths);
+	if ((ptr = g_shell->envp))
+		while (*ptr)
+			free(*ptr++);
+	if (g_shell->bgproc)
+		freelst_bg();
 	free(g_shell->script);
-	ft_free_tab(&g_shell->paths);
-	ft_free_tab(&g_shell->localp);
-	ft_free_tab(&g_shell->envp);
-	ft_free_tab(&g_shell->expor);
+	free(g_shell->envp);
 	clearhistory(1);
 	free(g_shell->history_file);
 	ft_lstdel(&g_shell->funcs, del_func);

@@ -1,26 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_set.c                                      :+:      :+:    :+:   */
+/*   resetsign.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/04 10:51:05 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/04 10:56:03 by gdufay           ###   ########.fr       */
+/*   Created: 2018/10/10 13:44:04 by jraymond          #+#    #+#             */
+/*   Updated: 2018/10/10 13:57:25 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shell.h"
-#include "ft_io.h"
-
-int		builtin_set(int argc, char **argv)
-{
-	char	**it;
-
-	(void)argc;
-	(void)argv;
-	if ((it = g_shell->localp))
-		while (*it)
-			ft_putendl(*it++);
-	return (0);
-}
