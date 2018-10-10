@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/06 19:24:16 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/10 12:59:37 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/10 14:49:36 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,7 @@ static void		print(t_list *elem)
 
 	pids = ((t_inffork *)elem->content)->pids;
 	while (pids)
-	{
-		log_debug("lst_pids: %d\n", pids->pid);
 		pids = pids->next;
-	}
 }
 
 static void		handle_retwait(int ret, pid_t pid)
@@ -90,7 +87,6 @@ void			sign_child(int sign)
 	int		ret;
 
 	elem = g_shell->bgproc;
-	log_debug("HANDLE_SIGCHLD\n");
 	while (elem)
 	{
 		pid = ((t_inffork *)elem->content)->pid;

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/08 21:46:12 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/10 14:49:00 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,8 +181,6 @@ int			main(int argc, char **argv, char **envp)
 	char	*line;
 	int		cursor;
 
-	if (logger_init(D_TRACE, "/tmp/out.log") != 0)
-		printf("failed to open the logger\n");
 	shell_begin(init_structs(argv[0]), argc, argv, envp);
 	if (check_script() || check_cmd_starter())
 		return (shell_end());
@@ -200,6 +198,5 @@ int			main(int argc, char **argv, char **envp)
 		else
 			break ;
 	}
-	logger_close();
 	return (shell_end());
 }

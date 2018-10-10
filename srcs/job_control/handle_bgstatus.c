@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 13:31:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/10 11:42:55 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/10 14:48:42 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ static int			lookpid_pipe(t_list *elem, pid_t pid, int opt)
 	t_pids	*pids;
 
 	pids = ((t_inffork *)elem->content)->pids;
-	log_debug("first\n");
 	if (opt)
 	{
 		while (pids && pids->pid != pid)
@@ -70,7 +69,6 @@ int					handle_bgstat(pid_t pid, int status, int opt)
 			break ;
 		elem = elem->next;
 	}
-	log_debug("pid: %d opt: %d\n", pid, opt);
 	if (((t_inffork *)elem->content)->status[0])
 		((t_inffork *)elem->content)->modif |= (1 << 0);
 	while (++i < g_bgstats_size)

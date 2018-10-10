@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/10 13:57:51 by jraymond         ###   ########.fr        #
+#    Updated: 2018/10/10 14:49:34 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -99,7 +99,7 @@ all:
 
 $(NAME): $(LIBFT) $(OBJB)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) -ltermcap $(OBJB) $(LIBFT) $(FRAMEWORKS) logger/liblogger.a -o $(NAME)
+	@$(CC) $(CFLAGS) -ltermcap $(OBJB) $(LIBFT) $(FRAMEWORKS) -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
 $(LIBFT):

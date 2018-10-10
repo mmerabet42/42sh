@@ -9,16 +9,12 @@ static void	size_malloc(t_ast *ast, int *i)
 	if (ast->left)
 		size_malloc(ast->left, i);
 	if (ast->name)
-	{
-		log_debug("name -> '%s'\n", ast->name);
 		*i += 1;
-	}
 	if (ast->args && (tab = ast->args->argv))
 	{
 		tab += *tab ? 1 : 0;
 		while (*tab)
 		{
-			log_debug("args -> '%s'\n", *tab);
 			*i += 1;
 			tab++;
 		}
@@ -58,7 +54,6 @@ int			ret_pipecmd(t_ast *ast, char ***cmd)
 	if (!*cmd)
 	{
 		size_malloc(ast, &size);
-		log_debug("size_tab: %d\n", size);
 		if (!(*cmd = (char **)ft_memalloc(sizeof(char *) * (size + 1))))
 			return (SH_MALLOC);
 	}

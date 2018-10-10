@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/10 11:52:24 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/10 14:48:18 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,6 @@ static int		wait_fork(t_pipe *a, void *res)
 	while (elem)
 	{
 		waitpid(elem->pid, res, WUNTRACED);
-		log_debug("end: %d\n", elem->pid);
 		elem = elem->next;
 	}
 	*(int *)res = handle_res(*(int *)res, ((t_inffork *)a->head->content)->pids->pid);
