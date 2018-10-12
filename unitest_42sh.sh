@@ -181,12 +181,109 @@ check_diff
 COMMAND="echo prout > file ; cat < file <&9 9<&0 ; rm file"
 check_diff
 
+COMMAND="echo def > /tmp/toto ; cat 9</tmp/toto 8<&9 7<&8 -e 6<&7 5<&6 4<&5 3<&4 2<&3 <&2; rm /tmp/toto"
+check_diff
+
 printf "${ORANGE}\n~~~~~~~~~~~~~\npipe\n~~~~~~~~~~~~~\n${NC}"
 
 COMMAND="echo a | cat -e"
 check_diff
 
 COMMAND="echo a | cat | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e"
+check_diff
+
+printf "${ORANGE}\n~~~~~~~~~~~~~\nglobbing\n~~~~~~~~~~~~~\n${NC}"
+
+COMMAND="echo src/*.sh"
+check_diff
+
+COMMAND="echo src/*.c"
+check_diff
+
+COMMAND="echo \"\*\""
+check_diff
+
+COMMAND="echo '*'"
+check_diff
+
+COMMAND="echo */*.h"
+check_diff
+
+COMMAND="echo */*.c"
+check_diff
+
+COMMAND="echo "*/*.h""
+check_diff
+
+COMMAND="echo "*/*.c""
+check_diff
+
+COMMAND="echo '*/*.h'"
+check_diff
+
+COMMAND="echo '*/*.c'"
+check_diff
+
+COMMAND="echo *"
+check_diff
+
+COMMAND="echo s?c ob? ???? ?"
+check_diff
+
+COMMAND="echo [!s]bj [!owf1-9]rc"
+check_diff
+
+COMMAND="echo src/[a-zA-Z]*.c"
+check_diff
+
+COMMAND="echo {src,obj}"
+check_diff
+
+COMMAND="echo {a,c,b}"
+check_diff
+
+COMMAND="echo {a}"
+check_diff
+
+COMMAND="echo */*/*.{h,c,o}"
+check_diff
+
+COMMAND="echo {src,obj}/*"
+check_diff
+
+COMMAND="echo {src,obj}/*/{h,c,o}"
+check_diff
+
+COMMAND="echo {src,obj}/*/*.{h,c,o}"
+check_diff
+
+COMMAND="echo {src,obj,}/*/*.{h,c,o}"
+check_diff
+
+COMMAND="echo {src,obj,include}/*/*.{h,c,o}"
+check_diff
+
+COMMAND="echo {{src,obj},include}/*/*.{h,c,o}"
+check_diff
+
+printf "${ORANGE}\n~~~~~~~~~~~~~\nbin\n~~~~~~~~~~~~~\n${NC}"
+
+COMMAND="/bin/ls /"
+check_diff
+
+COMMAND="/bin/ls -laF /"
+check_diff
+
+COMMAND="/bin/ls -l -a -F /"
+check_diff
+
+COMMAND="ls ~"
+check_diff
+
+COMMAND="ls -laF ~"
+check_diff
+
+COMMAND="ls -l -a -F ~"
 check_diff
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\nmixe\n~~~~~~~~~~~~~\n${NC}"
@@ -291,7 +388,7 @@ check_diff
 COMMAND="rm -rf toto"
 check_diff
 
-COMMAND="echo "$TERM""
+COMMAND="echo "\$TERM""
 check_diff
 
 COMMAND="ls this_file_does_not_exist 2>&1 > /tmp/redir_test_file;rm -f /tmp/redir_test_file;echo abc && echo def; echo 123 > /tmp/test_redir_file_stdout;echo \"---\" ; echo \"---\" ;cat /tmp/test_redir_file_stdout;rm -f /tmp/test_redir_file_stdout"
@@ -396,7 +493,7 @@ check_diff
 COMMAND="rm -rf toto"
 check_diff
 
-COMMAND="echo "$TERM""
+COMMAND="echo \"\$TERM\""
 check_diff
 
 
@@ -417,6 +514,11 @@ check_diff
 COMMAND="cd ~ ; cd -L goinfre ; pwd"
 check_diff
 
+COMMAND="cd ///// ; pwd"
+check_diff
+
+COMMAND="cd /////tmp ; pwd"
+check_diff
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\nbuiltin echo && quote\n~~~~~~~~~~~~~\n${NC}"
 
@@ -492,5 +594,23 @@ check_diff
 COMMAND="ls | (cat -e | cat -n) | (rev| ( ( cat -e ) ) )"
 check_diff
 
+printf "${ORANGE}\n~~~~~~~~~~~~~\narithmetique\n~~~~~~~~~~~~~\n${NC}"
+
+COMMAND="echo \$((1+3))"
+check_diff
+
+COMMAND="echo \$((1 +         3))"
+check_diff
+
+COMMAND="echo \$[1 +         3]"
+check_diff
+
+COMMAND="echo \$[ 1 +              3 - 50          ]"
+check_diff
+
+COMMAND="echo \$[ 1 +
+          3 - 50
+              ]m tmp tmp2"
+check_diff
 
 rm tmp tmp2
