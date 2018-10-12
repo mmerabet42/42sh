@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 11:58:28 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/12 13:51:00 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/12 14:18:28 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,6 @@
 #include "ft_mem.h"
 #include <sys/stat.h>
 #include <limits.h>
-
-static char	*get_curpath(char *path, int *pathno)
-{
-	char	*tmp;
-
-	tmp = ft_getenv("HOME", g_shell->envp);
-	if (!path && !tmp && (*pathno = 1))
-		return ((void*)(size_t)!ft_printf("42sh: cd: HOME not set\n"));
-	if (!path && tmp)
-		return (ft_strdup(tmp));
-	if (path[0] == '/' || !ft_strncmp(path, ".", 1)
-			|| !ft_strncmp(path, "..", 2))
-		return (ft_strdup(path));
-	tmp = ft_getenv("OLDPWD", g_shell->envp);
-	if (!ft_strcmp(path, "-") && !tmp && (*pathno = 1))
-		return ((void*)(size_t)!ft_printf("42sh: cd: OLDPWD not set\n"));
-	if (!ft_strcmp(path, "-") && (*pathno = 1))
-		return (ft_strdup(tmp));
-	return (get_curpath_extends(path, pathno));
-}
 
 static char	*canonical(char *curpath, char *canon)
 {
@@ -56,10 +36,7 @@ static char	*canonical(char *curpath, char *canon)
 	if (component && !ft_strncmp(curpath, "../", component))
 	{
 		if (stat(canon, &buf) == -1 || (buf.st_mode & S_IFMT) != S_IFDIR)
-		{
-			ft_printf("42sh: cd: %s: Not a directory\n", canon);
 			return (NULL);
-		}
 		canon = remove_prec_component(canon);
 		return (canonical(curpath + component, canon));
 	}
@@ -75,15 +52,9 @@ static char	*handle_opt_cd(char **curpath)
 	size_t	len;
 	char	pwd_buf[PATH_MAX];
 
-	if (!curpath || !*curpath)
+	if (!curpath || !*curpath || !(pwd = ft_getenv("PWD", g_shell->envp)))
 	{
-		ft_strdel(curpath);
-		return (NULL);
-	}
-	getcwd(pwd_buf, PATH_MAX);
-	if (!(pwd = ft_getenv("PWD", g_shell->envp)))
-	{
-		update_export("PWD", pwd_buf);
+		update_export("PWD", getcwd(pwd_buf, PATH_MAX));
 		ft_strdel(curpath);
 		return (NULL);
 	}
@@ -107,24 +78,26 @@ static char	*check_and_move(char **curpath, char *path, char opt)
 	struct stat		buf;
 	char			pwd[PATH_MAX];
 
-	getcwd(pwd, PATH_MAX);
-	update_export("OLDPWD", pwd);
+	update_export("OLDPWD", getcwd(pwd, PATH_MAX));
 	if (opt != 'P')
 		*curpath = handle_opt_cd(curpath);
 	if (stat((*curpath), &buf) == -1)
 	{
 		ft_strdel(curpath);
-		return ((void*)(size_t)!ft_printf("42sh: cd: %s: No such file or directory\n", path));
+		return ((void*)(size_t)!ft_printf("42sh: cd: %s: No such"
+					" file or directory\n", path));
 	}
 	if ((buf.st_mode & S_IFMT) != S_IFDIR)
 	{
 		ft_strdel(curpath);
-		return ((void*)(size_t)!ft_printf("42sh: cd: %s: Not a directory\n", path));
+		return ((void*)(size_t)!ft_printf("42sh: cd: %s: "
+					"Not a directory\n", path));
 	}
 	if (chdir(*curpath) == -1)
 	{
 		ft_strdel(curpath);
-		return ((void*)(size_t)!ft_printf("42sh: cd: %s: Permission denied\n", path));
+		return ((void*)(size_t)!ft_printf("42sh: cd: %s: "
+					"Permission denied\n", path));
 	}
 	return (*curpath);
 }
@@ -153,8 +126,7 @@ int			builtin_cd(int argc, char **argv)
 	char			*curpath;
 	char			pwd[PATH_MAX];
 
-	(void)argc;
-	pathno = 0;
+	pathno = argc - argc;
 	argv++;
 	if (handle_opt(&argv, &opt))
 		return (1);

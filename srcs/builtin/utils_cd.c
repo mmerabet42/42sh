@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 12:53:55 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/12 13:27:11 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/12 14:14:22 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,26 @@ static char	*get_curpath_cdpath(char **paths, char *path)
 		ft_strdel(&tmp);
 	}
 	return (NULL);
+}
+
+char		*get_curpath(char *path, int *pathno)
+{
+	char	*tmp;
+
+	tmp = ft_getenv("HOME", g_shell->envp);
+	if (!path && !tmp && (*pathno = 1))
+		return ((void*)(size_t)!ft_printf("42sh: cd: HOME not set\n"));
+	if (!path && tmp)
+		return (ft_strdup(tmp));
+	if (path[0] == '/' || !ft_strncmp(path, ".", 1)
+			|| !ft_strncmp(path, "..", 2))
+		return (ft_strdup(path));
+	tmp = ft_getenv("OLDPWD", g_shell->envp);
+	if (!ft_strcmp(path, "-") && !tmp && (*pathno = 1))
+		return ((void*)(size_t)!ft_printf("42sh: cd: OLDPWD not set\n"));
+	if (!ft_strcmp(path, "-") && (*pathno = 1))
+		return (ft_strdup(tmp));
+	return (get_curpath_extends(path, pathno));
 }
 
 char		*get_curpath_extends(char *path, int *pathno)
