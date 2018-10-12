@@ -3,131 +3,175 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/15 18:03:23 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/20 19:49:17 by jraymond         ###   ########.fr       */
+/*   Created: 2018/10/12 11:58:28 by gdufay            #+#    #+#             */
+/*   Updated: 2018/10/12 13:51:00 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_str.h"
-#include "ft_mem.h"
+#include "ft_printf.h"
 #include "ft_io.h"
-#include <unistd.h>
+#include "ft_mem.h"
+#include <sys/stat.h>
+#include <limits.h>
 
-static int	lorp(char ***argv)
+static char	*get_curpath(char *path, int *pathno)
 {
-	int		lp;
+	char	*tmp;
+
+	tmp = ft_getenv("HOME", g_shell->envp);
+	if (!path && !tmp && (*pathno = 1))
+		return ((void*)(size_t)!ft_printf("42sh: cd: HOME not set\n"));
+	if (!path && tmp)
+		return (ft_strdup(tmp));
+	if (path[0] == '/' || !ft_strncmp(path, ".", 1)
+			|| !ft_strncmp(path, "..", 2))
+		return (ft_strdup(path));
+	tmp = ft_getenv("OLDPWD", g_shell->envp);
+	if (!ft_strcmp(path, "-") && !tmp && (*pathno = 1))
+		return ((void*)(size_t)!ft_printf("42sh: cd: OLDPWD not set\n"));
+	if (!ft_strcmp(path, "-") && (*pathno = 1))
+		return (ft_strdup(tmp));
+	return (get_curpath_extends(path, pathno));
+}
+
+static char	*canonical(char *curpath, char *canon)
+{
+	unsigned int	component;
+	struct stat		buf;
+	char			*tmp;
+
+	if (!canon || !curpath || !*curpath)
+		return (canon);
+	tmp = ft_strchr(curpath, '/');
+	component = (tmp ? tmp - curpath : ft_strlen(curpath));
+	if (!component && ft_strlen(canon) > 0
+			&& canon[ft_strlen(canon) - 1] == '/')
+		return (canonical(curpath + component + 1, canon));
+	if (component && !ft_strncmp(curpath, "./", component))
+		return (canonical(curpath + component * 2 - 1, canon));
+	if (component && !ft_strncmp(curpath, "../", component))
+	{
+		if (stat(canon, &buf) == -1 || (buf.st_mode & S_IFMT) != S_IFDIR)
+		{
+			ft_printf("42sh: cd: %s: Not a directory\n", canon);
+			return (NULL);
+		}
+		canon = remove_prec_component(canon);
+		return (canonical(curpath + component, canon));
+	}
+	canon = ft_strncat(canon, curpath, component + 1);
+	return (canonical(curpath + component, canon));
+}
+
+static char	*handle_opt_cd(char **curpath)
+{
+	char	*canon;
+	char	*tmp;
+	char	*pwd;
+	size_t	len;
+	char	pwd_buf[PATH_MAX];
+
+	if (!curpath || !*curpath)
+	{
+		ft_strdel(curpath);
+		return (NULL);
+	}
+	getcwd(pwd_buf, PATH_MAX);
+	if (!(pwd = ft_getenv("PWD", g_shell->envp)))
+	{
+		update_export("PWD", pwd_buf);
+		ft_strdel(curpath);
+		return (NULL);
+	}
+	len = ft_strlen(pwd);
+	if (*(*curpath) != '/' && pwd[len - 1] != '/')
+		tmp = ft_multi_strjoin(3, pwd, "/", *curpath);
+	else if (**curpath != '/' && pwd[len - 1] == '/')
+		tmp = ft_multi_strjoin(2, pwd, *curpath);
+	else
+		tmp = ft_strdup(*curpath);
+	canon = ft_strnew(ft_strlen(tmp));
+	ft_strdel(curpath);
+	if (!(*curpath = canonical(tmp, canon)))
+		ft_strdel(&canon);
+	ft_strdel(&tmp);
+	return (*curpath);
+}
+
+static char	*check_and_move(char **curpath, char *path, char opt)
+{
+	struct stat		buf;
+	char			pwd[PATH_MAX];
+
+	getcwd(pwd, PATH_MAX);
+	update_export("OLDPWD", pwd);
+	if (opt != 'P')
+		*curpath = handle_opt_cd(curpath);
+	if (stat((*curpath), &buf) == -1)
+	{
+		ft_strdel(curpath);
+		return ((void*)(size_t)!ft_printf("42sh: cd: %s: No such file or directory\n", path));
+	}
+	if ((buf.st_mode & S_IFMT) != S_IFDIR)
+	{
+		ft_strdel(curpath);
+		return ((void*)(size_t)!ft_printf("42sh: cd: %s: Not a directory\n", path));
+	}
+	if (chdir(*curpath) == -1)
+	{
+		ft_strdel(curpath);
+		return ((void*)(size_t)!ft_printf("42sh: cd: %s: Permission denied\n", path));
+	}
+	return (*curpath);
+}
+
+static int	handle_opt(char ***argv, char *p)
+{
 	t_opt	opt;
 
-	lp = 1;
 	ft_bzero(&opt, sizeof(t_opt));
-	++(*argv);
 	while (ft_getopt(argv, "LP", &opt) != OPT_END)
 	{
-		if (opt.c == 'L')
-			lp = 1;
-		else if (opt.c == 'P')
-			lp = 0;
+		if (opt.c == 'L' || opt.c == 'P')
+			*p = opt.c;
 		else if (opt.c == '\0' && (*argv = opt.ptr - 1))
 			break ;
 		else if (ft_printf_fd(2, "cd: bad option: %c\n", opt.c))
-			return (-1);
+			return (1);
 	}
-	return (lp);
-}
-
-static int	goto_home(char *name)
-{
-	int	acc;
-
-	if (!g_shell->homepwd)
-	{
-		ft_printf_fd(2, "%s: HOME not set\n", name);
-		return (1);
-	}
-	if ((acc = ft_chdirl(g_shell->homepwd, g_shell->pwd, 2048)) == SH_OK)
-	{
-		ft_setenv("OLDPWD", ft_getenv("PWD", g_shell->envp), &g_shell->envp);
-		ft_setenv("PWD", g_shell->pwd, &g_shell->envp);
-		return (0);
-	}
-	ft_printf_fd(2, "%s: %s: %s\n", name, ft_strshret(acc), g_shell->homepwd);
-	return (1);
+	return (0);
 }
 
 int			builtin_cd(int argc, char **argv)
 {
-	int		acc;
-	char	*name;
+	int				pathno;
+	char			opt;
+	char			*curpath;
+	char			pwd[PATH_MAX];
 
-	name = NULL;
-	if (argc == 1)
-		return (goto_home(argv[0]));
-	else if (argc > 1)
+	(void)argc;
+	pathno = 0;
+	argv++;
+	if (handle_opt(&argv, &opt))
+		return (1);
+	if (ft_strlen(*argv) >= PATH_MAX)
+		return (!!ft_printf("42sh: cd: pathname too long\n"));
+	if (!(curpath = get_curpath(*argv, &pathno)))
 	{
-		if ((argc = lorp(&argv)) == -1)
-			return (1);
-		if (ft_strequ((name = argv[0]), "-"))
-			name = ft_getenv("OLDPWD", g_shell->envp);
-		if ((acc = ft_chdir(name, g_shell->pwd, 2048, argc)) != SH_OK)
-			return (!!ft_printf_fd(2, "cd: %s: %s\n", ft_strshret(acc), name));
-		if (ft_strequ(argv[0], "-"))
-		{
-			if (name)
-				ft_printf("%s\n", name);
-			else
-				return (!!ft_printf_fd(2, "cd: OLDPWD not set\n"));
-		}
+		return (pathno ? 1 : !!ft_printf("42sh: cd: %s"
+					": No such file or directory\n", *argv));
 	}
-	ft_setenv("OLDPWD", ft_getenv("PWD", g_shell->envp), &g_shell->envp);
-	ft_setenv("PWD", g_shell->pwd, &g_shell->envp);
-	return (0);
-}
-
-static void	print_pwd(int h)
-{
-	int		len;
-
-	if (h)
-	{
-		len = (int)ft_strlen(g_shell->homepwd);
-		if (ft_strnequ(g_shell->pwd, g_shell->homepwd, len))
-		{
-			ft_putchar('~');
-			ft_putstr(g_shell->pwd + len);
-			return ;
-		}
-	}
-	ft_putstr(g_shell->pwd);
-}
-
-int			builtin_pwd(int argc, char **argv)
-{
-	t_opt	opt;
-
-	argc = 0;
-	ft_bzero(&opt, sizeof(t_opt));
-	++argv;
-	while (ft_getopt(&argv, "LPnh", &opt) != OPT_END)
-	{
-		if (opt.c == 'L')
-			argc &= (~(1 << 0));
-		else if (opt.c == 'P')
-			argc |= (1 << 0);
-		else if (opt.c == 'n')
-			argc |= (1 << 1);
-		else if (opt.c == 'h')
-			argc |= (1 << 2);
-		else if (ft_printf_fd(2, "pwd: bad option: %c\n", opt.c))
-			return (1);
-	}
-	if (argc & (1 << 0))
-		ft_printf("%s", ft_getcwd(NULL, 0));
-	else
-		print_pwd((argc & (1 << 2)));
-	if (!(argc & (1 << 1)))
-		ft_printf("\n");
+	if (!(curpath = check_and_move(&curpath, *argv, opt)))
+		return (1);
+	getcwd(pwd, PATH_MAX);
+	update_export("PWD", (opt == 'P' ? pwd : curpath));
+	ft_strcpy(g_shell->pwd, (opt == 'P' ? pwd : curpath));
+	if (pathno)
+		ft_putendl(curpath);
+	ft_strdel(&curpath);
 	return (0);
 }

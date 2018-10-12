@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 10:55:03 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/12 12:19:03 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,8 @@ int					isbuiltin(char *name);
 int					execbuiltin(char *name, t_args *args);
 
 int					builtin_cd(int argc, char **argv);
+char				*get_curpath_extends(char *path, int *pathno);
+char				*remove_prec_component(char *canon);
 int					builtin_env(int argc, char **argv);
 int					builtin_echo(int argc, char **argv);
 int					builtin_exit(int argc, char **argv);
