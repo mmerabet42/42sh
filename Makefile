@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/11 16:46:21 by jraymond         ###   ########.fr        #
+#    Updated: 2018/10/12 11:05:32 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -95,16 +95,13 @@ CGREEN=\033[38;2;0;255;145m
 CEND=\033[0m
 
 all: 
-	@$(MAKE) lib log
+	@$(MAKE) lib
 	@$(MAKE) $(NAME)
 
 $(NAME): $(LIBFT) $(OBJB) $(logger)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) -ltermcap $(FRAMEWORKS) logger/liblogger.a -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) -ltermcap $(FRAMEWORKS) -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
-
-log:
-	@make -C logger
 
 lib:
 	@make -C $(LIBFTD)
