@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/12 20:53:55 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/24 15:24:58 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/12 19:59:13 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	redir_printerror(t_redir *r, int err, void **op)
 
 int		replace_fd(t_redir *r, int *closed_fd)
 {
-	int	tmp;
+	int	errno;
 
 	if (r->fdz == -2)
 		return (0);
@@ -38,11 +38,6 @@ int		replace_fd(t_redir *r, int *closed_fd)
 	}
 	else if (r->fdb != -1)
 	{
-		if ((tmp = r->fdz) == r->fdb)
-		{
-			r->fdz = dup(r->fdz);
-			close(tmp);
-		}
 		if (dup2(r->fdb, r->fda) == -1)
 			return (SH_BADFD);
 	}
