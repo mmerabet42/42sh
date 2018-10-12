@@ -31,7 +31,7 @@ static int	regex_modulus(t_regex_info *rgxi)
 	return (-1);
 }
 
-static int	special_char(char c, t_regex_info *rgxi, int *len)
+static int	special_char(char c, t_regex_info *rgxi)
 {
 	int	pos;
 
@@ -40,16 +40,16 @@ static int	special_char(char c, t_regex_info *rgxi, int *len)
 		++rgxi->regex;
 		if ((pos = regex_modulus(rgxi)) == -1)
 			return (-1);
-		*len += pos;
+		rgxi->len += pos;
 		rgxi->str += pos;
 		return (0);
 	}
 	else if (c == '*' || c == '?')
 	{
-		if ((pos = regex_wildcard(rgxi, len)) == -1)
+		if ((pos = regex_wildcard(rgxi)) == -1)
 			return (-1);
 		else if (pos > 0)
-			return (*len + pos);
+			return (pos);
 		return (0);
 	}
 	return (-2);
@@ -58,12 +58,10 @@ static int	special_char(char c, t_regex_info *rgxi, int *len)
 int		regex_exec(t_regex_info *regex_info)
 {
 	int	pos;
-	int	len;
 
-	len = 0;
 	while (*regex_info->regex)
 	{
-		if ((pos = special_char(*regex_info->regex, regex_info, &len)) == 0)
+		if ((pos = special_char(*regex_info->regex, regex_info)) == 0)
 			continue;
 		else if (pos != -2)
 			return (pos);
@@ -71,25 +69,15 @@ int		regex_exec(t_regex_info *regex_info)
 			pos = ft_strlen(regex_info->regex);
 		if (!ft_strnequ(regex_info->regex, regex_info->str, pos))
 			return (-1);
-		len += pos;
+		regex_info->len += pos;
 		regex_info->str += pos;
 		regex_info->regex += pos;
 	}
 	if ((regex_info->option & RGX_END) && *regex_info->str)
-		return (len);
+		return (regex_info->len);
 	if (*regex_info->regex && !ft_strequ(regex_info->regex, "*"))
 		return (-1);
-	return (*regex_info->str ? -1 : len);
-}
-
-void	regex_init(t_regex_info *regex_info, const char *regex, const char *str)
-{
-	ft_bzero(regex_info, sizeof(t_regex_info));
-	regex_info->str_begin = str;
-	regex_info->rgx_begin = regex;
-	regex_info->str = str;
-	regex_info->regex = regex;
-	regex_info->n = -1;
+	return (*regex_info->str ? -1 : regex_info->len);
 }
 
 int	ft_regex(const char *regex, const char *str, int n, int opt)

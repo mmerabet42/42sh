@@ -323,9 +323,7 @@ static t_regex_func	g_regexfs[] = {
 	{"LG", group_rgx},
 	{"BRACKET0:[*[?[@BRACKET1]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[]()\"'}]|?[@BRACKET0]@or?]]", NULL},
 	{"BRACKET1:(*[?[@BRACKET0]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]\"'}]|?[@BRACKET1]@or?])", NULL},
-	{"BRACKETZ:?[?[@BRACKET0]|?[@BRACKET1]@or]", NULL},
-
-	{"BRACKET:(*[?[@DQUOTE]|?[@QUOTE]|?[?![()]&?![@S_BRACKET]@and]|?[@BRACKET]@or?])", NULL},
+	{"BRACKET:?[?[@BRACKET0]|?[@BRACKET1]@or]", NULL},
 	{"T:?[?[0=n!0@expr]|?[n:*[@alpha]@expr]@or]?[0=n!0@expr]*[@=n]*[@digit=n]?[?[@T]|@or]", NULL},
 	{"expr", expr_rgx},
 	{"print", print_rgx},

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/01 11:26:03 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/12 20:12:00 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,9 +179,6 @@ static void	main_execution(char *line)
 
 int			main(int argc, char **argv, char **envp)
 {
-//	int	l;
-//	int	n = regex_bracket(argv[1], &l);
-//	ft_printf("bracket: '%s' %d %d\n", argv[1], n, l);
 	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(argv[1], argv[2], -1, 0));
 	return (0);
 	char	*line;
