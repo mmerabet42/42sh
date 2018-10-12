@@ -6,12 +6,13 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 10:21:35 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/12 10:53:00 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_str.h"
+#include "job_control.h"
 #include "ft_mem.h"
 #include "ft_io.h"
 #include "ft_types.h"
@@ -21,33 +22,6 @@
 #include <locale.h>
 #include <sys/signal.h>
 #include <sys/wait.h>
-
-void			sign_child(int sign)
-{
-	t_list	*elem;
-	pid_t	pid;
-	int		ret;
-
-	elem = g_shell->bgproc;
-	while (elem)
-	{
-		pid = ((t_inffork *)elem->content)->pid;
-		if (sign == SIGCHLD && waitpid(pid, &ret, WNOHANG | WUNTRACED) == pid)
-		{
-			if (WIFCONTINUED(ret))
-				handle_bgstat(pid, BG_RUN);
-			else if (WIFSTOPPED(ret))
-			{
-				handle_bgstat(pid, BG_STOP);
-			}
-			else if (!WIFEXITED(ret))
-				handle_bgstat(pid, BG_KILL);
-			else if (WIFEXITED(ret))
-				handle_bgstat(pid, BG_END);
-		}
-		elem = elem->next;
-	}
-}
 
 static	void	sign_handler(int sign)
 {
@@ -60,6 +34,7 @@ static	void	sign_handler(int sign)
 		signal(SIGTTOU, SIG_IGN);
 		signal(SIGTTIN, SIG_IGN);
 		signal(SIGCHLD, sign_child);
+		signal(SIGTSTP, SIG_IGN);
 	}
 	if (sign == SIGINT)
 	{

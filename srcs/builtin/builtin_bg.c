@@ -53,10 +53,20 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 		return (elem);
 	return (error_bg(argv, 0));
 }
+/*
+static void			resetsign(void)
+{
+	int	x;
+
+	x = -1;
+	while (++x < 33)
+		signal(x, SIG_DFL);
+}*/
 
 int					builtin_bg(int argc, char **argv)
 {
 	t_list	*elem;
+	pid_t	pid;
 	int		ret;
 
 	ret = ft_atoi(argv[1]);
@@ -68,8 +78,14 @@ int					builtin_bg(int argc, char **argv)
 			ft_printf_fd(2, "21sh: bg: job %d already in background\n", ret);
 		else
 		{
-			kill(((t_inffork *)elem->content)->pid, SIGCONT);
-			handle_bgstat(((t_inffork *)elem->content)->pid, BG_RUN);
+			pid = ((t_inffork *)elem->content)->pid;
+			pid = pid == -1 ? ((t_inffork *)elem->content)->pids->pid : pid;
+			ret = ((t_inffork *)elem->content)->pid == -1 ? 1 : 0;
+			handle_bgstat(((t_inffork *)elem->content)->pid, BG_RUN, ret);
+			if (((t_inffork *)elem->content)->pid == -1)
+				kill(-pid, SIGCONT);
+			else
+				kill(pid, SIGCONT);
 		}
 	}
 	return (0);

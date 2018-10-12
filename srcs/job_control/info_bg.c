@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:40:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/09/24 20:10:46 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/10 11:08:48 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "ft_list.h"
 #include "ft_io.h"
 #include "ft_mem.h"
+#include "job_control.h"
 
 static	t_inffork	*init_infproc(int x, pid_t pid, char **cmd)
 {
@@ -22,9 +23,11 @@ static	t_inffork	*init_infproc(int x, pid_t pid, char **cmd)
 	if (!(new = (t_inffork *)ft_memalloc(sizeof(t_inffork))))
 		ft_exitf(EXIT_FAILURE, "21sh: %s\n", ft_strshret(SH_MALLOC));
 	new->x = x;
-	new->pid = pid;
+	new->pid = (g_shell->bits & (1 << 1)) ? -1 : pid;
 	new->cmd = ft_copyenv(cmd);
 	new->sign = ' ';
+	if (new->pid == -1 && creatpushelem(&new->pids, pid) != 0)
+		ft_exitf(EXIT_FAILURE, "21sh: %s\n", ft_strshret(SH_MALLOC));
 	return (new);
 }
 
@@ -73,6 +76,7 @@ int					handle_bgproc(pid_t pid_fork, char **cmd,
 	ft_lstpush_p(&g_shell->bgproc, elem);
 	if (getpid() != pid_fork && opt)
 		handle_bgsign(elem, 0);
-	handle_bgstat(pid_fork, status);
+	ret = ((t_inffork *)elem->content)->pid == -1 ? 1 : 0;
+	handle_bgstat(pid_fork, status, ret);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/15 23:32:59 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/09 10:20:40 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/10 18:15:32 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int			shell_end(void)
 {
 	int		exitcode;
 
+	if (g_shell->bgproc)
+		freelst_bg();
 	free(g_shell->script);
 	ft_free_tab(&g_shell->paths);
 	ft_free_tab(&g_shell->localp);

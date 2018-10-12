@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/05 11:09:30 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/12 10:52:47 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static t_exp		g_exps[] = {
 
 	{EXP_BRACES, NULL},
 	{EXP_SUBSHELL, NULL},
-	//{"", exp_glob}
+	{"", exp_glob}
 };
 
 static t_expf		g_expf = {
@@ -160,7 +160,6 @@ static void	main_execution(char *line)
 		if (!line[0] && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
 		head = ft_lexer(line, &g_lexerf);
-	//	ft_astprint(head, 0);
 		if (check_syntax(head, &g_expf))
 			g_shell->exitcode = 1;
 		else if ((ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))

@@ -6,13 +6,13 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/08 16:35:58 by gdufay           ###   ########.fr        #
+#    Updated: 2018/10/11 16:46:21 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	42sh
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra -g3
+CFLAGS		=	-Wall -Werror -Wextra -g3 
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
@@ -22,8 +22,8 @@ INCLUDES	=	includes/expr.h includes/job_control.h includes/parser.h \
 				includes/shell.h includes/globing.h \
 				includes/libedit.h
 
-_JBCNTRL_FS	=	check_bgend.c info_bg.c handle_bgsign.c handle_bgstatus.c \
-				handle_pgid.c exec_cmd_background.c freelst_bg.c ret_astargs.c exec_btin_bin.c
+_JBCNTRL_FS	=	check_bgend.c info_bg.c handle_bgsign.c handle_bgstatus.c lst.c \
+				handle_pgid.c exec_cmd_background.c freelst_bg.c ret_astargs.c exec_btin_bin.c 
 JBCNTRL_FS	=	$(addprefix $(SRCD)job_control/,$(_JBCNTRL_FS))
 _JBCNTRL_FSO=	$(_JBCNTRL_FS:.c=.o)
 JBCNTRL_FSO	=	$(JBCNTRL_FS:.c=.o)
@@ -42,9 +42,9 @@ PARSER_FS	=	$(addprefix $(SRCD)parser/,$(_PARSER_FS))
 _PARSER_FSO	=	$(_PARSER_FS:.c=.o)
 PARSER_FSO	=	$(PARSER_FS:.c=.o)
 
-_SHCB_FS	=	shell_command.c shell_pipe.c shell_arithmetic.c shell_condition.c \
+_SHCB_FS	=	shell_command.c shell_pipe.c shell_pipe_bg.c shell_arithmetic.c shell_condition.c \
 				shell_equal.c shell_redir.c shell_redir1.c shell_expansions.c shell_expansions1.c \
-				shell_error.c shell_hdoc.c shell_seco.c shell_localvar.c
+				shell_localvar.c shell_error.c shell_hdoc.c shell_seco.c handle_pipe.c ret_pipecmd.c shell_pipe_bquote.c
 SHCB_FS		=	$(addprefix $(SRCD)callbacks/,$(_SHCB_FS))
 _SHCB_FSO	=	$(_SHCB_FS:.c=.o)
 SHCB_FSO	=	$(SHCB_FS:.c=.o)
@@ -72,7 +72,7 @@ _LIBEDIT_FSO=	$(_LIBEDIT_FS:.c=.o)
 LIBEDIT_FSO	=	$(LIBEDIT_FS:.c=.o)
 
 
-_MAIN_FS	=	ft_env.c main.c ft_env2.c ft_getcursor.c ft_exec.c ft_getpaths.c \
+_MAIN_FS	=	ft_env.c main.c ft_env2.c ft_getcursor.c ft_exec.c ft_getpaths.c sign_chld.c \
 				ft_parsepath.c list_redirections.c history.c shell_init.c shell_begin.c shell_end.c
 MAIN_FS		=	$(addprefix $(SRCD)main/,$(_MAIN_FS))
 _MAIN_FSO	=	$(_MAIN_FS:.c=.o)
@@ -95,15 +95,16 @@ CGREEN=\033[38;2;0;255;145m
 CEND=\033[0m
 
 all: 
-	@$(MAKE) lib
+	@$(MAKE) lib log
 	@$(MAKE) $(NAME)
 
-$(NAME): $(LIBFT) $(OBJB)
+$(NAME): $(LIBFT) $(OBJB) $(logger)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) -ltermcap $(FRAMEWORKS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) -ltermcap $(FRAMEWORKS) logger/liblogger.a -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
-$(LIBFT):
+log:
+	@make -C logger
 
 lib:
 	@make -C $(LIBFTD)

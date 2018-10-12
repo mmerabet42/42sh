@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/08 16:40:04 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/12 10:55:03 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,6 @@ typedef struct		s_allf
 	t_iterf			*iterf;
 	t_expf			*expf;
 }					t_allf;
-
-typedef struct		s_pipe
-{
-	pid_t			pgid;
-	int				in;
-	int				out;
-}					t_pipe;
 
 typedef struct		s_redir
 {
@@ -182,6 +175,7 @@ void				clearhistory(int save);
 void				movehistory(char c, char *line, size_t *cursor);
 
 int					ft_exec(char *name, char **argv, char **envp, pid_t *pid);
+void				sign_child(int sign);
 
 t_shret				ft_isbuiltin(char *name, t_args *args);
 int					isbuiltin(char *name);

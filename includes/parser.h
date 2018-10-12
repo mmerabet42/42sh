@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/08 16:22:56 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/11 16:07:29 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,22 @@ typedef struct		s_ast
 	struct s_ast	*right;
 }					t_ast;
 
+typedef struct		s_pipe
+{
+	t_list			*tabpipe;
+	t_list			*head;
+	char			**all_cmd;
+	int				fd[4];
+	int				pgrp;
+	int				pid;
+}					t_pipe;
+
+typedef struct		s_pipebquote
+{
+	int				in;
+	int				out;
+}					t_pipe1;
+
 typedef struct		s_inst
 {
 	t_args			args;
@@ -172,6 +188,13 @@ int					shell_bckgrnd_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
 int					shell_pipe_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
+int					shell_pipe_bg(t_ast *ast, void **op, void *res,
+								t_iterf *iterf);
+int					handle_ast_pipe(t_ast *ast, t_list **pipe);
+int					shell_pipe_bquote(t_ast *ast,
+										void **op,
+										void *res,
+										t_iterf *iterf);
 int					shell_redir_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
 int					shell_cond_cb(t_ast *ast, void **op, void *res,
@@ -219,6 +242,7 @@ char				**ft_getoptl(char **argv,
 							const char *loption,
 							int lfirst);
 char				**ft_getoptv(char **argv, const char *options);
+int					ret_pipecmd(t_ast *ast, char ***cmd);
 
 int					ft_interpret(const char *command,
 							void *ptr,
