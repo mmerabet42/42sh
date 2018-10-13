@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 16:37:58 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 11:40:14 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/13 17:48:00 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,8 @@ int			ft_astcresolver(t_ast *ast, t_expf *expf)
 	}
 	if (listtotab(lst, &ast->cargs->argv, &ast->cargs->argc) == -1)
 		return (1);
-	ast->cname = ast->cargs->argv[0];
+	if (ast->cargs->argv)
+		ast->cname = ast->cargs->argv[0];
 	ft_lstdel(&lst, NULL);
 	return (0);
 }

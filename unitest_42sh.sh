@@ -27,7 +27,7 @@ check_diff() {
 }
 
 check_diff_error() {
- echo ${COMMAND} | ${SH} > ${OUT} 2>&1
+ ${SH} ${COMMAND} > ${OUT} 2>&1
  RES_42SH=$?
  echo ${COMMAND} | ${SHB} > ${OUTB} 2>&1
  RES_BASH=$?
@@ -230,9 +230,6 @@ check_diff
 COMMAND="echo s?c ob? ???? ?"
 check_diff
 
-COMMAND="echo [!s]bj [!owf1-9]rc"
-check_diff
-
 COMMAND="echo src/[a-zA-Z]*.c"
 check_diff
 
@@ -357,7 +354,7 @@ check_diff
 COMMAND="cd /; cd -; cd /; cd ../; cd; pwd"
 check_diff
 
-COMMAND="ls | wc -l > toto; echo abc | wc -l >> toto; cat -e toto ; rm -rf toto"
+COMMAND="ls | wc -l > toto; echo abc | wc -l >> toto; cat -e toto ; ls > titi; cat titi; rm titi; rm -rf toto"
 check_diff
 
 COMMAND=""
@@ -461,9 +458,6 @@ COMMAND="env env env env env env env -i env ls"
 check_diff
 
 COMMAND="cd /; cd -; cd /; cd ../; cd;"
-check_diff
-
-COMMAND="ls | wc -l > toto; echo abc | wc -l >> toto; cat -e toto ; rm -rf toto"
 check_diff
 
 COMMAND="ls /dev | grep tty | sort -r | rev > toto ; < toto cat | rev | wc -l > titi ; rm -rf titi"
