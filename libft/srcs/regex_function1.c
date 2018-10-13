@@ -1,6 +1,7 @@
 #include "ft_str.h"
 #include "ft_types.h"
 #include "ft_math.h"
+#include "ft_printf.h"
 
 static int	get_result(t_regex_info *rgxi, t_regex_rule *rule)
 {
@@ -29,8 +30,9 @@ static int	get_result(t_regex_info *rgxi, t_regex_rule *rule)
 
 int			expr_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 {
-	char		*str;
-	int			r;
+	char			*str;
+	int				r;
+	t_regex_info	tmp;
 
 	r = 0;
 	if (rule->len_arg <= 1)
@@ -39,7 +41,12 @@ int			expr_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	{
 		if (!(str = ft_strndup(&rule->arg[2], rule->len_arg - 2)))
 			return (-1);
-		r = ft_regex(str, rgxi->str, -1, RGX_END);
+		tmp = *rgxi;
+		tmp.regex = str;
+		tmp.rgx_begin = str;
+		tmp.len = 0;
+		tmp.option = RGX_END;
+		r = regex_exec(&tmp);
 		free(str);
 		if (rule->arg[0] == '0')
 			return (r == -1 ? -1 : 0);
@@ -49,9 +56,9 @@ int			expr_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	if (rule->arg[0] == '0')
 		return (r ? 0 : -1);
 	if (ft_isupper(rule->arg[0]))
-		rgxi->var1[rule->arg[0] - 65] = r;
+		rgxi->vars[26 + rule->arg[0] - 65] = r;
 	else if (ft_islower(rule->arg[0]))
-		rgxi->var0[rule->arg[0] - 97] = r;
+		rgxi->vars[rule->arg[0] - 97] = r;
 	return (0);
 }
 
@@ -96,7 +103,7 @@ static int	move_i(t_regex_info *rgxi, t_regex_rule *rule, int *i)
 		return (-2);
 	rgxi2 = *rgxi;
 	rgxi2.regex = str;
-	rgxi2.rgx_begin = str;
+	rgxi2.rgx_begin = rgxi->rgx_begin;
 	rgxi2.option = RGX_END;
 	rgxi2.len = 0;
 	ret = regex_exec(&rgxi2);

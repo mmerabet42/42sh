@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 20:12:02 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/13 20:57:53 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,9 +223,11 @@ extern int			g_iread;
 extern int			g_explicitlev;
 extern int			g_ifound;
 
-# define RGX_END 1
 # define RGX_BKSLSH 2
 # define RGX_N 4
+# define RGX_END (1 << 0)
+# define RGX_VAR (1 << 1)
+# define RGX_POS (1 << 2)
 
 enum				e_regex_condtion
 {
@@ -252,8 +254,8 @@ typedef struct		s_regex_info
 	const char		*rgx_begin;
 	const char		*str;
 	const char		*regex;
-	int				*var0;
-	int				*var1;
+	const char		*next;
+	int				*vars;
 	int				len_param;
 	int				param_i;
 	int				len;
@@ -285,8 +287,7 @@ int					regex_bracket(const char *str, int *s);
 int					regex_exec(t_regex_info *regex_info);
 void				regex_init(t_regex_info *regex_info, const char *regex, const char *str);
 
-int					ft_regex(const char *regex, const char *str, int n, int opt);
-int					ft_lregex(int options, const char *a, const char *b, ...);
+int					ft_regex(int options, const char *regex, const char *str, ...);
 
 t_mchi				*ft_getmchi(const char *match);
 void				ft_delmchi(t_mchi *head);

@@ -38,8 +38,7 @@ static int			other_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	rgxi2.n = rgxi->n;
 	rgxi2.param = rule->arg;
 	rgxi2.len_param = rule->len_arg;
-	rgxi2.var0 = rgxi->var0;
-	rgxi2.var1 = rgxi->var1;
+	rgxi2.vars = rgxi->vars;
 	return (regex_exec(&rgxi2));
 }
 
@@ -74,8 +73,7 @@ static int			regex_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	regex_init(&rgxi2, str, rgxi->str);
 	rgxi2.option = RGX_END;
 	rgxi2.n = -1;
-	rgxi2.var0 = rgxi->var0;
-	rgxi2.var1 = rgxi->var1;
+	rgxi2.vars = rgxi->vars;
 	ret = regex_exec(&rgxi2);
 	free(str);
 	if (*rule->rule == ',' || *rule->rule == ';')

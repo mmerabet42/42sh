@@ -72,10 +72,9 @@ static int	regex_mark(t_regex_info *rgxi)
 
 int		regex_wildcard(t_regex_info *rgxi)
 {
-	int			ret;
-	int			neg;
-	const char	*o_str;
-	const char	*o_rgx;
+	int				ret;
+	int				neg;
+	t_regex_info	tmp;
 
 	if (!(neg = 0) && *rgxi->regex == '*')
 	{
@@ -83,19 +82,19 @@ int		regex_wildcard(t_regex_info *rgxi)
 			neg = 1;
 		if (*rgxi->regex == '[' && (rgxi->regex -= (neg ? 2 : 1)))
 			return (expanded_wildcard(rgxi, '*', neg));
-		o_str = rgxi->str;
-		if (!*(o_rgx = rgxi->regex))
+		if (!*rgxi->regex)
 			return (rgxi->len + ft_strlen(rgxi->str));
 		ret = 0;
-		while (*o_str && (ret = regex_exec(rgxi)) == -1)
+		tmp = *rgxi;
+		tmp.len = 0;
+		while (*rgxi->str && (ret = regex_exec(&tmp)) == -1)
 		{
 			++rgxi->len;
-			rgxi->str = ++o_str;
-			rgxi->regex = o_rgx;
+			tmp.len = 0;
+			tmp.str = ++rgxi->str;
+			tmp.regex = rgxi->regex;
 		}
-		rgxi->str = o_str;
-		rgxi->regex = o_rgx;
-		return (ret != -1 ? ret : 0);
+		return (ret != -1 ? rgxi->len + ret : 0);
 	}
 	return (regex_mark(rgxi));
 }

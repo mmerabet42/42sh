@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 20:05:27 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 20:11:59 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/13 20:30:28 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	regex_variable(t_regex_info *rgxi, const char *s)
 	if (ft_isdigit(*s))
 		return (ft_atoi(s));
 	else if (ft_islower(*s))
-		return (rgxi->var0[*s - 97]);
+		return (rgxi->vars[*s - 97]);
 	else if (ft_isupper(*s))
-		return (rgxi->var1[*s - 65]);
+		return (rgxi->vars[26 + *s - 65]);
 	return (0);
 }

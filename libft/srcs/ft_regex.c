@@ -46,13 +46,34 @@ static int	special_char(char c, t_regex_info *rgxi)
 	}
 	else if (c == '*' || c == '?')
 	{
-		if ((pos = regex_wildcard(rgxi)) == -1)
+		pos = regex_wildcard(rgxi);
+		if (pos == -1)
 			return (-1);
 		else if (pos > 0)
 			return (pos);
 		return (0);
 	}
 	return (-2);
+}
+
+static int	regex_equ(t_regex_info *rgxi)
+{
+	int	i;
+
+	i = 0;
+	while (rgxi->regex[i] && rgxi->str[i])
+	{
+		if (rgxi->regex[i] == '*' || rgxi->regex[i] == '?')
+			return (i);
+		else if (rgxi->regex[i] != rgxi->str[i])
+			return (-1);
+		++i;
+	}
+	if (!rgxi->str[i] && rgxi->regex[i])
+		return (-1);
+	else if (!rgxi->regex[i] && rgxi->str[i] && !(rgxi->option & RGX_END))
+		return (-1);
+	return (i);
 }
 
 int		regex_exec(t_regex_info *regex_info)
@@ -65,9 +86,7 @@ int		regex_exec(t_regex_info *regex_info)
 			continue;
 		else if (pos != -2)
 			return (pos);
-		if ((pos = ft_strpbrk_pos(regex_info->regex, "*?")) == -1)
-			pos = ft_strlen(regex_info->regex);
-		if (!ft_strnequ(regex_info->regex, regex_info->str, pos))
+		if ((pos = regex_equ(regex_info)) == -1)
 			return (-1);
 		regex_info->len += pos;
 		regex_info->str += pos;
@@ -80,48 +99,19 @@ int		regex_exec(t_regex_info *regex_info)
 	return (*regex_info->str ? -1 : regex_info->len);
 }
 
-int	ft_regex(const char *regex, const char *str, int n, int opt)
+int	ft_regex(int options, const char *regex, const char *str, ...)
 {
 	t_regex_info	regex_info;
-	int				var0[26];
-	int				var1[26];
+	int				vars[26 * 2];
+//	int				var1[26];
 
 	regex_init(&regex_info, regex, str);
-	ft_bzero(var0, sizeof(int) * 26);
-	ft_bzero(var1, sizeof(int) * 26);
-	regex_info.option = opt;
-	regex_info.n = n;
-	regex_info.var0 = (int *)var0;
-	regex_info.var1 = (int *)var1;
+	ft_bzero(vars, sizeof(int) * (26 * 2));
+//	ft_bzero(var1, sizeof(int) * 26);
+	regex_info.option = options;
+	regex_info.vars = (int *)vars;
+//	regex_info.var1 = (int *)var1;
 	regex_info.param = "REGEX";
 	regex_info.len_param = 5;
-	return (regex_exec(&regex_info));
-}
-
-int	ft_lregex(int options, const char *a, const char *b, ...)
-{
-	t_regex_info	regex_info;
-	int				var0[26];
-	int				var1[26];
-//	va_list			vp;
-
-	/*
-	RGX_STRN,	RGX_RGXN,	RGX_POS
-	int strn,	int rgxn,	int *pos
-							RGX_MATCHES
-							t_list **matches
-	RGX_ADDRULE
-	t_regex_funcptr *func
-	RGX_GETRULES
-	t_list **rules;
-	RGX_CLEANRULES
-	*/
-
-	regex_init(&regex_info, a, b);
-	ft_bzero(var0, sizeof(int) * 26);
-	ft_bzero(var1, sizeof(int) * 26);
-	regex_info.option = options;
-	regex_info.var0 = (int *)var0;
-	regex_info.var1 = (int *)var1;
 	return (regex_exec(&regex_info));
 }

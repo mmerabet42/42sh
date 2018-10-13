@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 20:12:00 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/13 20:57:52 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,8 +179,22 @@ static void	main_execution(char *line)
 
 int			main(int argc, char **argv, char **envp)
 {
-//	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(argv[1], argv[2], -1, 0));
-//	return (0);
+/*
+	RGX_END,	RGX_RGXN,	RGX_STRN,	RGX_POS
+				int	rgxn,	int strn,	int *pos
+										RGX_MATCHES
+										t_list **matches
+	RGX_ADDRULE
+	t_regex_funcptr *func
+	RGX_GETRULES
+	t_list **rules
+	RGX_CLEANRULES
+
+
+ * */
+
+	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(0, argv[1], argv[2]));
+	return (0);
 	char	*line;
 	int		cursor;
 

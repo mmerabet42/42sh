@@ -5,12 +5,12 @@
 int	print_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 {
 	int	t;
-	
+
 	t = 0;
 	if (ft_islower(rule->arg[0]))
-		t = rgxi->var0[rule->arg[0] - 97];
+		t = rgxi->vars[rule->arg[0] - 97];
 	else if (ft_isupper(rule->arg[0]))
-		t = rgxi->var1[rule->arg[0] - 65];
+		t = rgxi->vars[26 + rule->arg[0] - 65];
 	else if (ft_isdigit(rule->arg[0]))
 		t = ft_atoi(rule->arg);
 	if (*rule->rule == 'r')
@@ -29,7 +29,7 @@ int	getint_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	int	i;
 	int	n;
 
-	ret = ft_regex("?[@nint]", rgxi->str, -1, RGX_END);
+	ret = ft_regex(RGX_END, "?[@nint]", rgxi->str);
 	if (!ft_isalpha(rule->arg[0]))
 		return (ret);
 	n = (ret == -1 ? 0 : ft_atoi(rgxi->str));
@@ -37,9 +37,9 @@ int	getint_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	while (i < rule->len_arg)
 	{
 		if (ft_islower(rule->arg[i]))
-			rgxi->var0[rule->arg[i] - 97] = n;
+			rgxi->vars[rule->arg[i] - 97] = n;
 		else if (ft_isupper(rule->arg[i]))
-			rgxi->var1[rule->arg[i] - 65] = n;
+			rgxi->vars[26 + rule->arg[i] - 65] = n;
 		++i;
 	}
 	return (ret);
@@ -59,8 +59,7 @@ int	recursive_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	regex_init(&tmp, rgxi->rgx_begin, rgxi->str);
 	if (ft_isdigit(*rule->arg))
 		tmp.regex += ft_atoi(rule->arg);
-	tmp.var0 = rgxi->var0;
-	tmp.var1 = rgxi->var1;
+	tmp.vars = rgxi->vars;
 	tmp.option = RGX_END;
 	return (regex_exec(&tmp));
 }
