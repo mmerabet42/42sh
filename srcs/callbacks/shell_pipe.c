@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/13 13:03:36 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/13 14:51:23 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		return (shell_pipe_bg(ast, op, res, iterf));
 	if (g_shell->bits & (1 << 4))
 		return (shell_pipe_bquote(ast, op, res, iterf));
-	g_shell->bits &= (1 << 1);
+	g_shell->bits |= (1 << 1);
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);
 	elem = ft_lstend(a.tabpipe);

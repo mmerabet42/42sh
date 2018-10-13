@@ -6,13 +6,14 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/16 21:25:42 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 10:53:26 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/13 15:54:23 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_str.h"
 #include "ft_io.h"
+#include "ft_mem.h"
 #include <fcntl.h>
 
 static t_exp	g_exps[] = {
@@ -51,6 +52,7 @@ static int	shell_exec(int argc, char **argv, char *line)
 		g_shell->history_file = NULL;
 		if ((script_fd = (argc == -1 ? 0 : open(*argv, O_RDONLY))) == -1)
 			ft_exitf(1, "%s: can't open: %s\n", g_shell->name, *argv);
+		ft_memdel((void **)&g_shell->script);
 		get_next_delimstr(script_fd, "\01\02\033EOFEOF\n", &g_shell->script);
 		if (script_fd)
 			close(script_fd);
@@ -59,7 +61,7 @@ static int	shell_exec(int argc, char **argv, char *line)
 	{
 		resolve_history_file();
 		if ((script_fd = open(g_shell->history_file,
-						O_RDONLY | O_CREAT, 0666)) != -1)
+					O_RDONLY | O_CREAT, 0666)) != -1)
 		{
 			while (get_next_line(script_fd, &line) >= 0)
 			{
@@ -79,7 +81,7 @@ int			shell_init(int argc, char **argv)
 	++argv;
 	g_shell->history_file = "$HOME/.42sh_history";
 	g_shell->start_cmd = "if test -r $HOME/.42shrc then source $HOME/.42shrc";
-	while (ft_getopt(&argv, "l.1s.1;log.1", &opt) != OPT_END)
+	while (ft_getopt(&argv, "c.1l.1s.1;log.1", &opt) != OPT_END)
 	{
 		if (argc && opt.ret == OPT_UNKNOWN)
 		{
@@ -95,6 +97,8 @@ int			shell_init(int argc, char **argv)
 		else if (opt.c == 's')
 			g_shell->start_cmd = (opt.ret == OPT_MISSING
 					|| ft_strequ(*opt.ptr, "-") ? NULL : *opt.ptr);
+		else if (opt.c == 'c')
+			g_shell->script = ft_strdup(*opt.ptr);
 		else if (opt.c == '-' && ft_strequ(opt.clong, "nsep"))
 			g_shell->bits = (1 << 0);
 	}

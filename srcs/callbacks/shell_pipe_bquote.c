@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/13 13:02:46 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/13 13:10:02 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/13 14:50:56 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ int				shell_pipe_bquote(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	int		ret;
 
 	(void)op;
-	g_shell->bits &= (1 << 1);
+	g_shell->bits |= (1 << 1);
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);
 	elem = ft_lstend(a.tabpipe);

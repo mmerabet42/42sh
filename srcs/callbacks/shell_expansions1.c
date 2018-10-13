@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 20:01:35 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 12:00:34 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/13 15:55:00 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static int		exp_cmd1(int fd[2], t_list **res, int mode, pid_t pid)
 	char	*end;
 	int		ret;
 
-	(void)pid;
 	close(fd[1]);
 	get_next_delimstr(fd[0], EOF_NEVER_REACH, &line);
 	if (mode == -1)
@@ -34,8 +33,8 @@ static int		exp_cmd1(int fd[2], t_list **res, int mode, pid_t pid)
 	}
 	else
 		ft_lstpush_p(res, ft_strsplitpbrk_lst(line, " \t\n"));
-	waitpid(pid, &ret, WUNTRACED);
 	close(fd[0]);
+	waitpid(pid, &ret, WUNTRACED);
 	return (0);
 }
 
@@ -60,14 +59,19 @@ int				exp_cmd(t_strid *sid, t_list **res, t_expf *expf)
 
 	if (pipe(fd) == -1)
 		return (SH_PIPFAIL);
-	if ((pid = fork()) == -1 && !close(fd[0]) && !close(fd[1]))
+	if ((pid = fork()) == -1)
 	{
 		close(fd[0]);
 		close(fd[1]);
 		return (SH_FORKFAIL);
 	}
-	else if (!pid && !(sid->str[sid->len - 1] = '\0') && !close(fd[0]))
+	else if (!pid && !(sid->str[sid->len - 1] = '\0'))
 	{
+		if (close(fd[0]) == -1)
+		{
+			close(fd[1]);
+			exit(2);
+		}
 		dup2(fd[1], 1);
 		resetsign();
 		g_shell->bits |= (1 << 4);
