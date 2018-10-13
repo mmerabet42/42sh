@@ -60,18 +60,23 @@ void	start_fork(t_ast *ast, t_iterf *iterf, void *res, t_pipe *p)
 	exit(0);
 }
 
+static void prout(int sig)
+{
+	ft_printf("okkk %d\n", sig);
+}
+
 int		wait_pids(t_list *head, int *res, pid_t pgid)
 {
 	t_list	*it;
 
 	tcsetpgrp(0, pgid);
-	it = head;
+	it = ft_lstend(head);
 	*(int *)res = 0;
 	while (it)
 	{
 		waitpid((pid_t)it->content_size, res, WUNTRACED);
 		*res = WEXITSTATUS(*res);
-		it = it->next;
+		it = it->parent;
 	}
 	tcsetpgrp(0, g_shell->shellpid);
 	ft_lstdel(&head, NULL);
@@ -91,7 +96,7 @@ int		process_pipe(t_list *it, t_pipe *p, void *res, t_iterf *iterf)
 	else if (!pid)
 		start_fork((t_ast *)it->content, iterf, res, p);
 	it->content_size = pid;
-	setpgid(pid, (!p->pgid ? p->pgid = pid : p->pgid));
+	setpgid(pid, (!p->pgid ? (p->pgid = pid) : p->pgid));
 	if (p->in != 0)
 		close(p->in);
 	if (p->out != 1)
@@ -110,6 +115,12 @@ int		shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	(void)op;
 	head = list_pipes(ast);
 	it = head;
+	while (it)
+	{
+		ft_printf("it: '%s'\n", ((t_ast *)it->content)->name);
+		it = it->next;
+	}
+	it = head;
 	p.in = 0;
 	p.pgid = 0;
 	while (it)
@@ -122,4 +133,5 @@ int		shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		it = it->next;
 	}
 	return (wait_pids(head, (int *)res, p.pgid));
+	signal(SIGPIPE, prout);
 }
