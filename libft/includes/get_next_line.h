@@ -6,13 +6,13 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/23 22:48:49 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/02/08 18:51:38 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/13 11:19:59 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# define BUFF_SIZE 4
+# define BUFF_SIZE 65536
 
 typedef struct	s_fd
 {

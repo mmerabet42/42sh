@@ -6,13 +6,13 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/12 12:29:42 by gdufay           ###   ########.fr        #
+#    Updated: 2018/10/13 11:41:05 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	42sh
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra -g3 
+CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a

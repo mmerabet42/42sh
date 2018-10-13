@@ -6,18 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 20:01:35 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 11:05:10 by jraymond         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_exec.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/14 17:21:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/11 20:13:51 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/13 11:37:11 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +23,9 @@ static int		exp_cmd1(int fd[2], t_list **res, int mode, pid_t pid)
 
 	(void)pid;
 	close(fd[1]);
-	waitpid(pid, &ret, WUNTRACED);
+	get_next_delimstr(fd[0], EOF_NEVER_REACH, &line);
 	if (mode == -1)
 	{
-		get_next_delimstr(fd[0], EOF_NEVER_REACH, &line);
 		end = ft_strend(line);
 		while (end != line && *end == '\n')
 			*end-- = '\0';
@@ -45,13 +33,8 @@ static int		exp_cmd1(int fd[2], t_list **res, int mode, pid_t pid)
 		line = NULL;
 	}
 	else
-	{
-		while (get_next_line(fd[0], &line) >= 0)
-		{
-			ft_lstpush_p(res, ft_strsplitpbrk_lst(line, " \t"));
-			free(line);
-		}
-	}
+		ft_lstpush_p(res, ft_strsplitpbrk_lst(line, " \t\n"));
+	waitpid(pid, &ret, WUNTRACED);
 	close(fd[0]);
 	return (0);
 }
@@ -78,7 +61,11 @@ int				exp_cmd(t_strid *sid, t_list **res, t_expf *expf)
 	if (pipe(fd) == -1)
 		return (SH_PIPFAIL);
 	if ((pid = fork()) == -1 && !close(fd[0]) && !close(fd[1]))
+	{
+		close(fd[0]);
+		close(fd[1]);
 		return (SH_FORKFAIL);
+	}
 	else if (!pid && !(sid->str[sid->len - 1] = '\0') && !close(fd[0]))
 	{
 		dup2(fd[1], 1);
@@ -89,7 +76,6 @@ int				exp_cmd(t_strid *sid, t_list **res, t_expf *expf)
 		close(fd[1]);
 		exit(efail ? 1 : 0);
 	}
-	g_shell->curpid = pid;
 	return (exp_cmd1(fd, res, sid->i, pid));
 }
 

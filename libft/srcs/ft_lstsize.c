@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/11 18:44:56 by mmerabet          #+#    #+#             */
-/*   Updated: 2017/12/19 19:56:37 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/13 11:12:59 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 
 size_t	ft_lstsize(t_list *lst)
 {
-	if (lst)
-		return (ft_lstsize(lst->next) + 1);
-	return (0);
+	size_t	x;
+
+	x = 0;
+	while (lst && ++x)
+		lst = lst->next;
+	return (x);
 }
