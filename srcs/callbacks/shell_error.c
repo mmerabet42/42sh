@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/17 21:52:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 18:14:24 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/13 19:40:07 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	shell_conditionals_cb(t_ast *ast, void **op, void *res,
 
 static t_astfunc	g_callbacks[] = {
 	{"\\:=:&&:||:*[|&!,;\n@=1]:not", shell_error_cb, shell_error_cb, -2},
-	{"*<<:*>:*>>", shell_hdoc_cb, NULL, -1},
+	{"*<<", shell_hdoc_cb, NULL, -1},
 	{DLM_REDP, shell_error_cb, NULL, -2},
 	{"then:if:while:else", shell_conditionals_cb, shell_conditionals_cb, -2}
 };

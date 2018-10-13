@@ -6,22 +6,31 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 21:35:11 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/10 22:29:57 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/13 19:23:23 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
+#include "ft_printf.h"
 
-int			ft_interpret(const char *command, void *ptr, t_lexerf *lexf,
+int			ft_interpret(const char *cmd, t_expf *expf, t_lexerf *lexf,
 					t_iterf *itf)
 {
 	t_ast	*head;
 	int		ret;
 
 	ret = -1;
-	if (!(head = ft_lexer(command, lexf)))
+	if (!(head = ft_lexer(cmd, lexf)))
+		return (0);
+	if ((ret = check_syntax(head, expf)))
+	{
+		ft_astdel(&head);
 		return (ret);
-	ret = ft_astiter(head, ptr, itf);
+	}
+	ret = ft_astiter(head, &g_shell->exitcode, itf);
+	if (ret && ret != SH_EXIT)
+		ft_printf_fd(2, "%s: %s: [%s]\n", g_shell->name, ft_strshret(ret),
+				cmd, (g_shell->exitcode = 1));
 	ft_astdel(&head);
 	return (ret);
 }

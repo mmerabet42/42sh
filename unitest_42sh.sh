@@ -23,6 +23,7 @@ check_diff() {
 	cat ${OUT}
 	printf "${RED}bash: \"${COMMAND}\"${NC}\n"
 	cat ${OUTB}
+	echo "------------"
  fi
 }
 
@@ -34,7 +35,6 @@ check_diff_error() {
  if [ $RES_BASH = $RES_42SH ]
  then
 	 echo -n ""
-#	printf "${COMMAND} ${GREEN}OK${NC}\n"
  else
 	printf "${RED}42sh: \"${COMMAND}\": $RES_42SH${NC}\n"
 	printf "${RED}bash: \"${COMMAND}\": $RES_BASH${NC}\n"
@@ -152,6 +152,21 @@ check_diff
 printf "${ORANGE}\n~~~~~~~~~~~~~\nredir\n~~~~~~~~~~~~~\n${NC}"
 
 COMMAND="echo lol > prout ; cat prout; rm prout"
+check_diff
+
+COMMAND="ls -z 1>&-"
+check_diff
+
+COMMAND="ls -z 1>&- 2>&1"
+check_diff
+
+COMMAND="ls -z 2>&1 1>&-"
+check_diff
+
+COMMAND="ls | cat -e > prout ; cat prout; rm prout"
+check_diff
+
+COMMAND="ls | wc -l > toto; echo abc | wc -l >> toto; cat -e toto ; ls > titi; cat titi; rm titi; rm -rf toto"
 check_diff
 
 COMMAND="echo 1 2 | cat -e > file && cat file && rm file"

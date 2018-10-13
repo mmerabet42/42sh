@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 15:56:04 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/13 19:22:21 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,6 @@ static char	*init_structs(char *argv0)
 
 static int	check_script(void)
 {
-	int	c;
-
 	if (g_shell->bits & (1 << 0))
 	{
 		g_lexerf.parserf.def_word = DLM_WORD_N;
@@ -121,11 +119,7 @@ static int	check_script(void)
 	{
 		++g_shell->curargs->argv;
 		--g_shell->curargs->argc;
-		c = ft_interpret(g_shell->script, &g_shell->exitcode, &g_lexerf,
-				&g_shell_iterf);
-		if (c && c != SH_EXIT)
-			ft_printf_fd(2, "%s: %s: [%s]\n", g_shell->name, ft_strshret(c),
-					g_shell->script, (g_shell->exitcode = 1));
+		ft_interpret(g_shell->script, &g_expf, &g_lexerf, &g_shell_iterf);
 		--g_shell->curargs->argv;
 		++g_shell->curargs->argc;
 		return (1);
@@ -135,17 +129,14 @@ static int	check_script(void)
 
 static int	check_cmd_starter(void)
 {
-	int	c;
 
 	if (!isatty(1))
 		return (1);
-	if (g_shell->start_cmd && (c = ft_interpret(g_shell->start_cmd,
-					&g_shell->exitcode, &g_lexerf, &g_shell_iterf)))
+	if (g_shell->start_cmd)
 	{
-		if (c == SH_EXIT)
-			return (1);
-		ft_printf_fd(2, "%s: %s: [%s]\n", g_shell->name, ft_strshret(c),
-				g_shell->start_cmd, (g_shell->exitcode = 1));
+		ft_interpret(g_shell->start_cmd, &g_expf, &g_lexerf, &g_shell_iterf);
+		//if (c == SH_EXIT)
+		//	return (1);
 	}
 	return (0);
 }
