@@ -57,6 +57,18 @@ check_diff_error
 COMMAND=";"
 check_diff_error
 
+COMMAND=">"
+check_diff_error
+
+COMMAND=">>"
+check_diff_error
+
+COMMAND="<"
+check_diff_error
+
+COMMAND="<<"
+check_diff_error
+
 printf "${ORANGE}\n~~~~~~~~~~~~~\nast\n~~~~~~~~~~~~~\n${NC}"
 
 COMMAND="cd .. && ls -1 | cat -e"
