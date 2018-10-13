@@ -51,8 +51,11 @@ char				*ft_strrchr(const char *s, int c);
 char				*ft_strstr(const char *a, const char *b);
 char				*ft_strnstr(const char *a, const char *b, size_t n);
 char				*ft_strpbrk(const char *s, const char *charset);
+char				*ft_strnpbrk(const char *s, const char *charset, size_t n);
 int					ft_strpbrk_pos(const char *s, const char *charset);
-int					ft_strnpbrk_pos(const char *s, const char *charset, size_t n);
+int					ft_strnpbrk_pos(const char *s,
+								const char *charset,
+								size_t n);
 int					ft_strnrpbrk_pos(const char *s,
 								const char *charset,
 								size_t n);
@@ -265,13 +268,22 @@ typedef struct		s_regex_func
 	t_regex_funcptr	func;
 }					t_regex_func;
 
+
+int					cond_rgx(t_regex_info *rgxi, t_regex_rule *rule);
+int					expr_rgx(t_regex_info *rgxi, t_regex_rule *rule);
+int					print_rgx(t_regex_info *rgxi, t_regex_rule *rule);
+int					getint_rgx(t_regex_info *rgxi, t_regex_rule *rule);
+int					debug_rgx(t_regex_info *rgxi, t_regex_rule *rule);
+int					recursive_rgx(t_regex_info *rgxi, t_regex_rule *rule);
+int					group_rgx(t_regex_info *rgxi, t_regex_rule *rule);
+t_regex_func		*get_regex_func(const char *name, int len_rule);
+
 int					regex_variable(t_regex_info *rgxi, const char *s);
 int					regex_start(t_regex_info *rgxi, t_regex_func *func, t_regex_rule *rule);
 int					regex_wildcard(t_regex_info *rgxi);
 int					regex_bracket(const char *str, int *s);
 int					regex_exec(t_regex_info *regex_info);
 void				regex_init(t_regex_info *regex_info, const char *regex, const char *str);
-t_regex_func		*get_regex_func(const char *name, int len_rule);
 
 int					ft_regex(const char *regex, const char *str, int n, int opt);
 int					ft_lregex(int options, const char *a, const char *b, ...);

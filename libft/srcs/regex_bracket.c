@@ -30,7 +30,7 @@ int	regex_bracket(const char *str, int *s)
 	int	l;
 
 	if (!(i = bracket_start(str)))
-		return (-1);
+		return (-2);
 	l = 0;
 	while (str[i] == '{' && ++l)
 		++i;
@@ -40,12 +40,10 @@ int	regex_bracket(const char *str, int *s)
 	{
 		if (bracket_end(&str[i], l))
 			return (i + l + 1);
-		else if (bracket_start(&str[i]))
-		{
-			if ((j = regex_bracket(&str[i], NULL)) == -1)
-				break ;
+		else if ((j = regex_bracket(&str[i], NULL)) == -1)
+			return (-1);
+		else if (j != -2)
 			i += j;
-		}
 		else
 			++i;
 	}

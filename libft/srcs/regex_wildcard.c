@@ -20,15 +20,7 @@ static void	fill_info(t_regex_info *rgxi, t_regex_rule *r, int jmp, int ret)
 		else if (r->rule[r->len_rule] == '?')
 			r->cond = RGX_MARK;
 		if (r->rule[r->len_rule] != ']' && r->rule[r->len_rule] != '}')
-		{
 			r->l = regex_variable(rgxi, r->rule + r->len_rule + 1);
-		/*	if (ft_isdigit(r->rule[r->len_rule + 1]))
-				r->l = ft_atoi(&r->rule[r->len_rule + 1]);
-			else if (ft_islower(r->rule[r->len_rule + 1]))
-				r->l = rgxi->var0[r->rule[r->len_rule + 1] - 97];
-			else if (ft_isupper(r->rule[r->len_rule + 1]))
-				r->l = rgxi->var1[r->rule[r->len_rule + 1] - 65];*/
-		}
 	}
 }
 
