@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/23 23:02:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 15:58:14 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/13 16:13:27 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static int	inner_get_next_delim(t_fd *fd, char **l, const char *delim, int n)
 {
 	int	bread;
 	int	len;
-	int	x = 0;
 
 	len = 0;
 	if (fd->len <= 0)
