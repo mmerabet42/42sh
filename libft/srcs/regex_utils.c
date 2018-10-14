@@ -21,7 +21,8 @@ void	regex_init(t_regex_info *regex_info, const char *regex, const char *str)
 	regex_info->rgx_begin = regex;
 	regex_info->str = str;
 	regex_info->regex = regex;
-	regex_info->n = -1;
+	regex_info->rgxn = -1;
+	regex_info->strn = -1;
 }
 
 int	regex_variable(t_regex_info *rgxi, const char *s)
@@ -34,3 +35,4 @@ int	regex_variable(t_regex_info *rgxi, const char *s)
 		return (rgxi->vars[26 + *s - 65]);
 	return (0);
 }
+

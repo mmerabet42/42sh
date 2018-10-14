@@ -226,8 +226,10 @@ extern int			g_ifound;
 # define RGX_BKSLSH 2
 # define RGX_N 4
 # define RGX_END (1 << 0)
-# define RGX_VAR (1 << 1)
-# define RGX_POS (1 << 2)
+# define RGX_RGXN (1 << 1)
+# define RGX_STRN (1 << 2)
+# define RGX_POS (1 << 3)
+# define RGX_VAR (1 << 4)
 
 enum				e_regex_condtion
 {
@@ -259,8 +261,10 @@ typedef struct		s_regex_info
 	int				len_param;
 	int				param_i;
 	int				len;
-	int				n;
+	int				rgxn;
+	int				strn;
 	int				option;
+	int				*pos;
 }					t_regex_info;
 
 typedef int	(*t_regex_funcptr)(t_regex_info *regex_info, t_regex_rule *rule);

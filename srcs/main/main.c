@@ -180,8 +180,8 @@ static void	main_execution(char *line)
 int			main(int argc, char **argv, char **envp)
 {
 /*
-	RGX_END,	RGX_RGXN,	RGX_STRN,	RGX_POS
-				int	rgxn,	int strn,	int *pos
+	RGX_END,	RGX_RGXN,	RGX_STRN,	RGX_POS,		RGX_VAR
+				int	rgxn,	int strn,	int *pos,		int variables[52]
 										RGX_MATCHES
 										t_list **matches
 	RGX_ADDRULE
@@ -192,8 +192,14 @@ int			main(int argc, char **argv, char **envp)
 
 
  * */
+	int	pos = 0;
+	int	ret = ft_regex(RGX_POS | RGX_END, argv[1], argv[2], &pos);
 
-	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ft_regex(0, argv[1], argv[2]));
+	ft_printf("regex: '%s' '%s' %d %d\n", argv[1], argv[2], pos, ret);
+	if (ret != -1)
+		ft_printf("match: '%.*s'\n", ret, argv[2] + pos);
+	else
+		ft_printf("no match\n");
 	return (0);
 	char	*line;
 	int		cursor;
