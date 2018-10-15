@@ -6,13 +6,13 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/15 10:20:53 by jraymond         ###   ########.fr        #
+#    Updated: 2018/10/15 13:00:02 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	42sh
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra
+CFLAGS		=	-Wall -Werror -Wextra -g
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
@@ -95,16 +95,13 @@ CGREEN=\033[38;2;0;255;145m
 CEND=\033[0m
 
 all: 
-	@$(MAKE) lib log
+	@$(MAKE) lib
 	@$(MAKE) $(NAME)
 
 $(NAME): $(LIBFT) $(OBJB) $(logger)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) -ltermcap $(FRAMEWORKS) logger/liblogger.a -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) -ltermcap $(FRAMEWORKS) -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
-
-log:
-	@make -C logger
 
 lib:
 	@make -C $(LIBFTD)

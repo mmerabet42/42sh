@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/15 11:31:37 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 12:23:36 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ static int		init_struct(t_pipe *pipe, t_ast *ast)
 static void		fork_son(t_pipe *a, t_list *elem, void *res, t_iterf *iterf)
 {
 	setpgid(0, a->pgrp);
+	resetsign();
 	if (!elem->next)
 	{
 		close(a->fd[0]);
@@ -83,7 +84,6 @@ static void		fork_son(t_pipe *a, t_list *elem, void *res, t_iterf *iterf)
 		close(a->fd[1]);
 		dup2(a->fd[0], 0);
 	}
-	log_debug("elem->content: %s\n", ((t_ast *)elem->content)->name);
 	ft_astiter((t_ast *)elem->content, res, iterf);
 	exit(*(int *)res);
 }
@@ -160,7 +160,6 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		return (shell_pipe_bg(ast, op, res, iterf));
 	if (g_shell->bits & (1 << 4))
 		return (shell_pipe_bquote(ast, op, res, iterf));
-	log_debug("lol\n");
 	g_shell->bits |= (1 << 1);
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);

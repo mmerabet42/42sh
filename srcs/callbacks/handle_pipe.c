@@ -35,7 +35,6 @@ static int		son_left_right(t_ast *ast, t_list **pipe)
 			if (!(elem = ft_lstnew(NULL, 0)))
 				return (SH_MALLOC);
 			elem->content = ast1;
-			log_debug("name-> %s\n", ((t_ast *)elem->content)->name);
 			if (!*pipe)
 				*pipe = elem;
 			else
@@ -49,14 +48,13 @@ int				handle_ast_pipe(t_ast *ast, t_list **pipe)
 {
 	t_list	*elem;
 
-	while (ast && ast->left && ast->left->type == TK_PIPE + ast->cmd_offset)
+	while (ast && ast->left && ast->left->type == TK_PIPE)
 	{
 		if (ast->right)
 		{
 			if (!(elem = ft_lstnew(NULL, 0)))
 				return (SH_MALLOC);
 			elem->content = ast->right;
-			log_debug("name-> %s\n", ((t_ast *)elem->content)->name);
 			if (!*pipe)
 				*pipe = elem;
 			else
