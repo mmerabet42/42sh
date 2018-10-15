@@ -3,324 +3,121 @@
 #include "ft_types.h"
 #include "ft_math.h"
 #include "ft_printf.h"
+#include "ft_list.h"
 #include <stdarg.h>
 
-static int	regex_loop(t_regex_info *rgxi, t_regex_func *func, t_regex_rule *rule, int *len2)
+static int	regex_pos(t_regex_info *rgxi)
 {
-	int				len;
-	int				ret;
-	int				lret;
-	int				i;
-	t_regex_info	tmp;
+	const char	*str;
+	int			ret;
 
-	i = 0;
-	len = 0;
-	lret = -1;
-	ft_bzero(&tmp, sizeof(t_regex_info));
-	if (rule->cond == RGX_EQUAL && rule->l <= 0)
-		return (0);
-	else if (rule->cond == RGX_LESS && rule->l <= 1)
-		return (0);
-	while (*rgxi->str && (((ret = func->func(rgxi, rule)) != -1 && !rule->neg) || (ret == -1 && rule->neg)))
+	if (rgxi->pos)
 	{
-		ret = (ret == -1 ? 1 : ret);
-		len += ret;
-		rgxi->str += ret;
-		tmp.str_begin = rgxi->str_begin;
-		tmp.rgx_begin = rgxi->rgx_begin;
-		tmp.str = rgxi->str;
-		tmp.regex = rgxi->regex;
-		tmp.len = rgxi->len + len;
-		tmp.n = rgxi->n;
-		tmp.var0 = rgxi->var0;
-		tmp.var1 = rgxi->var1;
-		if (!rule->cond || rule->cond == RGX_MARK || rule->cond == RGX_LESS
-				|| (rule->cond == RGX_GREAT && i >= rule->l))
-			if ((lret = regex_exec(&tmp)) != -1)
-				return (len + lret);
-		if (++i == rule->l && rule->cond == RGX_EQUAL)
+		*rgxi->pos = 0;
+		str = rgxi->str;
+		ret = 0;
+		while ((ret = regex_exec(rgxi)) == -1)
 		{
-			*len2 += len;
-			return (0);
-		}
-		else if (rule->cond == RGX_LESS && i + 1 >= rule->l)
-			return (-1);
-	}
-	if (rule->cond == RGX_MARK)
-	{
-		*len2 += len;
-		return (0);
-	}
-	if ((rule->cond == RGX_GREAT && i <= rule->l) || (rule->cond == RGX_EQUAL && i < rule->l))
-		return (-1);
-	if ((ret == -1 && !i) || (lret == -1 && !(rgxi->option & RGX_END)))
-		return (-1);
-	if (lret == -1)
-		return (len);
-	return (len + lret);
-}
-
-static int	regex_start(t_regex_info *rgxi, t_regex_func *func, t_regex_rule *rule, int *len)
-{
-	int	ret;
-
-	if (!func)
-		return (-1);
-	else if (!func->func)
-	{
-		rule->rule = func->name;
-		rule->len_rule = ft_strlen(rule->rule);
-		if (!(func = get_regex_func("OTHER", 5)))
-			return (-1);
-	}
-	if (rule->type == '*')
-		return (regex_loop(rgxi, func, rule, len));
-	ret = func->func(rgxi, rule);
-	if (!rule->neg)
-	{
-		if (ret == -1 && rule->cond != RGX_MARK)
-			return (-1);
-		rgxi->str += (ret == -1 ? 0 : ret);
-		*len += (ret == -1 ? 0 : ret);
-		return (0);
-	}
-	else if (ret == -1)
-	{
-		++rgxi->str;
-		++*len;
-		return (0);
-	}
-	else if (rule->cond == RGX_MARK)
-		return (0);
-	return (-1);
-}
-
-static int	expanded_wildcard(t_regex_info *rgxi, char type, int *len, int neg)
-{
-	int	jmp;
-	int	ret;
-	t_regex_rule	rule;
-
-	if ((jmp = ft_strbetweenps_ext((char **)&rgxi->regex, "[?]")) != -1)
-	{
-		ft_bzero(&rule, sizeof(t_regex_rule));
-		rule.type = type;
-		rule.neg = neg;
-		--jmp;
-		rule.arg = ++rgxi->regex;
-		rule.len_arg = ft_strnrchr_pos(rgxi->regex, '@', jmp);
-		rgxi->regex += jmp;
-		if (rule.len_arg == -1)
-		{
-			rule.len_arg = jmp - 1;
-			rule.rule = "";
-			rule.len_rule = 0;
-		}
-		else
-		{
-			rule.rule = rule.arg + rule.len_arg + 1;
-			rule.len_rule = ft_strpbrk_pos(rule.rule, "?=><]");
-			if (rule.rule[rule.len_rule] == '=')
-				rule.cond = RGX_EQUAL;
-			else if (rule.rule[rule.len_rule] == '<')
-				rule.cond = RGX_LESS;
-			else if (rule.rule[rule.len_rule] == '>')
-				rule.cond = RGX_GREAT;
-			else if (rule.rule[rule.len_rule] == '?')
-				rule.cond = RGX_MARK;
-			if (rule.rule[rule.len_rule] != ']')
+			if (!*str)
 			{
-				if (ft_isdigit(rule.rule[rule.len_rule + 1]))
-					rule.l = ft_atoi(&rule.rule[rule.len_rule + 1]);
-				else if (ft_islower(rule.rule[rule.len_rule + 1]))
-					rule.l = rgxi->var0[rule.rule[rule.len_rule + 1] - 97];
-				else if (ft_isupper(rule.rule[rule.len_rule + 1]))
-					rule.l = rgxi->var1[rule.rule[rule.len_rule + 1] - 65];
+				*rgxi->pos = -1;
+				return (-1);
 			}
+			rgxi->str = ++str;
+			rgxi->regex = rgxi->rgx_begin;
+			rgxi->len = 0;
+			++*rgxi->pos;
 		}
-		ret = regex_start(rgxi, get_regex_func(rule.rule, rule.len_rule), &rule, len);
 		return (ret);
 	}
-	return (-1);
+	return (regex_exec(rgxi));
 }
 
-static int	wildcard(t_regex_info *rgxi, int *len)
+static int	get_matches(t_regex_info *rgxi)
 {
-	int			ret;
-	int			neg;
-	const char	*o_str;
-	const char	*o_rgx;
+	t_list			*head;
+	t_regex_match	match;
+	const char		*str;
+	int				global_pos;
+	int				i;
 
-	neg = 0;
-	if (*rgxi->regex == '*')
+	rgxi->option &= ~RGX_MATCHES;
+	rgxi->option |= RGX_POS;
+	rgxi->option |= RGX_END;
+	rgxi->pos = &match.pos;
+	str = rgxi->str;
+	head = NULL;
+	i = 0;
+	global_pos = 0;
+	while ((match.len = regex_pos(rgxi)) != -1)
 	{
-		if (*++rgxi->regex == '!' && *(rgxi->regex + 1) == '[')
-		{
-			++rgxi->regex;
-			neg = 1;
-		}
-		if (*rgxi->regex == '[')
-			return (expanded_wildcard(rgxi, '*', len, neg));
-		ret = 0;
-		o_str = rgxi->str;
-		o_rgx = rgxi->regex;
-		if (!*rgxi->regex)
-			return (ft_strlen(rgxi->str));
-		while (*o_str && (ret = regex_exec(rgxi)) == -1)
-		{
-			++o_str;
-			++*len;
-			rgxi->str = o_str;
-			rgxi->regex = o_rgx;
-		}
-		rgxi->str = o_str;
-		rgxi->regex = o_rgx;
-		if (ret != -1)
-			return (ret);
+		match.pos += global_pos;
+		match.str = str + match.pos;
+		ft_lstpush_p(&head, ft_lstnew(&match, sizeof(t_regex_match)));
+		global_pos = match.pos + match.len;
+		rgxi->str = str + global_pos;
+		rgxi->regex = rgxi->rgx_begin;
+		rgxi->len = 0;
+		++i;
 	}
-	else
-	{
-		if (*++rgxi->regex == '!' && *(rgxi->regex + 1) == '[')
-		{
-			++rgxi->regex;
-			neg = 1;
-		}
-		if (*rgxi->regex == '[')
-			return (expanded_wildcard(rgxi, '?', len, neg));
-		if (!*rgxi->str)
-			return (-1);
-		++rgxi->str;
-		++*len;
-	}
-	return (0);
+	ft_lstpush_p(rgxi->matches, head);
+	return (i);
 }
 
-static int	regex_modulus(t_regex_info *regex_info)
+static void	get_args(t_regex_info *rgxi, va_list vp)
 {
-	++regex_info->regex;
-	if (!regex_info->param)
-	{
-		if (*regex_info->str == '%')
-			return (1);
-	}
-	else if (*regex_info->regex == '.')
-	{
-		++regex_info->regex;
-		if (!regex_info->param[regex_info->param_i])
-			return (0);
-		if (*regex_info->str == regex_info->param[regex_info->param_i])
-			return (1);
-	}
-	else if (*regex_info->regex == '+')
-	{
-		++regex_info->regex;
-		if (!regex_info->param[regex_info->param_i])
-			return (0);
-		if (*regex_info->str == regex_info->param[regex_info->param_i++])
-			return (1);
-	}
-	else if (*regex_info->regex == '_')
-	{
-		++regex_info->regex;
-		if (ft_strnequ(regex_info->str, regex_info->param, regex_info->len_param))
-			return (regex_info->len_param);
-	}
-	else if (*regex_info->str == '%')
-		return (1);
-	return (-1);
+	if (rgxi->option & RGX_RGXN)
+		rgxi->rgxn = va_arg(vp, int);
+	if (rgxi->option & RGX_STRN)
+		rgxi->strn = va_arg(vp, int);
+	if (rgxi->option & RGX_MATCHES)
+		rgxi->matches = (t_list **)va_arg(vp, t_list **);
+	else if (rgxi->option & RGX_POS)
+		rgxi->pos = va_arg(vp, int *);
+	if (rgxi->option & RGX_VAR)
+		rgxi->vars = va_arg(vp, int *);
+	va_end(vp);
 }
 
-int		regex_exec(t_regex_info *regex_info)
-{
-	int	pos;
-	int	len;
-	char	c;
-
-	len = 0;
-	while (*regex_info->regex)
-	{
-		c = *regex_info->regex;
-		if (c == '%')
-		{
-			if ((pos = regex_modulus(regex_info)) == -1)
-				return (-1);
-			len += pos;
-			regex_info->str += pos;
-			continue ;
-		}
-		else if (c == '*' || c == '?')
-		{
-			if ((pos = wildcard(regex_info, &len)) == -1)
-				return (-1);
-			else if (pos > 0)
-				return (len + pos);
-			continue ;
-		}
-		if ((pos = ft_strpbrk_pos(regex_info->regex, "*?")) == -1)
-			pos = ft_strlen(regex_info->regex);
-		if (!ft_strnequ(regex_info->regex, regex_info->str, pos))
-			return (-1);
-		len += pos;
-		regex_info->str += pos;
-		regex_info->regex += pos;
-	}
-	if ((regex_info->option & RGX_END) && *regex_info->str)
-		return (len);
-	if (*regex_info->regex && !ft_strequ(regex_info->regex, "*"))
-		return (-1);
-	return (*regex_info->str ? -1 : len);
-}
-
-void	regex_init(t_regex_info *regex_info, const char *regex, const char *str)
-{
-	ft_bzero(regex_info, sizeof(t_regex_info));
-	regex_info->str_begin = str;
-	regex_info->rgx_begin = regex;
-	regex_info->str = str;
-	regex_info->regex = regex;
-	regex_info->n = -1;
-}
-
-int	ft_regex(const char *regex, const char *str, int n, int opt)
+int	ft_regex(int options, const char *regex, const char *str, ...)
 {
 	t_regex_info	regex_info;
-	int				var0[26];
-	int				var1[26];
+	int				vars[26 * 2];
+	va_list			vp;
 
 	regex_init(&regex_info, regex, str);
-	ft_bzero(var0, sizeof(int) * 26);
-	ft_bzero(var1, sizeof(int) * 26);
-	regex_info.option = opt;
-	regex_info.n = n;
-	regex_info.var0 = (int *)var0;
-	regex_info.var1 = (int *)var1;
-	return (regex_exec(&regex_info));
+	ft_bzero(vars, sizeof(int) * (26 * 2));
+	regex_info.vars = (int *)vars;
+	regex_info.option = options;
+	regex_info.param = "REGEX";
+	regex_info.len_param = 5;
+	va_start(vp, str);
+	get_args(&regex_info, vp);
+	if (regex_info.matches)
+		return (get_matches(&regex_info));
+	return (regex_pos(&regex_info));
 }
 
-int	ft_lregex(int options, const char *a, const char *b, ...)
+void	ft_print_matches(const char *str, t_list *matches)
 {
-	t_regex_info	regex_info;
-	int				var0[26];
-	int				var1[26];
-//	va_list			vp;
+	int				i;
+	int				n;
+	t_regex_match	*m;
 
-	/*
-	RGX_STRN,	RGX_RGXN,	RGX_POS
-	int strn,	int rgxn,	int *pos
-							RGX_MATCHES
-							t_list **matches
-	RGX_ADDRULE
-	t_regex_funcptr *func
-	RGX_GETRULES
-	t_list **rules;
-	RGX_CLEANRULES
-	*/
-
-	regex_init(&regex_info, a, b);
-	ft_bzero(var0, sizeof(int) * 26);
-	ft_bzero(var1, sizeof(int) * 26);
-	regex_info.option = options;
-	regex_info.var0 = (int *)var0;
-	regex_info.var1 = (int *)var1;
-	return (regex_exec(&regex_info));
+	if (!matches)
+		return ;
+	i = 0;
+	n = 0;
+	ft_printf("%#{magenta}{%{0}");
+	while (matches)
+	{
+		m = (t_regex_match *)matches->content;
+		ft_printf("%{white}%#{black}%.*s%{black}%#{%s}%.*s%{0}",
+				m->pos - i, str + i, (n ? "lcyan" : "lblue"), m->len, m->str);
+		n = !n;
+		i = m->pos + m->len;
+		if (!(matches = matches->next))
+			ft_printf("%{white}%#{black}%s%{0}", str + i);
+	}
+	ft_printf("%#{magenta}}%{0}\n");
 }

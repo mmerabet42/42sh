@@ -18,7 +18,7 @@
 
 /*
 ** Simple event system, when the event is triggered all callbacks functions are
-** called in the same order ther were added.
+** called in the same order they were added.
 */
 
 typedef struct	s_event

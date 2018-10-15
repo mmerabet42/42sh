@@ -42,6 +42,15 @@ int		ft_strnpbrk_pos(const char *s, const char *charset, size_t n)
 	return (-1);
 }
 
+char	*ft_strnpbrk(const char *s, const char *charset, size_t n)
+{
+	int	i;
+
+	if ((i = ft_strnpbrk_pos(s, charset, n)) == -1)
+		return (NULL);
+	return ((char *)s + i);
+}
+
 int		ft_strnpbrkl_pos(const char *s, const char *charset, size_t n)
 {
 	size_t	i;
