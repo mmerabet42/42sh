@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/15 14:33:58 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/15 19:20:38 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,39 @@ static void	main_execution(char *line)
 
 int			main(int argc, char **argv, char **envp)
 {
+/*
+	RGX_END,	RGX_RGXN,	RGX_STRN,	RGX_POS,		RGX_VAR
+				int	rgxn,	int strn,	int *pos,		int variables[52]
+										RGX_MATCHES
+										t_list **matches
+	RGX_ADD
+	t_regex_funcptr *func
+	RGX_GET
+	t_list **rules
+	RGX_CLEAN
+ * */
+	t_list	*matches = NULL;
+//	int	pos = 0;
+	ft_regex(RGX_ADD, NULL, "lol:?[$&]", NULL);
+	ft_regex(RGX_GET, NULL, NULL, &matches);
+	while (matches)
+	{
+		ft_printf("rule: '%s'\n", ((t_regex_func *)matches->content)->name);
+		matches = matches->next;
+	}
+	int	ret = ft_regex(RGX_MATCHES, argv[1], argv[2], &matches);
+
+	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
+//	ft_printf("regex: '%s' '%s' '%.*s' %d %d\n", argv[1], argv[2], ret, argv[2] + pos, pos, ret);
+	ft_printf("%d match\n", ret);
+	if (ret > 0)
+		ft_print_matches(argv[2], matches);
+	ft_regex(RGX_FREE, NULL, NULL, &matches);
+	return (0);
+/*	int	ret = ft_regex(RGX_END, argv[1], argv[2]);
+
+	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
+	return (0);*/
 	char	*line;
 	int		cursor;
 

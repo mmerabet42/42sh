@@ -19,15 +19,26 @@ static int	loop_return(t_regex_info *rg, t_regex_info *t,
 static int	loop_stop(t_regex_info *rgxi, t_regex_info *tmp,
 		t_regex_rule *r, int ret)
 {
-	int	lret;
+	int			lret;
+	int			nret;
 
 	rgxi->len += ret;
 	rgxi->str += ret;
 	*tmp = *rgxi;
 	if (!r->cond || r->cond == RGX_MARK || r->cond == RGX_LESS
 			|| (r->cond == RGX_GREAT && r->i >= r->l))
+	{
 		if ((lret = regex_exec(tmp)) != -1)
+		{
+			if (tmp->option & RGX_END)
+			{
+				*tmp = *rgxi;
+				if ((nret = regex_loop(tmp, r)) != -1)
+					return (nret);
+			}
 			return (lret);
+		}
+	}
 	if (++r->i == r->l && r->cond == RGX_EQUAL)
 		return (0);
 	else if (r->cond == RGX_LESS && r->i + 1 >= r->l)
@@ -35,8 +46,7 @@ static int	loop_stop(t_regex_info *rgxi, t_regex_info *tmp,
 	return (-2);
 }
 
-static int	regex_loop(t_regex_info *rgxi, t_regex_func *func,
-		t_regex_rule *rule)
+int			regex_loop(t_regex_info *rgxi, t_regex_rule *rule)
 {
 	int				ret;
 	int				lret;
@@ -46,7 +56,7 @@ static int	regex_loop(t_regex_info *rgxi, t_regex_func *func,
 	ret = -1;
 	while (*rgxi->str)
 	{
-		if ((ret = func->func(rgxi, rule)) == -1 && !rule->neg)
+		if ((ret = rule->func->func(rgxi, rule)) == -1 && !rule->neg)
 			break ;
 		else if (ret != -1 && rule->neg)
 			break ;
@@ -59,12 +69,11 @@ static int	regex_loop(t_regex_info *rgxi, t_regex_func *func,
 	return (loop_return(rgxi, &tmp, rule, ret));
 }
 
-static int	regex_once(t_regex_info *rgxi, t_regex_rule *rule,
-				t_regex_func *func)
+static int	regex_once(t_regex_info *rgxi, t_regex_rule *rule)
 {
 	int	ret;
 
-	ret = func->func(rgxi, rule);
+	ret = rule->func->func(rgxi, rule);
 	if (!rule->neg)
 	{
 		if (ret == -1 && rule->cond != RGX_MARK)
@@ -94,13 +103,14 @@ int	regex_start(t_regex_info *rgxi, t_regex_func *func,
 		if (!(func = get_regex_func("OTHER", 5)))
 			return (-1);
 	}
+	rule->func = func;
 	if (rule->type == '*')
 	{
 		if (rule->cond == RGX_EQUAL && rule->l <= 0)
 			return (0);
 		else if (rule->cond == RGX_LESS && rule->l <= 1)
 			return (0);
-		return (regex_loop(rgxi, func, rule));
+		return (regex_loop(rgxi, rule));
 	}
-	return (regex_once(rgxi, rule, func));
+	return (regex_once(rgxi, rule));
 }

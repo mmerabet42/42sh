@@ -55,12 +55,13 @@ static int	get_matches(t_regex_info *rgxi)
 		match.str = str + match.pos;
 		ft_lstpush_p(&head, ft_lstnew(&match, sizeof(t_regex_match)));
 		global_pos = match.pos + match.len;
-		rgxi->str = str + global_pos;
+		++i;
+		if (!*(rgxi->str = str + global_pos))
+			break ;
 		rgxi->regex = rgxi->rgx_begin;
 		rgxi->len = 0;
-		++i;
 	}
-	ft_lstpush_p(rgxi->matches, head);
+	*rgxi->matches = head;
 	return (i);
 }
 
@@ -79,26 +80,55 @@ static void	get_args(t_regex_info *rgxi, va_list vp)
 	va_end(vp);
 }
 
-int	ft_regex(int options, const char *regex, const char *str, ...)
+static int	manage_rules(const char *str, t_list **rules, int options, va_list vp)
 {
+	t_regex_func	func;
+	t_list			**lst;
+
+	func.name = str;
+	if (options & RGX_ADD)
+	{
+		func.func = va_arg(vp, t_regex_funcptr);
+		ft_lstpush_p(rules, ft_lstnew(&func, sizeof(t_regex_func)));
+	}
+	else if (options & (RGX_GET | RGX_FREE))
+	{
+		if (!(lst = va_arg(vp, t_list **)))
+			return (0);
+		if (options & RGX_GET)
+			*lst = *rules;
+		else
+			ft_lstdel(lst, content_delfunc);
+	}
+	else if (options & RGX_CLEAN)
+		ft_lstdel(rules, content_delfunc);
+	va_end(vp);
+	return (0);
+}
+
+int			ft_regex(int options, const char *regex, const char *str, ...)
+{
+	static t_list	*rules;
 	t_regex_info	regex_info;
-	int				vars[26 * 2];
+	int				vars[52];
 	va_list			vp;
 
+	va_start(vp, str);
+	if (options & (RGX_ADD | RGX_GET | RGX_CLEAN | RGX_FREE))
+		return (manage_rules(str, &rules, options, vp));
 	regex_init(&regex_info, regex, str);
-	ft_bzero(vars, sizeof(int) * (26 * 2));
+	ft_bzero(vars, sizeof(int) * (52));
 	regex_info.vars = (int *)vars;
 	regex_info.option = options;
 	regex_info.param = "REGEX";
 	regex_info.len_param = 5;
-	va_start(vp, str);
 	get_args(&regex_info, vp);
 	if (regex_info.matches)
 		return (get_matches(&regex_info));
 	return (regex_pos(&regex_info));
 }
 
-void	ft_print_matches(const char *str, t_list *matches)
+void		ft_print_matches(const char *str, t_list *matches)
 {
 	int				i;
 	int				n;

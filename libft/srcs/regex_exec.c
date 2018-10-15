@@ -56,6 +56,8 @@ static int	regex_equ(t_regex_info *rgxi)
 	int	i;
 
 	i = 0;
+	if (!rgxi->str[i])
+		return (-1);
 	while (rgxi->regex[i] && rgxi->str[i])
 	{
 		if (rgxi->regex[i] == '*' || rgxi->regex[i] == '?')
@@ -64,8 +66,8 @@ static int	regex_equ(t_regex_info *rgxi)
 			return (-1);
 		++i;
 	}
-	if (!rgxi->str[i] && rgxi->regex[i])
-		return (-1);
+//	if (!rgxi->str[i] && rgxi->regex[i])
+//		return (-1);
 	if (!rgxi->regex[i] && rgxi->str[i] && !(rgxi->option & RGX_END))
 		return (-1);
 	return (i);

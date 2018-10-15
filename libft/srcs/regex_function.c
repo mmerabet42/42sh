@@ -125,9 +125,10 @@ static t_regex_func	g_regexfs[] = {
 	{"DQUOTE:\"*[\\\"|?![\"]@or?]\"", NULL},
 	{"QUOTE:'*[?![']@or?]'", NULL},
 	{"BSLASH:\\?", NULL},
-	{"BRACKET0:[*[?[@BRACKET1]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[]()\"'}]|?[@BRACKET0]@or?]]", NULL},
-	{"BRACKET1:(*[?[@BRACKET0]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]\"'}]|?[@BRACKET1]@or?])", NULL},
-	{"BRACKET:?[?[@BRACKET0]|?[@BRACKET1]@or]", NULL},
+	{"BRACKET0:[*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[](){}\"'}]@or?]]", NULL},
+	{"BRACKET1:(*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]{}\"'}]@or?])", NULL},
+	{"BRACKET2:{*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]{}\"'}]@or?]}", NULL},
+	{"BRACKET:?[?[@BRACKET0]|?[@BRACKET1]|?[@BRACKET2]@or]", NULL},
 	{"INF:?[@INF]", NULL},
 };
 static size_t		g_regex_len = (sizeof(g_regexfs) / sizeof(t_regex_func));

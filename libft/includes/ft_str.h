@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/15 14:47:06 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/15 19:20:39 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,14 +231,21 @@ extern int			g_ifound;
 # define RGX_POS (1 << 3)
 # define RGX_MATCHES (1 << 4)
 # define RGX_VAR (1 << 5)
+# define RGX_ADD (1 << 6)
+# define RGX_GET (1 << 7)
+# define RGX_CLEAN (1 << 8)
+# define RGX_FREE (1 << 9)
 
 enum				e_regex_condtion
 {
 	RGX_GREAT = 1, RGX_LESS, RGX_EQUAL, RGX_MARK
 };
 
+typedef struct		s_regex_func t_regex_func;
+
 typedef struct		s_regex_rule
 {
+	t_regex_func	*func;
 	const char		*rule;
 	const char		*arg;
 	int				len_arg;
@@ -274,14 +281,15 @@ typedef struct		s_regex_match
 	const char		*str;
 	int				pos;
 	int				len;
+	int				id;
 }					t_regex_match;
-#include "ft_printf.h"
+
 typedef int	(*t_regex_funcptr)(t_regex_info *regex_info, t_regex_rule *rule);
-typedef struct		s_regex_func
+struct				s_regex_func
 {
-	char			*name;
+	const char		*name;
 	t_regex_funcptr	func;
-}					t_regex_func;
+};
 
 int					delim_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					cond_rgx(t_regex_info *rgxi, t_regex_rule *rule);
@@ -293,6 +301,7 @@ int					recursive_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					group_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 t_regex_func		*get_regex_func(const char *name, int len_rule);
 
+int					regex_loop(t_regex_info *rgxi, t_regex_rule *rule);
 int					regex_variable(t_regex_info *rgxi, const char *s);
 int					regex_start(t_regex_info *rgxi, t_regex_func *func, t_regex_rule *rule);
 int					regex_wildcard(t_regex_info *rgxi);
