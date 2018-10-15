@@ -88,6 +88,8 @@ static int			regex_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 static t_regex_func	g_regexfs[] = {
 	{"DEFAULT", default_rgx},
 	{"OTHER", other_rgx},
+	{"^", delim_rgx},
+	{"$", delim_rgx},
 	{"or", cond_rgx},
 	{"and", cond_rgx},
 	{"ror", cond_rgx},

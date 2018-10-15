@@ -223,17 +223,18 @@ extern int			g_iread;
 extern int			g_explicitlev;
 extern int			g_ifound;
 
-# define RGX_BKSLSH 2
-# define RGX_N 4
+# include "ft_list.h"
+
 # define RGX_END (1 << 0)
 # define RGX_RGXN (1 << 1)
 # define RGX_STRN (1 << 2)
 # define RGX_POS (1 << 3)
-# define RGX_VAR (1 << 4)
+# define RGX_MATCHES (1 << 4)
+# define RGX_VAR (1 << 5)
 
 enum				e_regex_condtion
 {
-	RGX_GREAT = 1, RGX_LESS = 2, RGX_EQUAL = 3, RGX_MARK = 4
+	RGX_GREAT = 1, RGX_LESS, RGX_EQUAL, RGX_MARK
 };
 
 typedef struct		s_regex_rule
@@ -265,7 +266,15 @@ typedef struct		s_regex_info
 	int				strn;
 	int				option;
 	int				*pos;
+	t_list			**matches;
 }					t_regex_info;
+
+typedef struct		s_regex_match
+{
+	const char		*str;
+	int				pos;
+	int				len;
+}					t_regex_match;
 
 typedef int	(*t_regex_funcptr)(t_regex_info *regex_info, t_regex_rule *rule);
 typedef struct		s_regex_func
@@ -274,7 +283,7 @@ typedef struct		s_regex_func
 	t_regex_funcptr	func;
 }					t_regex_func;
 
-
+int					delim_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					cond_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					expr_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					print_rgx(t_regex_info *rgxi, t_regex_rule *rule);
@@ -292,6 +301,10 @@ int					regex_exec(t_regex_info *regex_info);
 void				regex_init(t_regex_info *regex_info, const char *regex, const char *str);
 
 int					ft_regex(int options, const char *regex, const char *str, ...);
+void				ft_print_matches(const char *str, t_list *matches);
+
+# define RGX_BKSLSH 2
+# define RGX_N 4
 
 t_mchi				*ft_getmchi(const char *match);
 void				ft_delmchi(t_mchi *head);
