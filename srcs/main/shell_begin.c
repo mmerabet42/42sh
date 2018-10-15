@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/15 11:35:09 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/15 16:09:13 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <sys/signal.h>
 #include <sys/wait.h>
 
-static	void	sign_handler(int sign)
+void	sign_handler(int sign)
 {
 	char	*tmp;
 

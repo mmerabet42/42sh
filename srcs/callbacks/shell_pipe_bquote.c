@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/13 13:02:46 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/13 14:50:56 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 15:13:53 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ static int		init_struct(t_pipe *pipe, t_ast *ast)
 
 static void		fork_son(t_pipe *a, t_list *elem, void *res, t_iterf *iterf)
 {
+	resetsign();
 	if (!elem->next)
 	{
 		close(a->fd[0]);

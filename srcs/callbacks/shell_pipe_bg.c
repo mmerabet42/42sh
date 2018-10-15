@@ -57,6 +57,7 @@ static void		fork_son(t_pipe *a, t_list *elem, void *res, t_iterf *iterf)
 	ts.tv_sec = 0;
 	ts.tv_nsec = 8000000;
 	nanosleep(&ts, NULL);
+	resetsign();
 	if (!elem->next)
 	{
 		close(a->fd[0]);
