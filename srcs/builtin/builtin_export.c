@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 14:42:10 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/05 10:54:18 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/15 11:27:27 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,10 @@ int			builtin_export(int argc, char **argv)
 	while (argc-- > 0 && *argv)
 	{
 		s = ft_strsplit(*argv, '=');
-		update_export(s[0], s[1]);
+		if (ft_strchr(*argv, '='))
+			update_export(s[0], s[1] ? s[1] : "");
+		else
+			update_export(s[0], NULL);
 		ft_strdel(&(s)[0]);
 		ft_strdel(&(s)[1]);
 		free(s);

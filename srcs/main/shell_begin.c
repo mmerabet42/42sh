@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 10:53:00 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 11:35:09 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,8 @@ int				shell_begin(char *name, int argc, char **argv, char **envp)
 		ft_strcpy(g_shell->pwd, tmp);
 	else
 		ft_strcpy(g_shell->pwd, ft_getcwd(NULL, 0));
-	ft_setenv("SHLVL",
-			(tmp = ft_itoa(ft_atoi(ft_getenv("SHLVL", g_shell->envp)) + 1)),
-			&g_shell->envp);
+	update_export("SHLVL",
+			(tmp = ft_itoa(ft_atoi(ft_getenv("SHLVL", g_shell->envp)) + 1)));
 	free(tmp);
 	sign_handler(SIGWINCH);
 	return (shell_init(argc, argv));
