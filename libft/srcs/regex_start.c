@@ -24,7 +24,6 @@ static int	loop_stop(t_regex_info *rgxi, t_regex_info *tmp,
 	rgxi->len += ret;
 	rgxi->str += ret;
 	*tmp = *rgxi;
-	tmp->option = 0;
 	if (!r->cond || r->cond == RGX_MARK || r->cond == RGX_LESS
 			|| (r->cond == RGX_GREAT && r->i >= r->l))
 		if ((lret = regex_exec(tmp)) != -1)

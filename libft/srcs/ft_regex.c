@@ -51,8 +51,8 @@ static int	get_matches(t_regex_info *rgxi)
 	global_pos = 0;
 	while ((match.len = regex_pos(rgxi)) != -1)
 	{
-		match.str = rgxi->str - match.len;
 		match.pos += global_pos;
+		match.str = str + match.pos;
 		ft_lstpush_p(&head, ft_lstnew(&match, sizeof(t_regex_match)));
 		global_pos = match.pos + match.len;
 		rgxi->str = str + global_pos;

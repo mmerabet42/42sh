@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 20:57:52 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/15 14:47:04 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,14 +193,15 @@ int			main(int argc, char **argv, char **envp)
 
  * */
 	t_list	*matches = NULL;
-	int	pos = 0;
-	int	ret = ft_regex(RGX_END, argv[1], argv[2], &pos, &matches);
+//	int	pos = 0;
+	int	ret = ft_regex(RGX_MATCHES, argv[1], argv[2], &matches);
 
-	ft_printf("regex: '%s' '%s' %d %d\n", argv[1], argv[2], pos, ret);
+	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
+//	ft_printf("regex: '%s' '%s' '%.*s' %d %d\n", argv[1], argv[2], ret, argv[2] + pos, pos, ret);
 	ft_printf("%d match\n", ret);
-//	if (ret > 0)
-//		ft_print_matches(argv[2], matches);
-//	ft_lstdel(&matches, content_delfunc);
+	if (ret > 0)
+		ft_print_matches(argv[2], matches);
+	ft_lstdel(&matches, content_delfunc);
 	return (0);
 	char	*line;
 	int		cursor;
