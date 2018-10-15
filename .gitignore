@@ -2,4 +2,6 @@
 *.o
 42sh
 *.a
-logger/
+logger
+unitest_sh
+shelltesteur

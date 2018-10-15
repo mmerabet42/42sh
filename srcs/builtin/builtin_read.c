@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/08 10:24:29 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/08 17:22:34 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/15 13:58:33 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int			builtin_read(int argc, char **argv)
 	r = 0;
 	if (!argc || handle_opt(&argv, &r) || (tmp = NULL))
 		return (1);
+	signal(SIGINT, signal_read);
 	while (get_next_line(0, &s) > -1)
 	{
 		tmp = expands_builtin(tmp, s);
