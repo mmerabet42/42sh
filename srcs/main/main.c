@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 15:56:04 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 10:53:25 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ static void	main_execution(char *line)
 		if (!line[0] && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
 		head = ft_lexer(line, &g_lexerf);
+		ft_astprint(head, 0);
 		if (check_syntax(head, &g_expf))
 			g_shell->exitcode = 1;
 		else if ((ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
@@ -182,6 +183,8 @@ int			main(int argc, char **argv, char **envp)
 	char	*line;
 	int		cursor;
 
+	if (logger_init(D_TRACE, "/tmp/out.log") != 0)
+		printf("failed to open the logger\n");
 	shell_begin(init_structs(argv[0]), argc, argv, envp);
 	if (check_script() || check_cmd_starter())
 		return (shell_end());
@@ -199,5 +202,6 @@ int			main(int argc, char **argv, char **envp)
 		else
 			break ;
 	}
+	logger_close();
 	return (shell_end());
 }
