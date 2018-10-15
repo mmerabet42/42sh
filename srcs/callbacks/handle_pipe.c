@@ -48,7 +48,7 @@ int				handle_ast_pipe(t_ast *ast, t_list **pipe)
 {
 	t_list	*elem;
 
-	while (ast && ast->left && ast->left->type == TK_PIPE + 1)
+	while (ast && ast->left && ast->left->type == TK_PIPE)
 	{
 		if (ast->right)
 		{

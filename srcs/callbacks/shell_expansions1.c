@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 20:01:35 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 15:55:00 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 12:57:29 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,23 @@
 #include "ft_io.h"
 #include "ft_str.h"
 #include <sys/wait.h>
+#include "ft_mem.h"
+
+static t_list **	g_res;
+
+static void		free2(void *content, size_t size)
+{
+	(void)size;
+	ft_memdel(&content);
+}
+
+static void		hand_ctrc(int sign)
+{
+	if (sign)
+	{
+		ft_lstdel(g_res, free2);
+	}
+}
 
 static int		exp_cmd1(int fd[2], t_list **res, int mode, pid_t pid)
 {
@@ -21,7 +38,9 @@ static int		exp_cmd1(int fd[2], t_list **res, int mode, pid_t pid)
 	char	*end;
 	int		ret;
 
+	g_res = res;
 	close(fd[1]);
+	signal(SIGINT, hand_ctrc);
 	get_next_delimstr(fd[0], EOF_NEVER_REACH, &line);
 	if (mode == -1)
 	{
@@ -35,6 +54,7 @@ static int		exp_cmd1(int fd[2], t_list **res, int mode, pid_t pid)
 		ft_lstpush_p(res, ft_strsplitpbrk_lst(line, " \t\n"));
 	close(fd[0]);
 	waitpid(pid, &ret, WUNTRACED);
+	ft_strdel(&line);
 	return (0);
 }
 
