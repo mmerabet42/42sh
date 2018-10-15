@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/15 13:00:24 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 13:59:15 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,7 @@ char				**ft_split_whitespaces(char *str);
 char				*ft_multi_strjoin(int n, ...);
 void				ft_strremove(char *s);
 void				ft_free_tab(char ***tab);
+void				signal_read(int sig);
 
 extern int			g_dontfree;
 extern t_shell		*g_shell;
