@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/07 16:47:10 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/17 14:18:00 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 18:23:43 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,11 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 		while (elem && ((t_inffork *)elem->content)->sign != '+')
 			elem = elem->next;
 	}
-	if (elem && (((t_inffork *)elem->content)->status[0] != 'K' ||
-				((t_inffork *)elem->content)->status[0] != 'D'))
+	if (elem && (((t_inffork *)elem->content)->status != BG_KILL ||
+				((t_inffork *)elem->content)->status != BG_END))
 		return (elem);
 	return (error_bg(argv, 0));
 }
-/*
-static void			resetsign(void)
-{
-	int	x;
-
-	x = -1;
-	while (++x < 33)
-		signal(x, SIG_DFL);
-}*/
 
 int					builtin_bg(int argc, char **argv)
 {
@@ -74,7 +65,7 @@ int					builtin_bg(int argc, char **argv)
 		return (1);
 	else
 	{
-		if (((t_inffork *)elem->content)->status[0] != 'S')
+		if (((t_inffork *)elem->content)->status != BG_STOP)
 			ft_printf_fd(2, "21sh: bg: job %d already in background\n", ret);
 		else
 		{

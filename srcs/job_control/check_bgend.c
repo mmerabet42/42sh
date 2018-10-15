@@ -6,13 +6,21 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/06 22:40:06 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 18:06:45 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_mem.h"
 #include "ft_io.h"
+
+static char				*g_status[] = {
+	"",
+	"Running",
+	"Done",
+	"Killed",
+	"Suspended"
+};
 
 void			print_cmd_args(char **tab)
 {
@@ -63,10 +71,10 @@ t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
 {
 	if (!*struc->cmd)
 		ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
-					struc->status);
+					g_status[struc->status]);
 	else
 		ft_printf("[%d]  %c %s", struc->x, struc->sign,
-					struc->status);
+					g_status[struc->status]);
 	print_cmd_args(struc->cmd);
 	struc->modif &= (0 << 0);
 	return (elem->next);
@@ -81,14 +89,17 @@ int				check_bgend(void)
 	while (elem)
 	{
 		struc = elem->content;
-		if (end_status(struc->status) != -1)
+		if (struc->status == BG_END || struc->status == BG_KILL)
 		{
 			if (!*struc->cmd)
 				ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
-							struc->status);
+							g_status[struc->status]);
 			else
+			{
+				log_debug("toto\n");
 				ft_printf("[%d]  %c %s", struc->x, struc->sign,
-							struc->status);
+							g_status[struc->status]);
+			}
 			print_cmd_args(struc->cmd);
 			handle_bgsign(elem, 1);
 			elem = delete_info(elem);

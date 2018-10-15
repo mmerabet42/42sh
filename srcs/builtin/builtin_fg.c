@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/10 10:49:33 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 18:03:53 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 		while (elem && ((t_inffork *)elem->content)->sign != '+')
 			elem = elem->next;
 	}
-	if (elem && (((t_inffork *)elem->content)->status[0] != 'K' ||
-				((t_inffork *)elem->content)->status[0] != 'D'))
+	if (elem && (((t_inffork *)elem->content)->status != BG_KILL ||
+				((t_inffork *)elem->content)->status != BG_END))
 		return (elem);
 	return (error_fg(argv, 0));
 }
@@ -109,7 +109,7 @@ int					builtin_fg(int argc, char **argv)
 	{
 		print_cmd_args2(((t_inffork *)elem->content)->cmd);
 		signal(SIGCHLD, SIG_DFL);
-		if (((t_inffork *)elem->content)->status[0] == 'S')
+		if (((t_inffork *)elem->content)->status == BG_STOP)
 		{
 			if (((t_inffork *)elem->content)->pid != -1)
 				kill(((t_inffork *)elem->content)->pid, SIGCONT);

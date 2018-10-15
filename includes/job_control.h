@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 18:59:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/10 13:59:13 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 18:02:45 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 
 typedef	enum		e_bgstat
 {
-	BG_RUN, BG_END, BG_KILL, BG_STOP
+	BG_OFFSET, BG_RUN, BG_END,
+	BG_KILL, BG_STOP
 }					t_bgstat;
 
 typedef struct		s_bgstats
@@ -33,6 +34,7 @@ typedef struct s_pids	t_pids;
 struct				s_pids
 {
 	pid_t			pid;
+	char			*cmd;
 	t_pids			*parent;
 	t_pids			*next;
 };
@@ -42,7 +44,7 @@ typedef struct		s_inffork
 	int				x;
 	pid_t			pid;
 	char			sign;
-	char			status[100];
+	int				status;
 	char			**cmd;
 	unsigned int	modif : 1;
 	t_pids			*pids;
@@ -56,7 +58,6 @@ int					handle_bgproc(pid_t pid_fork,
 									int status,
 									int opt);
 int					check_bgend(void);
-int					end_status(char *str);
 void				print_cmd_args(char **tab);
 void				print_cmd_args2(char **tab);
 char				**ret_args(t_ast *ast);

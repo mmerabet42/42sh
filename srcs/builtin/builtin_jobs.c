@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 17:15:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/10 10:19:58 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/15 18:47:16 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,21 @@
 #include "shell.h"
 #include "ft_types.h"
 
+static char				*g_status[] = {
+	"",
+	"Running",
+	"Done",
+	"Killed",
+	"Suspended"
+};
+
 static void		jobs_print(t_list *elem)
 {
 	int	x;
 
 	ft_printf("[%d]%c %s ", ((t_inffork *)elem->content)->x,
 					((t_inffork *)elem->content)->sign,
-					((t_inffork *)elem->content)->status);
+					g_status[((t_inffork *)elem->content)->status]);
 	x = -1;
 	while (((t_inffork *)elem->content)->cmd[++x])
 		ft_printf(" %s", ((t_inffork *)elem->content)->cmd[x]);
