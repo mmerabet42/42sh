@@ -193,13 +193,14 @@ int			main(int argc, char **argv, char **envp)
 
  * */
 	t_list	*matches = NULL;
-	int	ret = ft_regex(RGX_MATCHES, argv[1], argv[2], &matches);
+	int	pos = 0;
+	int	ret = ft_regex(RGX_END, argv[1], argv[2], &pos, &matches);
 
-	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
+	ft_printf("regex: '%s' '%s' %d %d\n", argv[1], argv[2], pos, ret);
 	ft_printf("%d match\n", ret);
-	if (ret > 0)
-		ft_print_matches(argv[2], matches);
-	ft_lstdel(&matches, content_delfunc);
+//	if (ret > 0)
+//		ft_print_matches(argv[2], matches);
+//	ft_lstdel(&matches, content_delfunc);
 	return (0);
 	char	*line;
 	int		cursor;

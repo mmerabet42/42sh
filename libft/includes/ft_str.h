@@ -275,7 +275,7 @@ typedef struct		s_regex_match
 	int				pos;
 	int				len;
 }					t_regex_match;
-
+#include "ft_printf.h"
 typedef int	(*t_regex_funcptr)(t_regex_info *regex_info, t_regex_rule *rule);
 typedef struct		s_regex_func
 {

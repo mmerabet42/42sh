@@ -66,7 +66,7 @@ static int	regex_equ(t_regex_info *rgxi)
 	}
 	if (!rgxi->str[i] && rgxi->regex[i])
 		return (-1);
-	else if (!rgxi->regex[i] && rgxi->str[i] && !(rgxi->option & RGX_END))
+	if (!rgxi->regex[i] && rgxi->str[i] && !(rgxi->option & RGX_END))
 		return (-1);
 	return (i);
 }
