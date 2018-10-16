@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 18:59:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/16 16:24:55 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 17:55:25 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int					handle_bgproc(pid_t pid_fork,
 									int opt);
 int					check_bgend(void);
 void				print_cmd_args(char **tab);
-void				print_cmd_args2(char **tab);
+void				print_cmd_args2(char *tab);
 char				**ret_args(t_ast *ast);
 t_ast				*ret_astargs(t_ast *ast);
 void				handle_bgsign(t_list *elem, int opt);

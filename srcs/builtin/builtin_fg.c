@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/15 18:03:53 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 18:11:12 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int					builtin_fg(int argc, char **argv)
 		return (1);
 	else
 	{
-		print_cmd_args2(((t_inffork *)elem->content)->cmd);
+		print_cmd_args2(((t_inffork *)elem->content)->cmmd);
 		signal(SIGCHLD, SIG_DFL);
 		if (((t_inffork *)elem->content)->status == BG_STOP)
 		{

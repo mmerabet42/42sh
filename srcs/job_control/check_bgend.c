@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 11:38:19 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 18:11:14 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,14 @@ void			print_cmd_args(char **tab)
 		ft_printf(" %s\n", tab[x]);
 }
 
-void			print_cmd_args2(char **tab)
+void			print_cmd_args2(char *tab)
 {
 	int	x;
 
 	x = -1;
-	if (!tab || !tab[0])
+	if (!tab)
 		return ;
-	while (tab[++x] && tab[x + 1])
-		ft_printf(" %s", tab[x]);
-	if (!x && tab[x])
-		ft_printf("%s\n", tab[x]);
-	else if (tab[x])
-		ft_printf("%s\n", tab[x]);
+	ft_printf("%s\n", tab);
 }
 
 static t_list			*delete_info(t_list *elem)

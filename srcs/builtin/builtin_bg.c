@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/07 16:47:10 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/15 18:23:43 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 17:13:25 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int					builtin_bg(int argc, char **argv)
 			pid = pid == -1 ? ((t_inffork *)elem->content)->pids->pid : pid;
 			ret = ((t_inffork *)elem->content)->pid == -1 ? 1 : 0;
 			handle_bgstat(((t_inffork *)elem->content)->pid, BG_RUN, ret);
+			((t_inffork *)elem->content)->modif |= (1 << 0);;
 			if (((t_inffork *)elem->content)->pid == -1)
 				kill(-pid, SIGCONT);
 			else
