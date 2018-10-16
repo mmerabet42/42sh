@@ -13,7 +13,9 @@ static int	loop_return(t_regex_info *rg, t_regex_info *t,
 		return (-1);
 	if (t->len == -1 && (!(rg->option & RGX_END) || (t->regex && *t->regex)))
 		return (-1);
-	return (t->len == -1 ? rg->len : rg->len + t->len);
+	if (t->len == -1 && !*rg->regex && (!*rg->str || (rg->option & RGX_END)))
+		return (rg->len);
+	return (t->len == -1 ? -1 : rg->len + t->len);
 }
 
 static int	loop_stop(t_regex_info *rgxi, t_regex_info *tmp,
@@ -28,10 +30,9 @@ static int	loop_stop(t_regex_info *rgxi, t_regex_info *tmp,
 	if (!r->cond || r->cond == RGX_MARK || r->cond == RGX_LESS
 			|| (r->cond == RGX_GREAT && r->i >= r->l))
 	{
-		if ((lret = regex_exec(tmp)) != -1)
+		if (*tmp->regex && (lret = regex_exec(tmp)) != -1)
 		{
 			*tmp = *rgxi;
-			tmp->len = rgxi->len + r->i;
 			if ((tmp->option & RGX_END) && (nret = regex_loop(tmp, r)) != -1)
 				return (nret - lret);
 			return (lret);
@@ -81,7 +82,7 @@ static int	regex_once(t_regex_info *rgxi, t_regex_rule *rule)
 		rgxi->len += (ret == -1 ? 0 : ret);
 		return (0);
 	}
-	else if (ret == -1)
+	else if (ret == -1 && *rgxi->str)
 	{
 		++rgxi->str;
 		++rgxi->len;
@@ -98,7 +99,7 @@ int	regex_start(t_regex_info *rgxi, t_regex_rule *rule)
 	{
 		rule->rule = rule->func->name;
 		rule->len_rule = ft_strlen(rule->rule);
-		if (!(rule->func = get_regex_func("OTHER", 5, rgxi->id)))
+		if (!(rule->func = get_regex_func("OTHER", 5, NULL)))
 			return (-1);
 	}
 	if (rule->type == '*')

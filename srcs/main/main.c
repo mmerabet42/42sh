@@ -181,9 +181,13 @@ int			main(int argc, char **argv, char **envp)
 	t_list **rules
 	RGX_CLEAN
  * */
-	ft_printf("id 1: %d\n", ft_regex(RGX_ADD, NULL, "lol:?[$&]", NULL));
-	ft_printf("id 2: %d\n", ft_regex(RGX_ADD, NULL, "sp:?[@space]", NULL));
-	ft_printf("id 3: %d\n", ft_regex(RGX_ADD, NULL, "mdr:mdr", NULL));
+	ft_regex(RGX_ADD, NULL, "lol:?[$&]", NULL);
+	ft_regex(RGX_ADD, NULL, "sp:?[@space]", NULL);
+	ft_regex(RGX_ADD, NULL, "mdr:?[@word]", NULL);
+	ft_regex(RGX_ADD, NULL, "STRUCT:typedef*[@space]struct*[@space]*[@word]*[@space?]{*}*[@space?]*[@word]*[@space?];", NULL);
+	ft_regex(RGX_ADD, NULL, "_DQUOTE:?[@DQUOTE]", NULL);
+	ft_regex(RGX_ADD, NULL, "INCLUDE:<*![\n]>", NULL);
+
 	t_list	*matches = NULL;
 	int	ret = ft_regex(RGX_MATCHES, argv[1], argv[2], &matches);
 
@@ -192,8 +196,7 @@ int			main(int argc, char **argv, char **envp)
 	ft_print_matches(argv[2], matches);
 /*	int	id = 0;
 	int	pos = 0;
-	ft_printf("address: %p\n", &id);
-	int	ret = ft_regex(RGX_ID | RGX_POS | RGX_END, argv[1], argv[2], &pos, &id);
+	int	ret = ft_regex(0, argv[1], argv[2], &pos, &id);
 
 	ft_printf("regex: '%s' '%s' '%.*s' %d %d %d\n", argv[1], argv[2], ret, argv[2] + pos, pos, ret, id);*/
 	ft_regex(RGX_FREE, NULL, NULL, &matches);

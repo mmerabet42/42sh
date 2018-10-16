@@ -85,6 +85,24 @@ static int			regex_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	return (ret);
 }
 
+static int	boundary_rgx(t_regex_info *rgxi, t_regex_rule *rule)
+{
+	(void)rule;
+	if (rule->rule[rule->len_rule - 1] == '1')
+	{
+		if (rgxi->str == rgxi->str_begin || ft_strchr(" \f\n\t\r\v", *(rgxi->str - 1)))
+			return (0);
+	}
+	else if (!*rgxi->str)
+		return (0);
+	else if (ft_strchr(" \f\n\t\r\v", *rgxi->str))
+	{
+		++rgxi->str;
+		return (0);
+	}
+	return (-1);
+}
+
 static t_regex_func	g_regexfs[] = {
 	{"DEFAULT", default_rgx, 0},
 	{"OTHER", other_rgx, 0},
@@ -113,7 +131,9 @@ static t_regex_func	g_regexfs[] = {
 	{"nint:?[+-@?]*[0-9]", NULL, 0},
 	{"uint:*[@space?]*[0-9]", NULL, 0},
 	{"getint", getint_rgx, 0},
-	
+	{"b1", boundary_rgx, 0},
+	{"b2", boundary_rgx, 0},
+
 	{"print", print_rgx, 0},
 	{"regex", regex_rgx, 0},
 	{"case", case_rgx, 0},
@@ -122,7 +142,7 @@ static t_regex_func	g_regexfs[] = {
 	{"set%", case_rgx, 0},
 	{"equ:%_", NULL, 0},
 	
-	{"square:?[n:*[o]@E]?[m=n-2@E]*[o@=n]\n*[o*[ @=m]o\n@regex=m]*[o@=n]", NULL, 0},
+	{"square:?[n:*[o]@E]?[0=n>1@E]?[m=n-2@E]*[o@=n]\n*[o*[ @=m]o\n@regex=m]*[o@=n]", NULL, 0},
 	{"DQUOTE:\"*[\\\"|?![\"]@or?]\"", NULL, 0},
 	{"QUOTE:'*[?![']@or?]'", NULL, 0},
 	{"BSLASH:\\?", NULL, 0},

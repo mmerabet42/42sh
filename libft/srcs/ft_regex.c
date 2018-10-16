@@ -55,6 +55,7 @@ static int	get_matches(t_regex_info *rgxi)
 		match.str = str + match.pos;
 		ft_lstpush_p(&head, ft_lstnew(&match, sizeof(t_regex_match)));
 		global_pos = match.pos + match.len;
+		match.id = 0;
 		++i;
 		if (!*(rgxi->str = str + global_pos))
 			break ;
@@ -121,7 +122,7 @@ void		ft_print_matches(const char *str, t_list *matches)
 	while (matches)
 	{
 		m = (t_regex_match *)matches->content;
-		ft_printf("%{white}%#{black}%.*s%{black}%#{%s}%.*s%#{lred}%{0}",
+		ft_printf("%{white}%#{black}%.*s%{black}%#{%s}%.*s%#{lred}%d%{0}",
 				m->pos - i, str + i, (n ? "lcyan" : "lblue"), m->len, m->str, m->id);
 		n = !n;
 		i = m->pos + m->len;
