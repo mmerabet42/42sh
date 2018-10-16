@@ -42,6 +42,7 @@ int			expr_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 		if (!(str = ft_strndup(&rule->arg[2], rule->len_arg - 2)))
 			return (-1);
 		tmp = *rgxi;
+		tmp.id = NULL;
 		tmp.regex = str;
 		tmp.rgx_begin = str;
 		tmp.len = 0;

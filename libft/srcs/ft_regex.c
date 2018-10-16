@@ -42,9 +42,9 @@ static int	get_matches(t_regex_info *rgxi)
 	int				i;
 
 	rgxi->option &= ~RGX_MATCHES;
-	rgxi->option |= RGX_POS;
-	rgxi->option |= RGX_END;
+	rgxi->option |= (RGX_POS | RGX_END | RGX_ID);
 	rgxi->pos = &match.pos;
+	rgxi->id = &match.id;
 	str = rgxi->str;
 	head = NULL;
 	i = 0;
@@ -73,37 +73,16 @@ static void	get_args(t_regex_info *rgxi, va_list vp)
 		rgxi->strn = va_arg(vp, int);
 	if (rgxi->option & RGX_MATCHES)
 		rgxi->matches = (t_list **)va_arg(vp, t_list **);
-	else if (rgxi->option & RGX_POS)
-		rgxi->pos = va_arg(vp, int *);
+	else
+	{
+		if (rgxi->option & RGX_POS)
+			rgxi->pos = va_arg(vp, int *);
+		if (rgxi->option & RGX_ID)
+			rgxi->id = va_arg(vp, int *);
+	}
 	if (rgxi->option & RGX_VAR)
 		rgxi->vars = va_arg(vp, int *);
 	va_end(vp);
-}
-
-static int	manage_rules(const char *str, t_list **rules, int options, va_list vp)
-{
-	t_regex_func	func;
-	t_list			**lst;
-
-	func.name = str;
-	if (options & RGX_ADD)
-	{
-		func.func = va_arg(vp, t_regex_funcptr);
-		ft_lstpush_p(rules, ft_lstnew(&func, sizeof(t_regex_func)));
-	}
-	else if (options & (RGX_GET | RGX_FREE))
-	{
-		if (!(lst = va_arg(vp, t_list **)))
-			return (0);
-		if (options & RGX_GET)
-			*lst = *rules;
-		else
-			ft_lstdel(lst, content_delfunc);
-	}
-	else if (options & RGX_CLEAN)
-		ft_lstdel(rules, content_delfunc);
-	va_end(vp);
-	return (0);
 }
 
 int			ft_regex(int options, const char *regex, const char *str, ...)
@@ -142,8 +121,8 @@ void		ft_print_matches(const char *str, t_list *matches)
 	while (matches)
 	{
 		m = (t_regex_match *)matches->content;
-		ft_printf("%{white}%#{black}%.*s%{black}%#{%s}%.*s%{0}",
-				m->pos - i, str + i, (n ? "lcyan" : "lblue"), m->len, m->str);
+		ft_printf("%{white}%#{black}%.*s%{black}%#{%s}%.*s%#{lred}%{0}",
+				m->pos - i, str + i, (n ? "lcyan" : "lblue"), m->len, m->str, m->id);
 		n = !n;
 		i = m->pos + m->len;
 		if (!(matches = matches->next))

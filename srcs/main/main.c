@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/15 19:20:38 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/16 18:51:15 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,23 +181,24 @@ int			main(int argc, char **argv, char **envp)
 	t_list **rules
 	RGX_CLEAN
  * */
+	ft_printf("id 1: %d\n", ft_regex(RGX_ADD, NULL, "lol:?[$&]", NULL));
+	ft_printf("id 2: %d\n", ft_regex(RGX_ADD, NULL, "sp:?[@space]", NULL));
+	ft_printf("id 3: %d\n", ft_regex(RGX_ADD, NULL, "mdr:mdr", NULL));
 	t_list	*matches = NULL;
-//	int	pos = 0;
-	ft_regex(RGX_ADD, NULL, "lol:?[$&]", NULL);
 	int	ret = ft_regex(RGX_MATCHES, argv[1], argv[2], &matches);
 
 	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
-//	ft_printf("regex: '%s' '%s' '%.*s' %d %d\n", argv[1], argv[2], ret, argv[2] + pos, pos, ret);
 	ft_printf("%d match\n", ret);
-	if (ret > 0)
-		ft_print_matches(argv[2], matches);
+	ft_print_matches(argv[2], matches);
+/*	int	id = 0;
+	int	pos = 0;
+	ft_printf("address: %p\n", &id);
+	int	ret = ft_regex(RGX_ID | RGX_POS | RGX_END, argv[1], argv[2], &pos, &id);
+
+	ft_printf("regex: '%s' '%s' '%.*s' %d %d %d\n", argv[1], argv[2], ret, argv[2] + pos, pos, ret, id);*/
 	ft_regex(RGX_FREE, NULL, NULL, &matches);
 	ft_regex(RGX_CLEAN, NULL, NULL);
 	return (0);
-/*	int	ret = ft_regex(RGX_END, argv[1], argv[2]);
-
-	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
-	return (0);*/
 	char	*line;
 	int		cursor;
 

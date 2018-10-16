@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:39:12 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 23:42:10 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/16 16:39:16 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ t_list				*ft_lstmap_d(t_list *lst,
 							void *data);
 t_list				*ft_lstpush(t_list *lst, t_list *elem);
 t_list				*ft_lstpush_p(t_list **lst, t_list *elem);
+int					ft_lstpush_pi(t_list **lst, t_list *elem);
 void				ft_lstpushfront(t_list **alst, t_list *elem);
 t_list				*ft_lstinsert(t_list **alst, t_list *elem, int invert);
 t_list				*ft_lstconnect(t_list *a, t_list *b);

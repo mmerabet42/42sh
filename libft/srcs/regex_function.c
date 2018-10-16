@@ -86,61 +86,61 @@ static int			regex_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 }
 
 static t_regex_func	g_regexfs[] = {
-	{"DEFAULT", default_rgx},
-	{"OTHER", other_rgx},
-	{"^", delim_rgx},
-	{"$", delim_rgx},
-	{"or", cond_rgx},
-	{"and", cond_rgx},
-	{"ror", cond_rgx},
-	{"!", regex_rgx},
-	{",", regex_rgx},
-	{";", regex_rgx},
-	{"R", recursive_rgx},
-	{"E", expr_rgx},
-	{"G", group_rgx},
-	{"LG", group_rgx},
+	{"DEFAULT", default_rgx, 0},
+	{"OTHER", other_rgx, 0},
+	{"^", delim_rgx, 0},
+	{"$", delim_rgx, 0},
+	{"or", cond_rgx, 0},
+	{"and", cond_rgx, 0},
+	{"ror", cond_rgx, 0},
+	{"!", regex_rgx, 0},
+	{",", regex_rgx, 0},
+	{";", regex_rgx, 0},
+	{"R", recursive_rgx, 0},
+	{"E", expr_rgx, 0},
+	{"G", group_rgx, 0},
+	{"LG", group_rgx, 0},
 
-	{"upper:?[A-Z]", NULL},
-	{"lower:?[a-z]", NULL},
-	{"digit:?[0-9]", NULL},
-	{"alpha:?[a-zA-Z]", NULL},
-	{"alnum:?[a-zA-Z0-9]", NULL},
-	{"punct:?[?![@alnum]&?![@space]@and]", NULL},
-	{"word:?[a-zA-Z0-9_]", NULL},
-	{"space:?[ \f\n\t\r\v]", NULL},
-	{"int:*[@space?]?[+-@?]*[0-9]", NULL},
-	{"nint:?[+-@?]*[0-9]", NULL},
-	{"uint:*[@space?]*[0-9]", NULL},
-	{"getint", getint_rgx},
+	{"upper:?[A-Z]", NULL, 0},
+	{"lower:?[a-z]", NULL, 0},
+	{"digit:?[0-9]", NULL, 0},
+	{"alpha:?[a-zA-Z]", NULL, 0},
+	{"alnum:?[a-zA-Z0-9]", NULL, 0},
+	{"punct:?[?![@alnum]&?![@space]@and]", NULL, 0},
+	{"word:?[a-zA-Z0-9_]", NULL, 0},
+	{"space:?[ \f\n\t\r\v]", NULL, 0},
+	{"int:*[@space?]?[+-@?]*[0-9]", NULL, 0},
+	{"nint:?[+-@?]*[0-9]", NULL, 0},
+	{"uint:*[@space?]*[0-9]", NULL, 0},
+	{"getint", getint_rgx, 0},
 	
-	{"print", print_rgx},
-	{"regex", regex_rgx},
-	{"case", case_rgx},
-	{"return", print_rgx},
-	{"debug", debug_rgx},
-	{"set%", case_rgx},
-	{"equ:%_", NULL},
+	{"print", print_rgx, 0},
+	{"regex", regex_rgx, 0},
+	{"case", case_rgx, 0},
+	{"return", print_rgx, 0},
+	{"debug", debug_rgx, 0},
+	{"set%", case_rgx, 0},
+	{"equ:%_", NULL, 0},
 	
-	{"square:?[n:*[o]@E]?[m=n-2@E]*[o@=n]\n*[o*[ @=m]o\n@regex=m]*[o@=n]", NULL},
-	{"DQUOTE:\"*[\\\"|?![\"]@or?]\"", NULL},
-	{"QUOTE:'*[?![']@or?]'", NULL},
-	{"BSLASH:\\?", NULL},
-	{"BRACKET0:[*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[](){}\"'}]@or?]]", NULL},
-	{"BRACKET1:(*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]{}\"'}]@or?])", NULL},
-	{"BRACKET2:{*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]{}\"'}]@or?]}", NULL},
-	{"BRACKET:?[?[@BRACKET0]|?[@BRACKET1]|?[@BRACKET2]@or]", NULL},
-	{"INF:?[@INF]", NULL},
+	{"square:?[n:*[o]@E]?[m=n-2@E]*[o@=n]\n*[o*[ @=m]o\n@regex=m]*[o@=n]", NULL, 0},
+	{"DQUOTE:\"*[\\\"|?![\"]@or?]\"", NULL, 0},
+	{"QUOTE:'*[?![']@or?]'", NULL, 0},
+	{"BSLASH:\\?", NULL, 0},
+	{"BRACKET0:[*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[](){}\"'}]@or?]]", NULL, 0},
+	{"BRACKET1:(*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]{}\"'}]@or?])", NULL, 0},
+	{"BRACKET2:{*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]{}\"'}]@or?]}", NULL, 0},
+	{"BRACKET:?[?[@BRACKET0]|?[@BRACKET1]|?[@BRACKET2]@or]", NULL, 0},
+	{"INF:?[@INF]", NULL, 0},
 };
 static size_t		g_regex_len = (sizeof(g_regexfs) / sizeof(t_regex_func));
 
-t_regex_func		*get_regex_func(const char *name, int len_rule)
+t_regex_func		*get_regex_func(const char *name, int len_rule, int *id)
 {
 	size_t	i;
 	int		len;
 
 	if (!len_rule || !name || !*name)
-		return (get_regex_func("DEFAULT", 7));
+		return (get_regex_func("DEFAULT", 7, id));
 	i = 0;
 	while (i < g_regex_len)
 	{
@@ -149,13 +149,38 @@ t_regex_func		*get_regex_func(const char *name, int len_rule)
 		else
 			len = ft_strlen(g_regexfs[i].name);
 		if (ft_strnequ(name, g_regexfs[i].name, ft_max(len_rule, len)))
+		{
+			if (id)
+				*id = g_regexfs[i].id;
 			return (&g_regexfs[i]);
+		}
 		++i;
 	}
-	return (get_regex_rule(name, len_rule));
+	return (get_regex_rule(name, len_rule, id));
 }
 
-t_regex_func		*get_regex_func(const char *name, int len_rule)
+t_regex_func		*get_regex_rule(const char *name, int len_rule, int *id)
 {
-	
+	t_list			*rules;
+	t_regex_func	*func;
+	int				len;
+
+	rules = NULL;
+	ft_regex(RGX_GET, NULL, NULL, &rules);
+	while (rules)
+	{
+		func = (t_regex_func *)rules->content;
+		if (!func->func)
+			len = ft_strchr_pos(func->name, ':');
+		else
+			len = ft_strlen(func->name);
+		if (ft_strnequ(name, func->name, ft_max(len_rule, len)))
+		{
+			if (id)
+				*id = func->id;
+			return (func);
+		}
+		rules = rules->next;
+	}
+	return (NULL);
 }
