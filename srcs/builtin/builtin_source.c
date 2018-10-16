@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/23 20:14:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/23 20:16:51 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/16 11:03:02 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,12 @@ int	builtin_source(int argc, char **argv)
 	t_ast	*ast;
 
 	if (argc == 1)
-	{
-		ft_putstr_fd("source: not enough arguments\n", 2);
-		return (1);
-	}
+		return (!!ft_printf_fd(2, "source: not enough arguments\n"));
 	else if ((fd = open(argv[1], O_RDONLY)) == -1
 			|| get_next_delimstr(fd, EOF_NEVER_REACH, &content) == -1)
 	{
 		ft_printf_fd(2, "source: %s: %s\n", ft_strshret(SH_NEXIST), argv[1]);
-		if (fd != -1)
-			close(fd);
+		close(fd);
 		return (127);
 	}
 	close(fd);
@@ -51,6 +47,7 @@ int	builtin_function(int argc, char **argv)
 	t_func	*func;
 	int		res;
 	int		ret;
+	t_iterf	*itf;
 
 	it = g_shell->funcs;
 	if (argc > 1)
@@ -58,7 +55,7 @@ int	builtin_function(int argc, char **argv)
 		res = 0;
 		++g_shell->curargs->argv;
 		--g_shell->curargs->argc;
-		t_iterf *itf = g_shell->allf->iterf;
+		itf = g_shell->allf->iterf;
 		if ((func = get_function(argv[1])))
 			ret = ft_astiter(func->ast, &res, itf);
 		--g_shell->curargs->argv;

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/23 22:17:51 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 22:48:09 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/16 11:07:34 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	shell_arth_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		*(int *)res = 0;
 	return (0);
 }
+
 /*
 int	exp_arth(t_strid *sid, char **res, t_expf *expf)
 {
@@ -89,6 +90,7 @@ int	exp_cond(t_strid *sid, char **res, t_expf *expf)
 	return (0);
 }
 */
+
 int	exp_arth(t_strid *sid, t_list **res, t_expf *expf)
 {
 	EXPRT		val;
