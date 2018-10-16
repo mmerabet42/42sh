@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 18:59:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/15 18:02:45 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 12:56:10 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct		s_inffork
 	char			sign;
 	int				status;
 	char			**cmd;
+	char			*cmmd;
 	unsigned int	modif : 1;
 	t_pids			*pids;
 }					t_inffork;
@@ -71,7 +72,7 @@ t_list				*ret_sign(int opt);
 void				debug_sign();
 void				resetsign(void);
 
-int					creatpushelem(t_pids **head, pid_t pid);
+int					creatpushelem(t_pids **head, pid_t pid, t_list *ast);
 void				extractpids(t_pids **head, pid_t pid);
 
 #endif

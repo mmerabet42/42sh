@@ -6,13 +6,14 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 17:15:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/15 18:47:16 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 12:51:22 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_io.h"
 #include "shell.h"
 #include "ft_types.h"
+#include "job_control.h"
 
 static char				*g_status[] = {
 	"",
@@ -24,15 +25,26 @@ static char				*g_status[] = {
 
 static void		jobs_print(t_list *elem)
 {
-	int	x;
+	int		x;
+	t_pids	*a;
 
-	ft_printf("[%d]%c %s ", ((t_inffork *)elem->content)->x,
+	a = ((t_inffork *)elem->content)->pids;
+	ft_printf("[%d]%c %s %s", ((t_inffork *)elem->content)->x,
 					((t_inffork *)elem->content)->sign,
-					g_status[((t_inffork *)elem->content)->status]);
+					g_status[((t_inffork *)elem->content)->status],
+					((t_inffork *)elem->content)->cmmd);
 	x = -1;
+	/*
 	while (((t_inffork *)elem->content)->cmd[++x])
 		ft_printf(" %s", ((t_inffork *)elem->content)->cmd[x]);
-	ft_putchar('\n');
+	ft_putchar('\n');*/
+	while (a)
+	{
+		ft_printf("     %d %s %s\n", a->pid,
+								g_status[((t_inffork *)elem->content)->status],
+								a->cmd);
+		a = a->next;
+	}
 }
 
 static	int		error_jobs(char **argv, int error)

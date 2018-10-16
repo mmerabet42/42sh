@@ -6,13 +6,13 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/15 18:09:39 by jraymond         ###   ########.fr        #
+#    Updated: 2018/10/16 12:00:50 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	42sh
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra -g
+CFLAGS		=	-Wall -Werror -Wextra -g3
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a

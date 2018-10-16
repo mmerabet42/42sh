@@ -90,7 +90,7 @@ static void		fork_father(t_pipe *a, t_list **elem)
 		free(a->all_cmd);
 		a->head = ft_lstend(g_shell->bgproc);
 	}
-	creatpushelem(&((t_inffork *)a->head->content)->pids, a->pid);
+	creatpushelem(&((t_inffork *)a->head->content)->pids, a->pid, *elem);
 	*elem = (*elem)->parent;
 	if (*elem && (*elem)->next && (*elem)->next->next)
 		swap1(a->fd);

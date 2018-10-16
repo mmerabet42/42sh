@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/13 13:02:46 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/15 15:13:53 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 11:09:25 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ static int		init_struct(t_pipe *pipe, t_ast *ast)
 		pipe->fd[x] = -1;
 	if ((ret = handle_ast_pipe(ast, &pipe->tabpipe)))
 		return (ret);
-	if (ret_pipecmd(ast, &pipe->all_cmd) != 0)
-		return (SH_MALLOC);
 	return (0);
 }
 
@@ -91,14 +89,7 @@ static void		fork_father(t_pipe *a, t_list **elem)
 {
 	closefd(a->fd, *elem);
 	if (!a->pgrp)
-	{
 		a->pgrp = a->pid;
-		handle_bgproc(a->pid, a->all_cmd, BG_RUN, 1);
-		free(a->all_cmd);
-		a->head = ft_lstend(g_shell->bgproc);
-	}
-	else
-		creatpushelem(&((t_inffork *)a->head->content)->pids, a->pid);
 	*elem = (*elem)->parent;
 		if (*elem && (*elem)->next && (*elem)->next->next)
 			swap1(a->fd);

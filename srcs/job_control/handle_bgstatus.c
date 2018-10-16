@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 13:31:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/15 18:44:02 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 12:03:51 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static int			lookpid_pipe(t_list *elem, pid_t pid, int opt)
 	t_pids	*pids;
 
 	pids = ((t_inffork *)elem->content)->pids;
+	if (!pids)
+		return (1);
 	if (opt)
 	{
 		while (pids && pids->pid != pid)

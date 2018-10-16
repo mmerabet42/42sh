@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:40:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/10 11:08:48 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 13:00:09 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,26 @@
 #include "ft_list.h"
 #include "ft_io.h"
 #include "ft_mem.h"
+#include "ft_str.h"
 #include "job_control.h"
+
+static int			tabptrtotab(char **cmd, t_inffork *info)
+{
+	int		all_size;
+	int		x;
+
+	all_size = 0;
+	x = -1;
+	while (cmd[++x])
+		all_size += ft_strlen(cmd[x]);
+	if (!(info->cmmd = (char *)ft_memalloc(sizeof(char) * (all_size + 1))))
+		return (SH_MALLOC);
+	x = -1;
+	while (cmd[++x])
+		ft_memcpy(&info->cmmd[ft_strlen(info->cmmd)],
+					cmd[x], ft_strlen(cmd[x]));
+	return (0);
+}
 
 static	t_inffork	*init_infproc(int x, pid_t pid, char **cmd)
 {
@@ -25,9 +44,9 @@ static	t_inffork	*init_infproc(int x, pid_t pid, char **cmd)
 	new->x = x;
 	new->pid = (g_shell->bits & (1 << 1)) ? -1 : pid;
 	new->cmd = ft_copyenv(cmd);
-	new->sign = ' ';
-	if (new->pid == -1 && creatpushelem(&new->pids, pid) != 0)
+	if (tabptrtotab(cmd, new) == SH_MALLOC)
 		ft_exitf(EXIT_FAILURE, "21sh: %s\n", ft_strshret(SH_MALLOC));
+	new->sign = ' ';
 	return (new);
 }
 

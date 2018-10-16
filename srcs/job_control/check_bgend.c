@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/15 18:06:45 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 11:38:19 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void			print_cmd_args2(char **tab)
 		ft_printf("%s\n", tab[x]);
 }
 
-t_list			*delete_info(t_list *elem)
+static t_list			*delete_info(t_list *elem)
 {
 	int		i;
 	t_list	*save;
@@ -67,7 +67,7 @@ t_list			*delete_info(t_list *elem)
 		return (save);
 }
 
-t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
+static t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
 {
 	if (!*struc->cmd)
 		ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
@@ -80,7 +80,7 @@ t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
 	return (elem->next);
 }
 
-int				check_bgend(void)
+int					check_bgend(void)
 {
 	t_list		*elem;
 	t_inffork	*struc;
@@ -95,11 +95,8 @@ int				check_bgend(void)
 				ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
 							g_status[struc->status]);
 			else
-			{
-				log_debug("toto\n");
 				ft_printf("[%d]  %c %s", struc->x, struc->sign,
 							g_status[struc->status]);
-			}
 			print_cmd_args(struc->cmd);
 			handle_bgsign(elem, 1);
 			elem = delete_info(elem);
