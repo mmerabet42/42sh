@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 17:15:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 12:51:22 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 17:01:27 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,6 @@ static void		jobs_print(t_list *elem)
 					g_status[((t_inffork *)elem->content)->status],
 					((t_inffork *)elem->content)->cmmd);
 	x = -1;
-	/*
-	while (((t_inffork *)elem->content)->cmd[++x])
-		ft_printf(" %s", ((t_inffork *)elem->content)->cmd[x]);
-	ft_putchar('\n');*/
 	while (a)
 	{
 		ft_printf("     %d %s %s\n", a->pid,

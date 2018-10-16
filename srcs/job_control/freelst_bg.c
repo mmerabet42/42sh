@@ -6,12 +6,13 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 14:51:51 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 13:00:13 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 16:32:57 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_mem.h"
+#include "job_control.h"
 
 void		del(void *content, size_t size)
 {
@@ -33,6 +34,18 @@ void		del(void *content, size_t size)
 		}
 	}
 	ft_memdel(&content);
+}
+
+void		freetpids(t_pids **pids)
+{
+	t_pids	*next;
+
+	while (*pids)
+	{
+		next = (*pids)->next;
+		ft_memdel((void **)pids);
+		*pids = next;
+	}
 }
 
 void		freelst_bg(void)

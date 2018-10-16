@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 11:02:45 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 11:33:58 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 15:52:11 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,24 @@ static char		*cmdpipe(t_list *elem)
 	return (cmd);
 }
 
-static t_pids	*creat_elem(pid_t pid, t_list *elem)
+static t_pids	*creat_elem(pid_t pid, t_list *elem, int bquote)
 {
 	t_pids	*pids;
 
 	if (!(pids = (t_pids *)ft_memalloc(sizeof(t_pids))))
 		return (NULL);
 	pids->pid = pid;
-	if (!(pids->cmd = cmdpipe(elem)))
+	if (!bquote && !(pids->cmd = cmdpipe(elem)))
 		return (NULL);
 	return (pids);
 }
 
-int				creatpushelem(t_pids **head, pid_t pid, t_list *ast)
+int				creatpushelem(t_pids **head, pid_t pid, t_list *ast, int bquote)
 {
 	t_pids	*pids;
 	t_pids	*elem;
 
-	if (!(pids = creat_elem(pid, ast)))
+	if (!(pids = creat_elem(pid, ast, bquote)))
 		return (SH_MALLOC);
 	if (!*head)
 		*head = pids;

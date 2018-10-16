@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   shell_pipe_bquote1.c                               :+:      :+:    :+:   */
+/*   shell_pipe_bquote.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/13 13:02:46 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 11:09:25 by jraymond         ###   ########.fr       */
+/*   Created: 2018/10/16 15:36:45 by jraymond          #+#    #+#             */
+/*   Updated: 2018/10/16 16:52:27 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ static void		closefd(int *fd, t_list *elem)
 	else
 		close(fd[0]);
 }
-
 
 static int		init_struct(t_pipe *pipe, t_ast *ast)
 {
@@ -90,31 +89,10 @@ static void		fork_father(t_pipe *a, t_list **elem)
 	closefd(a->fd, *elem);
 	if (!a->pgrp)
 		a->pgrp = a->pid;
+	creatpushelem(&a->bquote, a->pid, *elem, 1);
 	*elem = (*elem)->parent;
-		if (*elem && (*elem)->next && (*elem)->next->next)
-			swap1(a->fd);
-}
-
-static int		handle_res(int res, pid_t pid)
-{
-	t_list	*elem;
-
-	if (WIFEXITED(res))
-	{
-		elem = ft_lstend(g_shell->bgproc);
-		if (elem == g_shell->bgproc)
-			g_shell->bgproc = NULL;
-		else
-			elem->parent->next = NULL;
-		ft_lstdelone(&elem, del);
-	}
-	else if (WIFSTOPPED(res))
-	{
-		handle_bgstat(pid, BG_STOP, 1);
-		handle_bgsign(ft_lstend(g_shell->bgproc), 0);
-		return (WSTOPSIG(res));
-	}
-	return (WEXITSTATUS(res));
+	if (*elem && (*elem)->next && (*elem)->next->next)
+		swap1(a->fd);
 }
 
 static int		wait_fork(t_pipe *a, void *res)
@@ -122,7 +100,7 @@ static int		wait_fork(t_pipe *a, void *res)
 	t_pids	*elem;
 	int		ret;
 
-	elem = ((t_inffork *)a->head->content)->pids;
+	elem = a->bquote;
 	ret = 0;
 	ft_lstdel(&a->tabpipe, NULL);
 	while (elem)
@@ -130,8 +108,9 @@ static int		wait_fork(t_pipe *a, void *res)
 		waitpid(elem->pid, res, WUNTRACED);
 		elem = elem->next;
 	}
-	*(int *)res = handle_res(*(int *)res, ((t_inffork *)a->head->content)->pids->pid);
+	*(int *)res = WEXITSTATUS(res);
 	signal(SIGCHLD, sign_child);
+	freetpids(&a->bquote);
 	ft_lstdelone(&a->tabpipe, NULL);
 	g_shell->bits &= ~(1 << 1);
 	return (0);
@@ -153,7 +132,7 @@ int				shell_pipe_bquote(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	{
 		if (!a.pgrp && pipe(a.fd) == -1)
 			return (SH_PIPFAIL);
- 		else if (elem->parent && elem->next)
+		else if (elem->parent && elem->next)
 			if (pipe((a.fd + 2)) == -1)
 				return (SH_PIPFAIL);
 		if ((a.pid = fork()) == -1)

@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 11:48:09 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/16 16:52:26 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ static void		fork_father(t_pipe *a, t_list **elem)
 		tcsetpgrp(0, a->pgrp);
 		a->head = ft_lstend(g_shell->bgproc);
 	}
-	creatpushelem(&((t_inffork *)a->head->content)->pids, a->pid, *elem);
+	creatpushelem(&((t_inffork *)a->head->content)->pids, a->pid, *elem, 0);
 	*elem = (*elem)->parent;
 		if (*elem && (*elem)->next && (*elem)->next->next)
 			swap1(a->fd);
@@ -110,7 +110,7 @@ static int		handle_res(int res, pid_t pid)
 {
 	t_list	*elem;
 
-	if (WIFEXITED(res))
+	if (WIFEXITED(res) || !WIFEXITED(res))
 	{
 		elem = ft_lstend(g_shell->bgproc);
 		if (elem == g_shell->bgproc)
