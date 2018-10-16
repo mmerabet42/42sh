@@ -15,6 +15,7 @@
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "get_next_line.h"
+#include <signal.h>
 
 static int	handle_opt(char ***argv, char *r)
 {

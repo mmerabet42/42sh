@@ -107,6 +107,7 @@ static t_regex_func	g_regexfs[] = {
 	{"alpha:?[a-zA-Z]", NULL},
 	{"alnum:?[a-zA-Z0-9]", NULL},
 	{"punct:?[?![@alnum]&?![@space]@and]", NULL},
+	{"word:?[a-zA-Z0-9_]", NULL},
 	{"space:?[ \f\n\t\r\v]", NULL},
 	{"int:*[@space?]?[+-@?]*[0-9]", NULL},
 	{"nint:?[+-@?]*[0-9]", NULL},
@@ -151,5 +152,10 @@ t_regex_func		*get_regex_func(const char *name, int len_rule)
 			return (&g_regexfs[i]);
 		++i;
 	}
-	return (NULL);
+	return (get_regex_rule(name, len_rule));
+}
+
+t_regex_func		*get_regex_func(const char *name, int len_rule)
+{
+	
 }

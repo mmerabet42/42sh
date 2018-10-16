@@ -12,6 +12,7 @@
 
 #include "shell.h"
 #include <sys/ioctl.h>
+#include <signal.h>
 
 void	signal_read(int sig)
 {

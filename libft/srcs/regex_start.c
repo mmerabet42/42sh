@@ -30,12 +30,10 @@ static int	loop_stop(t_regex_info *rgxi, t_regex_info *tmp,
 	{
 		if ((lret = regex_exec(tmp)) != -1)
 		{
-			if (tmp->option & RGX_END)
-			{
-				*tmp = *rgxi;
-				if ((nret = regex_loop(tmp, r)) != -1)
-					return (nret);
-			}
+			tmp->regex = rgxi->regex;
+			tmp->str = rgxi->str;
+			if ((tmp->option & RGX_END) && (nret = regex_loop(tmp, r)) != -1)
+				return (nret);
 			return (lret);
 		}
 	}
@@ -54,6 +52,7 @@ int			regex_loop(t_regex_info *rgxi, t_regex_rule *rule)
 
 	lret = -1;
 	ret = -1;
+	tmp.regex = NULL;
 	while (*rgxi->str)
 	{
 		if ((ret = rule->func->func(rgxi, rule)) == -1 && !rule->neg)

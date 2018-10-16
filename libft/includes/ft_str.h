@@ -300,6 +300,7 @@ int					debug_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					recursive_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					group_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 t_regex_func		*get_regex_func(const char *name, int len_rule);
+t_regex_func		*get_regex_rule(const char *name, int len_rule);
 
 int					regex_loop(t_regex_info *rgxi, t_regex_rule *rule);
 int					regex_variable(t_regex_info *rgxi, const char *s);

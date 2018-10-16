@@ -184,12 +184,6 @@ int			main(int argc, char **argv, char **envp)
 	t_list	*matches = NULL;
 //	int	pos = 0;
 	ft_regex(RGX_ADD, NULL, "lol:?[$&]", NULL);
-	ft_regex(RGX_GET, NULL, NULL, &matches);
-	while (matches)
-	{
-		ft_printf("rule: '%s'\n", ((t_regex_func *)matches->content)->name);
-		matches = matches->next;
-	}
 	int	ret = ft_regex(RGX_MATCHES, argv[1], argv[2], &matches);
 
 	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
@@ -198,6 +192,7 @@ int			main(int argc, char **argv, char **envp)
 	if (ret > 0)
 		ft_print_matches(argv[2], matches);
 	ft_regex(RGX_FREE, NULL, NULL, &matches);
+	ft_regex(RGX_CLEAN, NULL, NULL);
 	return (0);
 /*	int	ret = ft_regex(RGX_END, argv[1], argv[2]);
 

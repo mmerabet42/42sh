@@ -132,10 +132,8 @@ static int		handle_res(int res, pid_t pid)
 static int		wait_fork(t_pipe *a, void *res)
 {
 	t_pids	*elem;
-	int		ret;
 
 	elem = ((t_inffork *)a->head->content)->pids;
-	ret = 0;
 	ft_lstdel(&a->tabpipe, NULL);
 	while (elem)
 	{
