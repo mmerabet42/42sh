@@ -66,8 +66,6 @@ static int	regex_equ(t_regex_info *rgxi)
 			return (-1);
 		++i;
 	}
-//	if (!rgxi->str[i] && rgxi->regex[i])
-//		return (-1);
 	if (!rgxi->regex[i] && rgxi->str[i] && !(rgxi->option & RGX_END))
 		return (-1);
 	return (i);
@@ -77,6 +75,9 @@ int	regex_exec(t_regex_info *regex_info)
 {
 	int	pos;
 
+	if (regex_info->id)
+		*regex_info->id = 0;
+	regex_info->cid = 0;
 	while (*regex_info->regex)
 	{
 		if ((pos = special_char(*regex_info->regex, regex_info)) == 0)

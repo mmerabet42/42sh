@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/16 18:51:15 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/17 21:17:02 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static t_exp		g_exps[] = {
 
 	{EXP_BRACES, NULL},
 	{EXP_SUBSHELL, NULL},
-	{"", exp_glob}
+//	{"", exp_glob}
 };
 
 static t_expf		g_expf = {
@@ -168,26 +168,30 @@ static void	main_execution(char *line)
 		addhistory(line);
 }
 
+
+
 int			main(int argc, char **argv, char **envp)
 {
-/*
-	RGX_END,	RGX_RGXN,	RGX_STRN,	RGX_POS,		RGX_VAR
-				int	rgxn,	int strn,	int *pos,		int variables[52]
-										RGX_MATCHES
-										t_list **matches
-	RGX_ADD
-	t_regex_funcptr *func
-	RGX_GET
-	t_list **rules
-	RGX_CLEAN
- * */
-	ft_regex(RGX_ADD, NULL, "lol:?[$&]", NULL);
-	ft_regex(RGX_ADD, NULL, "sp:?[@space]", NULL);
-	ft_regex(RGX_ADD, NULL, "mdr:?[@word]", NULL);
+	ft_regex(RGX_ADD, NULL, "BEG:?[@^]", NULL);
+	ft_regex(RGX_ADD, NULL, "END:?[@$]", NULL);
+	ft_regex(RGX_ADD, NULL, "BEGL:?[@^n]", NULL);
+	ft_regex(RGX_ADD, NULL, "ENDL:?[@$n]", NULL);
+	ft_regex(RGX_ADD, NULL, "BEGW:?[@^w]", NULL);
+	ft_regex(RGX_ADD, NULL, "ENDW:?[@$w]", NULL);
+	ft_regex(RGX_ADD, NULL, "SQUARE:?[n;*[o@>2]@E]?[m=n-2@E]\n*[o*[ @=m]o\n@X=m]*[o@=n]", NULL);
+	ft_regex(RGX_ADD, NULL, "BWORD:?[@b1]*[@word=%]?[@b2]", NULL);
+	ft_regex(RGX_ADD, NULL, "DQUOTE:\"*[\\\"|?![\"]@or?]\"", NULL);
+	ft_regex(RGX_ADD, NULL, "QUOTE:'*![']'", NULL);
+	ft_regex(RGX_ADD, NULL, "BSLASH:\\?", NULL);
+	ft_regex(RGX_ADD | RGX_ID, NULL, "BRACKET:?[?[@BRACKET0]|?[@BRACKET1]|?[@BRACKET2]@or]", NULL, -2);
+	ft_regex(RGX_ADD, NULL,
+			"BRACKET0:(*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]{}\"'}]@or?])", NULL);
+	ft_regex(RGX_ADD, NULL,
+			"BRACKET1:[*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[](){}\"'}]@or?]]", NULL);
+	ft_regex(RGX_ADD, NULL,
+			"BRACKET2:{*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[](){}\"'}]@or?]}", NULL);
 	ft_regex(RGX_ADD, NULL, "STRUCT:typedef*[@space]struct*[@space]*[@word]*[@space?]{*}*[@space?]*[@word]*[@space?];", NULL);
-	ft_regex(RGX_ADD, NULL, "_DQUOTE:?[@DQUOTE]", NULL);
-	ft_regex(RGX_ADD, NULL, "INCLUDE:<*![\n]>", NULL);
-
+	ft_regex(RGX_ADD | RGX_ID, NULL, "EXPANSION:?[?[@DQUOTE]|?[@QUOTE]|?[@BRACKET]|?[@BSLASH]@or]", NULL, -2);
 	t_list	*matches = NULL;
 	int	ret = ft_regex(RGX_MATCHES, argv[1], argv[2], &matches);
 

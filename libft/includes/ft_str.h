@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/16 18:51:17 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/17 21:17:03 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,7 @@ extern int			g_ifound;
 # define RGX_STRN (1 << 2)
 # define RGX_POS (1 << 3)
 # define RGX_MATCHES (1 << 4)
+# define RGX_UMATCHES (1 << 5)
 # define RGX_VAR (1 << 5)
 # define RGX_ADD (1 << 6)
 # define RGX_GET (1 << 7)
@@ -274,6 +275,7 @@ typedef struct		s_regex_info
 	int				strn;
 	int				option;
 	int				*pos;
+	int				cid;
 	int				*id;
 	t_list			**matches;
 }					t_regex_info;
@@ -294,6 +296,8 @@ struct				s_regex_func
 	int				id;
 };
 
+int					case_rgx(t_regex_info *rgxi, t_regex_rule *rule);
+int					bnd_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					delim_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					cond_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					expr_rgx(t_regex_info *rgxi, t_regex_rule *rule);
@@ -301,11 +305,10 @@ int					print_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					getint_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					debug_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					recursive_rgx(t_regex_info *rgxi, t_regex_rule *rule);
-int					group_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 t_regex_func		*get_regex_func(const char *name, int len_rule, int *id);
 t_regex_func		*get_regex_rule(const char *name, int len_rule, int *id);
 
-int					manage_rules(const char *str, t_list **rules, int options, va_list vp);
+int					manage_rules(const char *str, t_list **rules, int op, va_list vp);
 int					regex_loop(t_regex_info *rgxi, t_regex_rule *rule);
 int					regex_variable(t_regex_info *rgxi, const char *s);
 int					regex_start(t_regex_info *rgxi, t_regex_rule *rule);

@@ -34,31 +34,14 @@ static int			other_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	if (!(ptr = ft_strchr(rule->rule, ':')))
 		return (-1);
 	regex_init(&rgxi2, ptr + 1, rgxi->str);
+	rgxi2.str_begin = rgxi->str_begin;
 	rgxi2.option = rgxi->option | RGX_END;
 	rgxi2.param = rule->arg;
 	rgxi2.len_param = rule->len_arg;
 	rgxi2.vars = rgxi->vars;
+	if (rgxi->cid == -2)
+		rgxi2.id = rgxi->id;
 	return (regex_exec(&rgxi2));
-}
-
-static int			case_rgx(t_regex_info *rgxi, t_regex_rule *rule)
-{
-	int	i;
-
-	if (ft_strnequ(rule->rule, "set%", rule->len_rule))
-	{
-		rgxi->param = rule->arg;
-		rgxi->len_param = rule->len_arg;
-		rgxi->param_i = 0;
-		return (0);
-	}
-	i = -1;
-	while (++i < rule->len_arg && rgxi->str[i])
-		if (ft_tolower(rule->arg[i]) != ft_tolower(rgxi->str[i]))
-			return (-1);
-	if (!rgxi->str[i] && i < rule->len_arg)
-		return (-1);
-	return (i);
 }
 
 static int			regex_rgx(t_regex_info *rgxi, t_regex_rule *rule)
@@ -69,9 +52,11 @@ static int			regex_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 
 	if (!(str = ft_strndup(rule->arg, rule->len_arg)))
 		return (-1);
-	regex_init(&rgxi2, str, rgxi->str);
+	rgxi2 = *rgxi;
+	rgxi2.len = 0;
 	rgxi2.option = RGX_END;
-	rgxi2.vars = rgxi->vars;
+	rgxi2.regex = str;
+	rgxi2.rgx_begin = str;
 	ret = regex_exec(&rgxi2);
 	free(str);
 	if (*rule->rule == ',' || *rule->rule == ';')
@@ -85,29 +70,13 @@ static int			regex_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	return (ret);
 }
 
-static int	boundary_rgx(t_regex_info *rgxi, t_regex_rule *rule)
-{
-	(void)rule;
-	if (rule->rule[rule->len_rule - 1] == '1')
-	{
-		if (rgxi->str == rgxi->str_begin || ft_strchr(" \f\n\t\r\v", *(rgxi->str - 1)))
-			return (0);
-	}
-	else if (!*rgxi->str)
-		return (0);
-	else if (ft_strchr(" \f\n\t\r\v", *rgxi->str))
-	{
-		++rgxi->str;
-		return (0);
-	}
-	return (-1);
-}
-
 static t_regex_func	g_regexfs[] = {
 	{"DEFAULT", default_rgx, 0},
 	{"OTHER", other_rgx, 0},
 	{"^", delim_rgx, 0},
 	{"$", delim_rgx, 0},
+	{"^n", delim_rgx, 0},
+	{"$n", delim_rgx, 0},
 	{"or", cond_rgx, 0},
 	{"and", cond_rgx, 0},
 	{"ror", cond_rgx, 0},
@@ -116,8 +85,9 @@ static t_regex_func	g_regexfs[] = {
 	{";", regex_rgx, 0},
 	{"R", recursive_rgx, 0},
 	{"E", expr_rgx, 0},
-	{"G", group_rgx, 0},
-	{"LG", group_rgx, 0},
+	{"X", regex_rgx, 0},
+	{"^w", bnd_rgx, 0},
+	{"$w", bnd_rgx, 0},
 
 	{"upper:?[A-Z]", NULL, 0},
 	{"lower:?[a-z]", NULL, 0},
@@ -131,26 +101,14 @@ static t_regex_func	g_regexfs[] = {
 	{"nint:?[+-@?]*[0-9]", NULL, 0},
 	{"uint:*[@space?]*[0-9]", NULL, 0},
 	{"getint", getint_rgx, 0},
-	{"b1", boundary_rgx, 0},
-	{"b2", boundary_rgx, 0},
 
 	{"print", print_rgx, 0},
-	{"regex", regex_rgx, 0},
 	{"case", case_rgx, 0},
 	{"return", print_rgx, 0},
 	{"debug", debug_rgx, 0},
 	{"set%", case_rgx, 0},
 	{"equ:%_", NULL, 0},
-	
-	{"square:?[n:*[o]@E]?[0=n>1@E]?[m=n-2@E]*[o@=n]\n*[o*[ @=m]o\n@regex=m]*[o@=n]", NULL, 0},
-	{"DQUOTE:\"*[\\\"|?![\"]@or?]\"", NULL, 0},
-	{"QUOTE:'*[?![']@or?]'", NULL, 0},
-	{"BSLASH:\\?", NULL, 0},
-	{"BRACKET0:[*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[](){}\"'}]@or?]]", NULL, 0},
-	{"BRACKET1:(*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]{}\"'}]@or?])", NULL, 0},
-	{"BRACKET2:{*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{()[]{}\"'}]@or?]}", NULL, 0},
-	{"BRACKET:?[?[@BRACKET0]|?[@BRACKET1]|?[@BRACKET2]@or]", NULL, 0},
-	{"INF:?[@INF]", NULL, 0},
+	{"inf:?[@inf]", NULL, 0},
 };
 static size_t		g_regex_len = (sizeof(g_regexfs) / sizeof(t_regex_func));
 

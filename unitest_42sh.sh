@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SHB="/bin/bash --posix"
-SH=/Users/sle-rest/42sh/42sh
+SH=/Users/mmerabet/Projects/42sh/42sh
 OUT=tmp
 OUTB=tmp2
 RED='\033[0;31m'

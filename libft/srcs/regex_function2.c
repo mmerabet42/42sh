@@ -63,10 +63,3 @@ int	recursive_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	tmp.option = RGX_END;
 	return (regex_exec(&tmp));
 }
-
-int	group_rgx(t_regex_info *rgxi, t_regex_rule *rule)
-{
-	(void)rgxi;
-	(void)rule;
-	return (0);
-}

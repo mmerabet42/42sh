@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:41:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/23 20:56:59 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/17 15:10:27 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ int					ft_isupper(int c);
 int					ft_islower(int c);
 int					ft_iscntrl(int c);
 int					ft_isspace(int c);
-int					ft_ispinct(int c);
+int					ft_ispunct(int c);
+int					ft_isword(int c);
 
 int					ft_intlen(int n);
 int					ft_longlen(long n);

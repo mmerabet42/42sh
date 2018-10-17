@@ -23,6 +23,8 @@ static void	fill_info(t_regex_info *rgxi, t_regex_rule *r, int jmp, int ret)
 			r->l = regex_variable(rgxi, r->rule + r->len_rule + 1);
 	}
 	r->func = get_regex_func(r->rule, r->len_rule, rgxi->id);
+	if (rgxi->id)
+	rgxi->cid = *rgxi->id;
 }
 
 static int	expanded_wildcard(t_regex_info *rgxi, char type, int neg)
@@ -45,7 +47,8 @@ static int	expanded_wildcard(t_regex_info *rgxi, char type, int neg)
 		}
 		rgxi->regex += jmp;
 		fill_info(rgxi, &rule, jmp, ret);
-		ret = regex_start(rgxi, &rule);
+		if ((ret = regex_start(rgxi, &rule)) == -1 && rgxi->id)
+			*rgxi->id = 0;
 		return (ret);
 	}
 	return (-1);

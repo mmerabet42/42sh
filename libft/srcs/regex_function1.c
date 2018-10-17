@@ -32,12 +32,14 @@ int			expr_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 {
 	char			*str;
 	int				r;
+	int				ret;
 	t_regex_info	tmp;
 
 	r = 0;
 	if (rule->len_arg <= 1)
 		return (-1);
-	if (rule->arg[1] == ':')
+	ret = 0;
+	if (rule->arg[1] == ':' || rule->arg[1] == ';')
 	{
 		if (!(str = ft_strndup(&rule->arg[2], rule->len_arg - 2)))
 			return (-1);
@@ -51,6 +53,8 @@ int			expr_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 		free(str);
 		if (rule->arg[0] == '0')
 			return (r == -1 ? -1 : 0);
+		else if (rule->arg[1] == ';')
+			ret = r;
 	}
 	else
 		r = get_result(rgxi, rule);
@@ -60,7 +64,7 @@ int			expr_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 		rgxi->vars[26 + rule->arg[0] - 65] = r;
 	else if (ft_islower(rule->arg[0]))
 		rgxi->vars[rule->arg[0] - 97] = r;
-	return (0);
+	return (ret);
 }
 
 static int	next_op(t_regex_rule *rule, int i)

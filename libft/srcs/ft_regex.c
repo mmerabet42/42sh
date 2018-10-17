@@ -41,8 +41,6 @@ static int	get_matches(t_regex_info *rgxi)
 	int				global_pos;
 	int				i;
 
-	rgxi->option &= ~RGX_MATCHES;
-	rgxi->option |= (RGX_POS | RGX_END | RGX_ID);
 	rgxi->pos = &match.pos;
 	rgxi->id = &match.id;
 	str = rgxi->str;
@@ -54,9 +52,11 @@ static int	get_matches(t_regex_info *rgxi)
 		match.pos += global_pos;
 		match.str = str + match.pos;
 		ft_lstpush_p(&head, ft_lstnew(&match, sizeof(t_regex_match)));
-		global_pos = match.pos + match.len;
 		match.id = 0;
 		++i;
+		global_pos = match.pos + (!match.len ? 1 : match.len);
+		if (!*(str + match.pos))
+			break ;
 		if (!*(rgxi->str = str + global_pos))
 			break ;
 		rgxi->regex = rgxi->rgx_begin;
@@ -104,7 +104,11 @@ int			ft_regex(int options, const char *regex, const char *str, ...)
 	regex_info.len_param = 5;
 	get_args(&regex_info, vp);
 	if (regex_info.matches)
+	{
+		regex_info.option &= ~RGX_MATCHES;
+		regex_info.option |= (RGX_POS | RGX_END | RGX_ID);
 		return (get_matches(&regex_info));
+	}
 	return (regex_pos(&regex_info));
 }
 

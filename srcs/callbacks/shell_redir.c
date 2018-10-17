@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 17:21:51 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 19:32:13 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/17 18:20:56 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static void	store_fds(t_list *elem)
 	t_redir	*r;
 
 	r = (t_redir *)elem->content;
-	if ((r->fdz = dup(r->fda)) == -1)
+	if ((r->fdz = dup2(r->fda, r->fda + 11)) == -1)
 		r->fdz = -2;
 }
 
