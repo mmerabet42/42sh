@@ -72,7 +72,7 @@ static void	get_args(t_regex_info *rgxi, va_list vp)
 		rgxi->rgxn = va_arg(vp, int);
 	if (rgxi->option & RGX_STRN)
 		rgxi->strn = va_arg(vp, int);
-	if (rgxi->option & RGX_MATCHES)
+	if (rgxi->option & (RGX_MATCHES | RGX_UMATCHES))
 		rgxi->matches = (t_list **)va_arg(vp, t_list **);
 	else
 	{
