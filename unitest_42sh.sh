@@ -163,6 +163,9 @@ check_diff
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\nredir\n~~~~~~~~~~~~~\n${NC}"
 
+#COMMAND="cat 4< auteur 3<&4 2<&3 <&2 | cat -e"
+#check_diff
+
 COMMAND="echo lol > prout ; cat prout; rm prout"
 check_diff
 

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/12 20:53:55 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 20:01:53 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/17 21:47:21 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ void	redir_printerror(t_redir *r, int err, void **op)
 
 int		replace_fd(t_redir *r, int *closed_fd)
 {
-	if (r->fdz == -2)
-		return (0);
 	if (r->fdb == -1)
 	{
 		close(r->fda);

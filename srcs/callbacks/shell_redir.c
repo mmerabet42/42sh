@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 17:21:51 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 19:32:13 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/17 21:47:17 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include "ft_mem.h"
 #include <fcntl.h>
 #include <sys/wait.h>
+
+static int	max_fd;
 
 static void	restore_fds(void *c, size_t s)
 {
@@ -45,6 +47,7 @@ static void	restore_fds(void *c, size_t s)
 	else
 		close(r->fdz);
 	free(c);
+	max_fd = 0;
 }
 
 static int	heredoc(t_redir *r)
@@ -83,11 +86,26 @@ static int	dup_file(t_redir *r)
 
 static void	store_fds(t_list *elem)
 {
+	t_list	*begin;
 	t_redir	*r;
 
-	r = (t_redir *)elem->content;
-	if ((r->fdz = dup(r->fda)) == -1)
-		r->fdz = -2;
+	begin = elem;
+	while (elem)
+	{
+		r = (t_redir *)elem->content;
+		if (max_fd < r->fda + 100)
+			max_fd = r->fda + 100;
+		elem = elem->next;
+	}
+	elem = begin;
+	while (elem)
+	{
+		r = (t_redir *)elem->content;
+		if ((r->fdz = dup2(r->fda, max_fd)) == -1)
+			r->fdz = -2;
+		max_fd++;
+		elem = elem->next;
+	}
 }
 
 int			shell_redir_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
@@ -98,7 +116,8 @@ int			shell_redir_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	int		i[2];
 
 	redirs = list_redirections(&ast, ((t_allf *)iterf->data)->expf);
-	ft_lstiter((it = redirs), store_fds);
+	store_fds(redirs);
+	it = redirs;
 	ft_bzero(i, sizeof(int) * 2);
 	while (it && (r = (t_redir *)it->content))
 	{
