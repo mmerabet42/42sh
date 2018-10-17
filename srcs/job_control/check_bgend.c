@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 18:11:14 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/17 18:33:05 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ static t_list			*delete_info(t_list *elem)
 
 static t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
 {
-	if (!*struc->cmd)
-		ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
-					g_status[struc->status]);
+	if (!struc->cmmd)
+		ft_printf("[%d]\t%c %s\t%s\n", struc->x, struc->sign,
+					g_status[struc->status], struc->cmmd);
 	else
-		ft_printf("[%d]  %c %s", struc->x, struc->sign,
-					g_status[struc->status]);
-	print_cmd_args(struc->cmd);
+		ft_printf("[%d]\t%c %s\t%s\n", struc->x, struc->sign,
+					g_status[struc->status], struc->cmmd);
+//	print_cmd_args(struc->cmd);
 	struc->modif &= (0 << 0);
 	return (elem->next);
 }
@@ -86,13 +86,13 @@ int					check_bgend(void)
 		struc = elem->content;
 		if (struc->status == BG_END || struc->status == BG_KILL)
 		{
-			if (!*struc->cmd)
-				ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
-							g_status[struc->status]);
+			if (!struc->cmmd)
+				ft_printf("[%d]\t%c %s\t%s\n", struc->x, struc->sign,
+							g_status[struc->status], struc->cmmd);
 			else
-				ft_printf("[%d]  %c %s", struc->x, struc->sign,
-							g_status[struc->status]);
-			print_cmd_args(struc->cmd);
+				ft_printf("[%d]\t%c %s\t%s\n", struc->x, struc->sign,
+							g_status[struc->status], struc->cmmd);
+//			print_cmd_args(struc->cmd);
 			handle_bgsign(elem, 1);
 			elem = delete_info(elem);
 		}

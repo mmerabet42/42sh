@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 16:52:26 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/17 18:34:13 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static int		init_struct(t_pipe *pipe, t_ast *ast)
 		return (ret);
 	if (ret_pipecmd(ast, &pipe->all_cmd) != 0)
 		return (SH_MALLOC);
+	ret_pipecmd1(pipe->tabpipe, &pipe->allcmmd);
 	return (0);
 }
 
@@ -95,7 +96,7 @@ static void		fork_father(t_pipe *a, t_list **elem)
 	if (!a->pgrp)
 	{
 		a->pgrp = a->pid;
-		handle_bgproc(a->pid, a->all_cmd, BG_RUN, 1);
+		handle_bgproc(a->pid, &a->allcmmd, BG_RUN, 1);
 		free(a->all_cmd);
 		tcsetpgrp(0, a->pgrp);
 		a->head = ft_lstend(g_shell->bgproc);

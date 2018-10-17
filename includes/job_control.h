@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 18:59:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/16 17:55:25 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/17 18:27:26 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ typedef struct		s_inffork
 	pid_t			pid;
 	char			sign;
 	int				status;
-	char			**cmd;
 	char			*cmmd;
 	unsigned int	modif : 1;
 	t_pids			*pids;

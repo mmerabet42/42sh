@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 14:51:51 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 16:32:57 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/17 18:27:07 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void		del(void *content, size_t size)
 	t_pids	*tmp;
 
 	(void)size;
-	ft_delenv(&((t_inffork *)content)->cmd);
 	ft_memdel((void **)&((t_inffork *)content)->cmmd);
 	if (((t_inffork *)content)->pid == -1)
 	{

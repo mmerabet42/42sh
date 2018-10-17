@@ -46,6 +46,7 @@ static int		init_struct(t_pipe *pipe, t_ast *ast)
 		return (ret);
 	if (ret_pipecmd(ast, &pipe->all_cmd) != 0)
 		return (SH_MALLOC);
+	ret_pipecmd1(pipe->tabpipe, &pipe->allcmmd);
 	return (0);
 }
 
