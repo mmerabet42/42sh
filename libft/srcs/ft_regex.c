@@ -19,10 +19,7 @@ static int	regex_pos(t_regex_info *rgxi)
 		while ((ret = regex_exec(rgxi)) == -1)
 		{
 			if (!*str)
-			{
-				*rgxi->pos = -1;
 				return (-1);
-			}
 			rgxi->str = ++str;
 			rgxi->regex = rgxi->rgx_begin;
 			rgxi->len = 0;
@@ -37,6 +34,7 @@ static int	get_matches(t_regex_info *rgxi)
 {
 	t_list			*head;
 	t_regex_match	match;
+	t_regex_match	umatch;
 	const char		*str;
 	int				global_pos;
 	int				i;
@@ -49,18 +47,32 @@ static int	get_matches(t_regex_info *rgxi)
 	global_pos = 0;
 	while ((match.len = regex_pos(rgxi)) != -1)
 	{
+		if ((rgxi->option & RGX_UMATCHES) && match.pos)
+		{
+			umatch.pos = global_pos;
+			umatch.len = match.pos;
+			umatch.str = str + global_pos;
+			umatch.id = -1;
+			ft_lstpush_p(&head, ft_lstnew(&umatch, sizeof(t_regex_match)));
+		}
 		match.pos += global_pos;
 		match.str = str + match.pos;
 		ft_lstpush_p(&head, ft_lstnew(&match, sizeof(t_regex_match)));
 		match.id = 0;
 		++i;
 		global_pos = match.pos + (!match.len ? 1 : match.len);
-		if (!*(str + match.pos))
-			break ;
-		if (!*(rgxi->str = str + global_pos))
+		if (!*(str + match.pos) || !*(rgxi->str = str + global_pos))
 			break ;
 		rgxi->regex = rgxi->rgx_begin;
 		rgxi->len = 0;
+	}
+	if ((rgxi->option & RGX_UMATCHES) && match.len == -1)
+	{
+		umatch.pos = global_pos;
+		umatch.len = match.pos;
+		umatch.str = str + global_pos;
+		umatch.id = -1;
+		ft_lstpush_p(&head, ft_lstnew(&umatch, sizeof(t_regex_match)));
 	}
 	*rgxi->matches = head;
 	return (i);

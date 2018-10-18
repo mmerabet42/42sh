@@ -172,14 +172,8 @@ static void	main_execution(char *line)
 
 int			main(int argc, char **argv, char **envp)
 {
-	ft_regex(RGX_ADD, NULL, "BEG:?[@^]", NULL);
-	ft_regex(RGX_ADD, NULL, "END:?[@$]", NULL);
-	ft_regex(RGX_ADD, NULL, "BEGL:?[@^n]", NULL);
-	ft_regex(RGX_ADD, NULL, "ENDL:?[@$n]", NULL);
-	ft_regex(RGX_ADD, NULL, "BEGW:?[@^w]", NULL);
-	ft_regex(RGX_ADD, NULL, "ENDW:?[@$w]", NULL);
 	ft_regex(RGX_ADD, NULL, "SQUARE:?[n;*[o@>2]@E]?[m=n-2@E]\n*[o*[ @=m]o\n@X=m]*[o@=n]", NULL);
-	ft_regex(RGX_ADD, NULL, "BWORD:?[@b1]*[@word=%]?[@b2]", NULL);
+	ft_regex(RGX_ADD, NULL, "BWORD:?[@^w]*[@word=%]?[@$w]", NULL);
 	ft_regex(RGX_ADD, NULL, "DQUOTE:\"*[\\\"|?![\"]@or?]\"", NULL);
 	ft_regex(RGX_ADD, NULL, "QUOTE:'*![']'", NULL);
 	ft_regex(RGX_ADD, NULL, "BSLASH:\\?", NULL);
@@ -190,10 +184,11 @@ int			main(int argc, char **argv, char **envp)
 			"BRACKET1:[*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[](){}\"'}]@or?]]", NULL);
 	ft_regex(RGX_ADD, NULL,
 			"BRACKET2:{*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[](){}\"'}]@or?]}", NULL);
-	ft_regex(RGX_ADD, NULL, "STRUCT:typedef*[@space]struct*[@space]*[@word]*[@space?]{*}*[@space?]*[@word]*[@space?];", NULL);
+	ft_regex(RGX_ADD, NULL, "TSTRUCT:typedef*[@space]struct*[@space]*[@word]*[@space?]{*}*[@space?]*[@word]*[@space?];", NULL);
+	ft_regex(RGX_ADD, NULL, "STRUCT:struct*[@space]*[@word]*[@space?]{*}*[@space?];", NULL);
 	ft_regex(RGX_ADD | RGX_ID, NULL, "EXPANSION:?[?[@DQUOTE]|?[@QUOTE]|?[@BRACKET]|?[@BSLASH]@or]", NULL, -2);
 	t_list	*matches = NULL;
-	int	ret = ft_regex(RGX_MATCHES, argv[1], argv[2], &matches);
+	int	ret = ft_regex(RGX_UMATCHES, argv[1], argv[2], &matches);
 
 	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
 	ft_printf("%d match\n", ret);
