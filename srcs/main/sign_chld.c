@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/06 19:24:16 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/15 18:24:21 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/18 20:12:02 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,6 @@
 #include "job_control.h"
 #include <sys/signal.h>
 #include <sys/wait.h>
-
-static void		print(t_list *elem)
-{
-	t_pids	*pids;
-
-	pids = ((t_inffork *)elem->content)->pids;
-	while (pids)
-		pids = pids->next;
-}
 
 static void		handle_retwait(int ret, pid_t pid)
 {
@@ -39,14 +30,21 @@ static void		handle_retwait(int ret, pid_t pid)
 
 static void		retwait_negpid(t_pids *pids, int ret, pid_t pid)
 {
+	(void)pid;
 	if (WIFCONTINUED(ret) || WIFSTOPPED(ret))
 	{
 		if (!pids->next)
 		{
 			if (WIFCONTINUED(ret))
-				handle_bgstat(pid, BG_RUN, 1);
+			{
+				log_debug("pid: %d", pids->pid);
+				handle_bgstat(pids->pid, BG_RUN, 1);
+			}
 			else
-				handle_bgstat(pid, BG_STOP, 1);
+			{
+				log_debug("pid: %d", pids->pid);
+				handle_bgstat(pids->pid, BG_STOP, 1);
+			}
 		}
 	}
 	else if (!WIFEXITED(ret) || WIFEXITED(ret))
@@ -54,9 +52,15 @@ static void		retwait_negpid(t_pids *pids, int ret, pid_t pid)
 		if (!pids->next)
 		{
 			if (!WIFEXITED(ret))
-				handle_bgstat(pid, BG_KILL, 1);
+			{
+				log_debug("pid: %d", pids->pid);
+				handle_bgstat(pids->pid, BG_KILL, 1);
+			}
 			else
-				handle_bgstat(pid, BG_END, 1);
+			{
+				log_debug("pid: %d", pids->pid);
+				handle_bgstat(pids->pid, BG_END, 1);
+			}
 		}
 	}
 }
@@ -66,12 +70,13 @@ static int		neg_pid(t_list *elem)
 	t_pids	*pipe;
 	int		ret;
 
+	log_debug("toto\n");
 	pipe = ((t_inffork *)elem->content)->pids;
-	print(elem);
 	while (pipe)
 	{
 		if (waitpid(pipe->pid, &ret, WNOHANG | WUNTRACED) == pipe->pid)
 		{
+			log_debug("lol\n");
 			retwait_negpid(pipe, ret, getpgid(pipe->pid));
 			break ;
 		}

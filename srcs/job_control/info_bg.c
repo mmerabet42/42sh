@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:40:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/17 18:26:39 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/18 16:44:50 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,21 @@ static int			tabptrtotab(char **cmd, t_inffork *info, pid_t pid)
 	x = -1;
 	if (pid == -1)
 	{
-		if (!(info->cmmd = (char *)ft_memalloc(ft_strlen(*cmd) + 1)))
-			return (SH_MALLOC);
-		ft_strcpy(info->cmmd, *cmd);
+		info->cmmd = *cmd;
 		return (0);
 	}
 	while (cmd[++x])
-		all_size += ft_strlen(cmd[x]);
+		all_size += (ft_strlen(cmd[x]) + 1);
 	if (!(info->cmmd = (char *)ft_memalloc(sizeof(char) * (all_size + 1))))
 		return (SH_MALLOC);
 	x = -1;
 	while (cmd[++x])
+	{
 		ft_memcpy(&info->cmmd[ft_strlen(info->cmmd)],
 					cmd[x], ft_strlen(cmd[x]));
+		if (cmd[x + 1])
+			info->cmmd[ft_strlen(info->cmmd)] = ' ';
+	}
 	return (0);
 }
 
@@ -50,7 +52,7 @@ static	t_inffork	*init_infproc(int x, pid_t pid, char **cmd)
 		ft_exitf(EXIT_FAILURE, "21sh: %s\n", ft_strshret(SH_MALLOC));
 	new->x = x;
 	new->pid = (g_shell->bits & (1 << 1)) ? -1 : pid;
-	if (tabptrtotab(cmd, new, pid) == SH_MALLOC)
+	if (tabptrtotab(cmd, new, new->pid) == SH_MALLOC)
 		ft_exitf(EXIT_FAILURE, "21sh: %s\n", ft_strshret(SH_MALLOC));
 	new->sign = ' ';
 	return (new);

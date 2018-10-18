@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/17 18:33:05 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/18 19:16:06 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,6 @@ static char				*g_status[] = {
 	"Killed",
 	"Suspended"
 };
-
-void			print_cmd_args(char **tab)
-{
-	int	x;
-
-	x = -1;
-	if (!tab || !tab[0])
-		return ;
-	while (tab[++x] && tab[x + 1])
-		ft_printf(" %s", tab[x]);
-	if (x && tab[x])
-		ft_printf("%s\n", tab[x]);
-	else if (tab[x])
-		ft_printf(" %s\n", tab[x]);
-}
 
 void			print_cmd_args2(char *tab)
 {
@@ -70,7 +55,6 @@ static t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
 	else
 		ft_printf("[%d]\t%c %s\t%s\n", struc->x, struc->sign,
 					g_status[struc->status], struc->cmmd);
-//	print_cmd_args(struc->cmd);
 	struc->modif &= (0 << 0);
 	return (elem->next);
 }
@@ -92,7 +76,6 @@ int					check_bgend(void)
 			else
 				ft_printf("[%d]\t%c %s\t%s\n", struc->x, struc->sign,
 							g_status[struc->status], struc->cmmd);
-//			print_cmd_args(struc->cmd);
 			handle_bgsign(elem, 1);
 			elem = delete_info(elem);
 		}

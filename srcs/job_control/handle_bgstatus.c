@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 13:31:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 17:20:43 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/18 17:07:14 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int					handle_bgstat(pid_t pid, int status, int opt)
 			break ;
 		elem = elem->next;
 	}
-//	if (!((t_inffork *)elem->content)->status)
-	((t_inffork *)elem->content)->modif |= (1 << 0);
+	if (((t_inffork *)elem->content)->status)
+		((t_inffork *)elem->content)->modif |= (1 << 0);
 	((t_inffork *)elem->content)->status = status;
 	return (0);
 }

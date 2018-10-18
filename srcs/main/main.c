@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/17 21:17:03 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/18 16:06:10 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,11 +133,7 @@ static int	check_cmd_starter(void)
 	if (!isatty(1))
 		return (1);
 	if (g_shell->start_cmd)
-	{
 		ft_interpret(g_shell->start_cmd, &g_expf, &g_lexerf, &g_shell_iterf);
-		//if (c == SH_EXIT)
-		//	return (1);
-	}
 	return (0);
 }
 

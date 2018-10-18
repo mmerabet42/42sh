@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 11:02:45 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 15:52:11 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/18 16:42:02 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,17 @@ static char		*cmdpipe(t_list *elem)
 	while (a->left)
 		a = a->left;
 	while (a->args->argv[++x])
-		all_size += ft_strlen(a->args->argv[x]);
+		all_size += (ft_strlen(a->args->argv[x]) + 1);
 	if (!(cmd = (char *)ft_memalloc(sizeof(char) * all_size)))
 		return (NULL);
 	x = -1;
 	while (a->args->argv[++x])
+	{
 		ft_memcpy(&cmd[ft_strlen(cmd)],
 					a->args->argv[x], ft_strlen(a->args->argv[x]));
+		if (a->args->argv[x + 1])
+		cmd[ft_strlen(cmd)] = ' ';
+	}
 	return (cmd);
 }
 
