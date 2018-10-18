@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/18 16:18:51 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/18 19:16:38 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,7 @@ extern int			g_ifound;
 # define RGX_CLEAN (1 << 8)
 # define RGX_FREE (1 << 9)
 # define RGX_ID (1 << 10)
+# define RGX_TRACE (1 << 11)
 
 enum				e_regex_condtion
 {
@@ -277,6 +278,7 @@ typedef struct		s_regex_info
 	int				*pos;
 	int				cid;
 	int				*id;
+	int				lvl;
 	t_list			**matches;
 }					t_regex_info;
 
@@ -305,8 +307,8 @@ int					print_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					getint_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					debug_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 int					recursive_rgx(t_regex_info *rgxi, t_regex_rule *rule);
-t_regex_func		*get_regex_func(const char *name, int len_rule, int *id);
-t_regex_func		*get_regex_rule(const char *name, int len_rule, int *id);
+t_regex_func		*get_regex_func(const char *name, int len_rule, t_regex_info *rgxi);
+t_regex_func		*get_regex_rule(const char *name, int len_rule, t_regex_info *rgxi);
 
 int					manage_rules(const char *str, t_list **rules, int flags, va_list vp);
 int					regex_loop(t_regex_info *rgxi, t_regex_rule *rule);

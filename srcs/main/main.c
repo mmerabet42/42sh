@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/18 16:18:50 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/18 19:23:43 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,16 +194,17 @@ int			main(int argc, char **argv, char **envp)
 	ft_regex(RGX_ADD, NULL,
 			"WORD_DELIM:*[@space]", NULL);
 	ft_regex(RGX_ADD | RGX_ID, NULL,
-			"OPERATOR:?[?[@OP_andor]|?[@OP_pipe]|?[@OP_comma]|?[@OP_redir]@or]", NULL, -2);
+			"OPERATOR:?[?[@OP_andor]|?[@OP_pipe]|?[@OP_comma]|?[@OP_redir]@or]", NULL, 2);
 	t_list	*matches = NULL;
-	int	ret = ft_regex(RGX_UMATCHES | RGX_MATCHES, argv[1], argv[2], &matches);
+	int	ret = ft_regex(RGX_MATCHES, argv[1], argv[2], &matches);
 
 	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
 	ft_printf("%d match\n", ret);
 	ft_print_matches(argv[2], matches);
 /*	int	id = 0;
 	int	pos = 0;
-	int	ret = ft_regex(0, argv[1], argv[2], &pos, &id);
+	int	ids[1];
+	int	ret = ft_regex(0, argv[1], argv[2], 1, ids);
 
 	ft_printf("regex: '%s' '%s' '%.*s' %d %d %d\n", argv[1], argv[2], ret, argv[2] + pos, pos, ret, id);*/
 	ft_regex(RGX_FREE, NULL, NULL, &matches);

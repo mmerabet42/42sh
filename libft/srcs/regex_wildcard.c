@@ -22,9 +22,9 @@ static void	fill_info(t_regex_info *rgxi, t_regex_rule *r, int jmp, int ret)
 		if (r->rule[r->len_rule] != ']' && r->rule[r->len_rule] != '}')
 			r->l = regex_variable(rgxi, r->rule + r->len_rule + 1);
 	}
-	r->func = get_regex_func(r->rule, r->len_rule, rgxi->id);
+	r->func = get_regex_func(r->rule, r->len_rule, rgxi);
 	if (rgxi->id)
-	rgxi->cid = *rgxi->id;
+		rgxi->cid = *rgxi->id;
 }
 
 static int	expanded_wildcard(t_regex_info *rgxi, char type, int neg)
