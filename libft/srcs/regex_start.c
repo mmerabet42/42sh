@@ -11,9 +11,9 @@ static int	loop_return(t_regex_info *rg, t_regex_info *t,
 			|| (r->cond == RGX_EQUAL && r->i < r->l)
 			|| (!r->i && ((!r->neg && ret == -1) || (r->neg && ret != -1))))
 		return (-1);
-	if (t->len == -1 && (!(rg->option & RGX_END) || (t->regex && *t->regex)))
+	if (t->len == -1 && (!(rg->flags & RGX_END) || (t->regex && *t->regex)))
 		return (-1);
-	if (t->len == -1 && !*rg->regex && (!*rg->str || (rg->option & RGX_END)))
+	if (t->len == -1 && !*rg->regex && (!*rg->str || (rg->flags & RGX_END)))
 		return (rg->len);
 	return (t->len == -1 ? -1 : rg->len + t->len);
 }
@@ -33,7 +33,7 @@ static int	loop_stop(t_regex_info *rgxi, t_regex_info *tmp,
 		if (*tmp->regex && (lret = regex_exec(tmp)) != -1)
 		{
 			*tmp = *rgxi;
-			if ((tmp->option & RGX_END) && (nret = regex_loop(tmp, r)) != -1)
+			if ((tmp->flags & RGX_END) && (nret = regex_loop(tmp, r)) != -1)
 				return (nret - lret);
 			return (lret);
 		}

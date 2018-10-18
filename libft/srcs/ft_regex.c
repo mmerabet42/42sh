@@ -37,6 +37,7 @@ static int	get_matches(t_regex_info *rgxi)
 	t_regex_match	umatch;
 	const char		*str;
 	int				global_pos;
+	int				zero;
 	int				i;
 
 	rgxi->pos = &match.pos;
@@ -45,28 +46,33 @@ static int	get_matches(t_regex_info *rgxi)
 	head = NULL;
 	i = 0;
 	global_pos = 0;
+	zero = 0;
 	while ((match.len = regex_pos(rgxi)) != -1)
 	{
-		if ((rgxi->option & RGX_UMATCHES) && match.pos)
+		if ((rgxi->flags & RGX_UMATCHES) && match.pos)
 		{
-			umatch.pos = global_pos;
-			umatch.len = match.pos;
-			umatch.str = str + global_pos;
+			umatch.pos = global_pos - (zero ? 1: 0);
+			umatch.len = match.pos + (zero ? 1 : 0);
+			umatch.str = str + umatch.pos;
 			umatch.id = -1;
 			ft_lstpush_p(&head, ft_lstnew(&umatch, sizeof(t_regex_match)));
 		}
 		match.pos += global_pos;
-		match.str = str + match.pos;
-		ft_lstpush_p(&head, ft_lstnew(&match, sizeof(t_regex_match)));
-		match.id = 0;
+		if (rgxi->flags & RGX_MATCHES)
+		{
+			match.str = str + match.pos;
+			ft_lstpush_p(&head, ft_lstnew(&match, sizeof(t_regex_match)));
+			match.id = 0;
+		}
 		++i;
+		zero = (!match.len ? 1 : 0);
 		global_pos = match.pos + (!match.len ? 1 : match.len);
 		if (!*(str + match.pos) || !*(rgxi->str = str + global_pos))
 			break ;
 		rgxi->regex = rgxi->rgx_begin;
 		rgxi->len = 0;
 	}
-	if ((rgxi->option & RGX_UMATCHES) && match.len == -1)
+	if ((rgxi->flags & RGX_UMATCHES) && match.len == -1)
 	{
 		umatch.pos = global_pos;
 		umatch.len = match.pos;
@@ -80,25 +86,25 @@ static int	get_matches(t_regex_info *rgxi)
 
 static void	get_args(t_regex_info *rgxi, va_list vp)
 {
-	if (rgxi->option & RGX_RGXN)
+	if (rgxi->flags & RGX_RGXN)
 		rgxi->rgxn = va_arg(vp, int);
-	if (rgxi->option & RGX_STRN)
+	if (rgxi->flags & RGX_STRN)
 		rgxi->strn = va_arg(vp, int);
-	if (rgxi->option & (RGX_MATCHES | RGX_UMATCHES))
+	if (rgxi->flags & (RGX_MATCHES | RGX_UMATCHES))
 		rgxi->matches = (t_list **)va_arg(vp, t_list **);
 	else
 	{
-		if (rgxi->option & RGX_POS)
+		if (rgxi->flags & RGX_POS)
 			rgxi->pos = va_arg(vp, int *);
-		if (rgxi->option & RGX_ID)
+		if (rgxi->flags & RGX_ID)
 			rgxi->id = va_arg(vp, int *);
 	}
-	if (rgxi->option & RGX_VAR)
+	if (rgxi->flags & RGX_VAR)
 		rgxi->vars = va_arg(vp, int *);
 	va_end(vp);
 }
 
-int			ft_regex(int options, const char *regex, const char *str, ...)
+int			ft_regex(int flags, const char *regex, const char *str, ...)
 {
 	static t_list	*rules;
 	t_regex_info	regex_info;
@@ -106,19 +112,18 @@ int			ft_regex(int options, const char *regex, const char *str, ...)
 	va_list			vp;
 
 	va_start(vp, str);
-	if (options & (RGX_ADD | RGX_GET | RGX_CLEAN | RGX_FREE))
-		return (manage_rules(str, &rules, options, vp));
+	if (flags & (RGX_ADD | RGX_GET | RGX_CLEAN | RGX_FREE))
+		return (manage_rules(str, &rules, flags, vp));
 	regex_init(&regex_info, regex, str);
 	ft_bzero(vars, sizeof(int) * (52));
 	regex_info.vars = (int *)vars;
-	regex_info.option = options;
+	regex_info.flags = flags;
 	regex_info.param = "REGEX";
 	regex_info.len_param = 5;
 	get_args(&regex_info, vp);
 	if (regex_info.matches)
 	{
-		regex_info.option &= ~RGX_MATCHES;
-		regex_info.option |= (RGX_POS | RGX_END | RGX_ID);
+		regex_info.flags |= (RGX_POS | RGX_END | RGX_ID);
 		return (get_matches(&regex_info));
 	}
 	return (regex_pos(&regex_info));
@@ -128,6 +133,7 @@ void		ft_print_matches(const char *str, t_list *matches)
 {
 	int				i;
 	int				n;
+	const char		*color;
 	t_regex_match	*m;
 
 	if (!matches)
@@ -138,8 +144,11 @@ void		ft_print_matches(const char *str, t_list *matches)
 	while (matches)
 	{
 		m = (t_regex_match *)matches->content;
+		color = (n ? "lcyan" : "lblue");
+		if (m->id == -1)
+			color = "white";
 		ft_printf("%{white}%#{black}%.*s%{black}%#{%s}%.*s%#{lred}%d%{0}",
-				m->pos - i, str + i, (n ? "lcyan" : "lblue"), m->len, m->str, m->id);
+				m->pos - i, str + i, color, m->len, m->str, m->id);
 		n = !n;
 		i = m->pos + m->len;
 		if (!(matches = matches->next))

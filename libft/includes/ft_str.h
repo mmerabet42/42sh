@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/17 21:17:03 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/18 16:18:51 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,7 +273,7 @@ typedef struct		s_regex_info
 	int				len;
 	int				rgxn;
 	int				strn;
-	int				option;
+	int				flags;
 	int				*pos;
 	int				cid;
 	int				*id;
@@ -308,7 +308,7 @@ int					recursive_rgx(t_regex_info *rgxi, t_regex_rule *rule);
 t_regex_func		*get_regex_func(const char *name, int len_rule, int *id);
 t_regex_func		*get_regex_rule(const char *name, int len_rule, int *id);
 
-int					manage_rules(const char *str, t_list **rules, int op, va_list vp);
+int					manage_rules(const char *str, t_list **rules, int flags, va_list vp);
 int					regex_loop(t_regex_info *rgxi, t_regex_rule *rule);
 int					regex_variable(t_regex_info *rgxi, const char *s);
 int					regex_start(t_regex_info *rgxi, t_regex_rule *rule);
@@ -317,7 +317,7 @@ int					regex_bracket(const char *str, int *s);
 int					regex_exec(t_regex_info *regex_info);
 void				regex_init(t_regex_info *regex_info, const char *regex, const char *str);
 
-int					ft_regex(int options, const char *regex, const char *str, ...);
+int					ft_regex(int flags, const char *regex, const char *str, ...);
 void				ft_print_matches(const char *str, t_list *matches);
 
 # define RGX_BKSLSH 2

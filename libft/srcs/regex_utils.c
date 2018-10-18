@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 20:05:27 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/17 20:23:29 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/18 14:58:48 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	regex_variable(t_regex_info *rgxi, const char *s)
 	return (0);
 }
 
-int	manage_rules(const char *str, t_list **rules, int op, va_list vp)
+int	manage_rules(const char *str, t_list **rules, int flags, va_list vp)
 {
 	t_regex_func	func;
 	t_list			*nw;
@@ -47,10 +47,10 @@ int	manage_rules(const char *str, t_list **rules, int op, va_list vp)
 
 	ret = 0;
 	func.name = str;
-	if (op & RGX_ADD)
+	if (flags & RGX_ADD)
 	{
 		func.func = va_arg(vp, t_regex_funcptr);
-		if (!(op & RGX_ID))
+		if (!(flags & RGX_ID))
 			func.id = ft_lstsize(*rules) + 1;
 		else
 			func.id = va_arg(vp, int);
@@ -59,11 +59,11 @@ int	manage_rules(const char *str, t_list **rules, int op, va_list vp)
 		ft_lstpushfront(rules, nw);
 		ret = func.id;
 	}
-	else if ((op & RGX_GET) && (lst = va_arg(vp, t_list **)))
+	else if ((flags & RGX_GET) && (lst = va_arg(vp, t_list **)))
 		*lst = *rules;
-	else if ((op & RGX_FREE) && (lst = va_arg(vp, t_list **)))
+	else if ((flags & RGX_FREE) && (lst = va_arg(vp, t_list **)))
 		ft_lstdel(lst, content_delfunc);
-	else if (op & RGX_CLEAN)
+	else if (flags & RGX_CLEAN)
 		ft_lstdel(rules, content_delfunc);
 	va_end(vp);
 	return (ret);

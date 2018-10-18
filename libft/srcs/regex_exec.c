@@ -66,7 +66,7 @@ static int	regex_equ(t_regex_info *rgxi)
 			return (-1);
 		++i;
 	}
-	if (!rgxi->regex[i] && rgxi->str[i] && !(rgxi->option & RGX_END))
+	if (!rgxi->regex[i] && rgxi->str[i] && !(rgxi->flags & RGX_END))
 		return (-1);
 	return (i);
 }
@@ -90,7 +90,7 @@ int	regex_exec(t_regex_info *regex_info)
 		regex_info->str += pos;
 		regex_info->regex += pos;
 	}
-	if ((regex_info->option & RGX_END) && *regex_info->str)
+	if ((regex_info->flags & RGX_END) && *regex_info->str)
 		return (regex_info->len);
 	if (*regex_info->regex && !ft_strequ(regex_info->regex, "*"))
 		return (-1);

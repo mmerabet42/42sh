@@ -60,6 +60,6 @@ int	recursive_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 	if (ft_isdigit(*rule->arg))
 		tmp.regex += ft_atoi(rule->arg);
 	tmp.vars = rgxi->vars;
-	tmp.option = RGX_END;
+	tmp.flags = RGX_END;
 	return (regex_exec(&tmp));
 }

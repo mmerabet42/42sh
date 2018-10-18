@@ -48,7 +48,7 @@ int			expr_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 		tmp.regex = str;
 		tmp.rgx_begin = str;
 		tmp.len = 0;
-		tmp.option = RGX_END;
+		tmp.flags = RGX_END;
 		r = regex_exec(&tmp);
 		free(str);
 		if (rule->arg[0] == '0')
@@ -109,7 +109,7 @@ static int	move_i(t_regex_info *rgxi, t_regex_rule *rule, int *i)
 	rgxi2 = *rgxi;
 	rgxi2.regex = str;
 	rgxi2.rgx_begin = rgxi->rgx_begin;
-	rgxi2.option = RGX_END;
+	rgxi2.flags = RGX_END;
 	rgxi2.len = 0;
 	ret = regex_exec(&rgxi2);
 	free(str);
