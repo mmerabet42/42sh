@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 17:21:51 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/17 21:47:17 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/18 15:56:59 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 
-static int	max_fd;
+static int	g_max_fd;
 
 static void	restore_fds(void *c, size_t s)
 {
@@ -26,8 +26,8 @@ static void	restore_fds(void *c, size_t s)
 
 	(void)s;
 	r = (t_redir *)c;
-	if (r->fdz == -2 && ft_memdel((void **)&c))
-		return ;
+	if (!(g_max_fd = 0) && r->fdz == -2 && ft_memdel((void **)&c))
+		return ((void)close(r->fda));
 	else if (r->checked)
 	{
 		if (r->rep)
@@ -47,7 +47,6 @@ static void	restore_fds(void *c, size_t s)
 	else
 		close(r->fdz);
 	free(c);
-	max_fd = 0;
 }
 
 static int	heredoc(t_redir *r)
@@ -93,17 +92,17 @@ static void	store_fds(t_list *elem)
 	while (elem)
 	{
 		r = (t_redir *)elem->content;
-		if (max_fd < r->fda + 100)
-			max_fd = r->fda + 100;
+		if (g_max_fd < r->fda + 100)
+			g_max_fd = r->fda + 100;
 		elem = elem->next;
 	}
 	elem = begin;
 	while (elem)
 	{
 		r = (t_redir *)elem->content;
-		if ((r->fdz = dup2(r->fda, max_fd)) == -1)
+		if ((r->fdz = dup2(r->fda, g_max_fd)) == -1)
 			r->fdz = -2;
-		max_fd++;
+		g_max_fd++;
 		elem = elem->next;
 	}
 }
