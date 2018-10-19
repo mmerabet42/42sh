@@ -36,7 +36,7 @@ static int	get_matches(t_regex_info *rgxi)
 	t_regex_match	match;
 	t_regex_match	umatch;
 	const char		*str;
-	int				global_pos;
+//	int				global_pos;
 	int				zero;
 	int				i;
 
@@ -45,19 +45,20 @@ static int	get_matches(t_regex_info *rgxi)
 	str = rgxi->str;
 	head = NULL;
 	i = 0;
-	global_pos = 0;
+//	global_pos = 0;
+	umatch.pos = 0;
 	zero = 0;
 	while ((match.len = regex_pos(rgxi)) != -1)
 	{
 		if ((rgxi->flags & RGX_UGLOBAL) && match.pos)
 		{
-			umatch.pos = global_pos - (zero ? 1: 0);
+		//	umatch.pos -= (zero ? 1: 0);
 			umatch.len = match.pos + (zero ? 1 : 0);
 			umatch.str = str + umatch.pos;
 			umatch.id = -1;
 			ft_lstpush_p(&head, ft_lstnew(&umatch, sizeof(t_regex_match)));
 		}
-		match.pos += global_pos;
+		match.pos += umatch.pos;
 		if (rgxi->flags & RGX_GLOBAL)
 		{
 			match.str = str + match.pos;
@@ -66,17 +67,17 @@ static int	get_matches(t_regex_info *rgxi)
 		}
 		++i;
 		zero = (!match.len ? 1 : 0);
-		global_pos = match.pos + (!match.len ? 1 : match.len);
-		if (!*(str + match.pos) || !*(rgxi->str = str + global_pos))
+		umatch.pos = match.pos + (!match.len ? 1 : match.len);
+		if (!*(str + match.pos) || !*(rgxi->str = str + umatch.pos))
 			break ;
 		rgxi->regex = rgxi->rgx_begin;
 		rgxi->len = 0;
 	}
 	if ((rgxi->flags & RGX_UGLOBAL) && match.len == -1)
 	{
-		umatch.pos = global_pos;
+	//	umatch.pos = global_pos;
 		umatch.len = match.pos;
-		umatch.str = str + global_pos;
+		umatch.str = str + umatch.pos;
 		umatch.id = -1;
 		ft_lstpush_p(&head, ft_lstnew(&umatch, sizeof(t_regex_match)));
 	}
