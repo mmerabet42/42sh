@@ -49,7 +49,7 @@ static int	get_matches(t_regex_info *rgxi)
 	zero = 0;
 	while ((match.len = regex_pos(rgxi)) != -1)
 	{
-		if ((rgxi->flags & RGX_UMATCHES) && match.pos)
+		if ((rgxi->flags & RGX_UGLOBAL) && match.pos)
 		{
 			umatch.pos = global_pos - (zero ? 1: 0);
 			umatch.len = match.pos + (zero ? 1 : 0);
@@ -58,7 +58,7 @@ static int	get_matches(t_regex_info *rgxi)
 			ft_lstpush_p(&head, ft_lstnew(&umatch, sizeof(t_regex_match)));
 		}
 		match.pos += global_pos;
-		if (rgxi->flags & RGX_MATCHES)
+		if (rgxi->flags & RGX_GLOBAL)
 		{
 			match.str = str + match.pos;
 			ft_lstpush_p(&head, ft_lstnew(&match, sizeof(t_regex_match)));
@@ -72,7 +72,7 @@ static int	get_matches(t_regex_info *rgxi)
 		rgxi->regex = rgxi->rgx_begin;
 		rgxi->len = 0;
 	}
-	if ((rgxi->flags & RGX_UMATCHES) && match.len == -1)
+	if ((rgxi->flags & RGX_UGLOBAL) && match.len == -1)
 	{
 		umatch.pos = global_pos;
 		umatch.len = match.pos;
@@ -90,7 +90,7 @@ static void	get_args(t_regex_info *rgxi, va_list vp)
 		rgxi->rgxn = va_arg(vp, int);
 	if (rgxi->flags & RGX_STRN)
 		rgxi->strn = va_arg(vp, int);
-	if (rgxi->flags & (RGX_MATCHES | RGX_UMATCHES))
+	if (rgxi->flags & (RGX_GLOBAL | RGX_UGLOBAL))
 		rgxi->matches = (t_list **)va_arg(vp, t_list **);
 	else
 	{

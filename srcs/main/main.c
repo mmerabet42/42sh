@@ -196,7 +196,7 @@ int			main(int argc, char **argv, char **envp)
 	ft_regex(RGX_ADD | RGX_ID, NULL,
 			"OPERATOR:?[?[@OP_andor]|?[@OP_pipe]|?[@OP_comma]|?[@OP_redir]@or]", NULL, 2);
 	t_list	*matches = NULL;
-	int	ret = ft_regex(RGX_MATCHES, argv[1], argv[2], &matches);
+	int	ret = ft_regex(RGX_GLOBAL, argv[1], argv[2], &matches);
 
 	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
 	ft_printf("%d match\n", ret);
