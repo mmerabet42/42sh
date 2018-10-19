@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/18 20:12:00 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 15:26:41 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ static int			my_wait(t_list *elem)
 
 	if (((t_inffork *)elem->content)->pid == -1)
 	{
+		tcsetpgrp(0, ((t_inffork *)elem->content)->pids->pid);
 		pids = ((t_inffork *)elem->content)->pids;
 		while (pids)
 		{
@@ -102,6 +103,7 @@ static int			my_wait(t_list *elem)
 	}
 	else
 	{
+		tcsetpgrp(0, ((t_inffork *)elem->content)->pid);
 		waitpid(((t_inffork *)elem->content)->pid, &status, WUNTRACED);
 	}
 	return (status);
@@ -121,15 +123,9 @@ int					builtin_fg(int argc, char **argv)
 		if (((t_inffork *)elem->content)->status == BG_STOP)
 		{
 			if (((t_inffork *)elem->content)->pid != -1)
-			{
 				kill(((t_inffork *)elem->content)->pid, SIGCONT);
-				tcsetpgrp(0, ((t_inffork *)elem->content)->pid);
-			}
 			else
-			{
 				kill(-((t_inffork *)elem->content)->pids->pid, SIGCONT);
-				tcsetpgrp(0, ((t_inffork *)elem->content)->pids->pid);
-			}
 		}
 		status = my_wait(elem);
 		check_retfork(status, elem);
