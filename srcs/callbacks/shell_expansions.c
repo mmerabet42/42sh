@@ -6,13 +6,14 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 18:29:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/04 14:15:55 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/16 11:08:21 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_types.h"
 #include "ft_str.h"
+#include "ft_printf.h"
 
 int			exp_var(t_strid *sid, t_list **res, t_expf *expf)
 {
@@ -76,7 +77,7 @@ static t_exp	g_exps[] = {
 static t_expf	g_expf = {
 	g_exps, sizeof(g_exps), NULL, 0
 };
-#include "ft_printf.h"
+
 int			exp_quote(t_strid *sid, t_list **res, t_expf *expf)
 {
 	char	sep;

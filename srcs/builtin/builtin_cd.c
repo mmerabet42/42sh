@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 11:58:28 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/12 14:18:28 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/16 11:30:16 by gdufay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,20 +84,20 @@ static char	*check_and_move(char **curpath, char *path, char opt)
 	if (stat((*curpath), &buf) == -1)
 	{
 		ft_strdel(curpath);
-		return ((void*)(size_t)!ft_printf("42sh: cd: %s: No such"
-					" file or directory\n", path));
+		return ((void*)(size_t)!ft_printf("42sh: cd: %s: No such file or direc"
+					"tory\n", path ? path : ft_getenv("HOME", g_shell->envp)));
 	}
 	if ((buf.st_mode & S_IFMT) != S_IFDIR)
 	{
 		ft_strdel(curpath);
-		return ((void*)(size_t)!ft_printf("42sh: cd: %s: "
-					"Not a directory\n", path));
+		return ((void*)(size_t)!ft_printf("42sh: cd: %s: Not a directory\n",
+					path ? path : ft_getenv("HOME", g_shell->envp)));
 	}
 	if (chdir(*curpath) == -1)
 	{
 		ft_strdel(curpath);
-		return ((void*)(size_t)!ft_printf("42sh: cd: %s: "
-					"Permission denied\n", path));
+		return ((void*)(size_t)!ft_printf("42sh: cd: %s: Permission denied\n",
+					path ? path : ft_getenv("HOME", g_shell->envp)));
 	}
 	return (*curpath);
 }

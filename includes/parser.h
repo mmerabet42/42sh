@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/18 16:27:22 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 17:20:52 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,41 +194,41 @@ int					exp_quote(t_strid *sid, t_list **res, t_expf *expf);
 int					exp_cond(t_strid *sid, t_list **res, t_expf *expf);
 
 int					shell_cmd_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_arth_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_lists_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_andor_seco_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_bckgrnd_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_pipe_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_pipe_bg(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					handle_ast_pipe(t_ast *ast, t_list **pipe);
 int					shell_pipe_bquote(t_ast *ast,
-										void **op,
-										void *res,
-										t_iterf *iterf);
+		void **op,
+		void *res,
+		t_iterf *iterf);
 int					shell_redir_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_cond_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_else_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_equal_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_equal(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_hdoc_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 
 int					shell_then_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 int					shell_if_cb(t_ast *ast, void **op, void *res,
-								t_iterf *iterf);
+		t_iterf *iterf);
 
 void				manage_export(char *name, char *content);
 
@@ -247,21 +247,21 @@ int					ft_astvalid(t_ast *ast);
 int					ft_resolver(t_args *args, t_list **res, t_expf *expf);
 int					ft_astcresolver(t_ast *ast, t_expf *expf);
 int					ft_strexpand(const char *origin,
-							t_list **res,
-							int i,
-							t_expf *expf);
+		t_list **res,
+		int i,
+		t_expf *expf);
 
 int					ft_astgood(t_ast *ast);
 void				ft_astprint(t_ast *bt, int n);
 int					ft_getopt(char ***argv, const char *options, t_opt *opt);
 char				**ft_getoptl(char **argv,
-							char option,
-							const char *loption,
-							int lfirst);
+		char option,
+		const char *loption,
+		int lfirst);
 char				**ft_getoptv(char **argv, const char *options);
 int					ret_pipecmd(t_list *tabpipe, char **cmd);
 
-int			ft_interpret(const char *cmd, t_expf *expf, t_lexerf *lexf,
-					t_iterf *itf);
+int					ft_interpret(const char *cmd, t_expf *expf, t_lexerf *lexf,
+		t_iterf *itf);
 
 #endif

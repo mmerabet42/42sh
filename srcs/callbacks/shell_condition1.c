@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shell_condition1.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/16 11:04:48 by gdufay            #+#    #+#             */
+/*   Updated: 2018/10/16 11:10:27 by gdufay           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "shell.h"
 
 int	shell_then_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
@@ -30,5 +42,4 @@ int	shell_if_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 			|| !ft_strequ(ast->right->name, "else")
 			|| !ft_strequ(ast->right->name, "then"))
 		return (SH_CONDWTHEN);
-	
 }
