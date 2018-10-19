@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/16 15:20:23 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 17:23:05 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@
 # include "parser.h"
 # include "expr.h"
 # include "job_control.h"
-
-
-# include "../logger/incs/logger.h"
 
 # define DLM_REDP1 "<<:<<<:*[0-9]<<<:<:>:*[0-9]<<:>>:*[0-9]>>:*[<>@=1]&*[0-9]"
 # define DLM_REDP2 DLM_REDP1 ":*[<>@=1]&-:*[0-9]*[<>@=1]&:*[0-9]*[<>@=1]&-"
