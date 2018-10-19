@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 17:42:32 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/15 17:21:24 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 16:14:12 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #include <signal.h>
 #include "job_control.h"
 
-void			son_fork(t_ast *ast, void *res, t_iterf *iterf)
+static void		son_fork(t_ast *ast, void *res, t_iterf *iterf)
 {
 	char		**args;
 	t_list		*elem;
@@ -41,6 +41,15 @@ void			son_fork(t_ast *ast, void *res, t_iterf *iterf)
 	exit(0);
 }
 
+static int		is_pipe1(t_ast *ast, void *res, t_iterf *iterf)
+{
+	g_shell->bits |= (1 << 1);
+	g_shell->bits |= (1 << 2);
+	ft_astiter(ast->left, res, iterf);
+	ft_astiter(ast->right, res, iterf);
+	return (0);
+}
+
 int				exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 {
 	pid_t		pid;
@@ -48,12 +57,7 @@ int				exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 
 	ft_bzero(&inf, sizeof(t_inffork));
 	if (ast->left->type == TK_PIPE + 1)
-	{
-		g_shell->bits |= (1 << 1);
-		g_shell->bits |= (1 << 2);
-		ft_astiter(ast->left, res, iterf);
-		ft_astiter(ast->right, res, iterf);
-	}
+		return (is_pipe1(ast, res, iterf));
 	else
 	{
 		if ((pid = fork()) == -1)

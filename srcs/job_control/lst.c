@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 11:02:45 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/18 16:42:02 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 16:15:25 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static char		*cmdpipe(t_list *elem)
 		ft_memcpy(&cmd[ft_strlen(cmd)],
 					a->args->argv[x], ft_strlen(a->args->argv[x]));
 		if (a->args->argv[x + 1])
-		cmd[ft_strlen(cmd)] = ' ';
+			cmd[ft_strlen(cmd)] = ' ';
 	}
 	return (cmd);
 }

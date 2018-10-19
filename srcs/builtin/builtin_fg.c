@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/19 15:26:41 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 16:40:11 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,11 @@
 #include "ft_io.h"
 #include "ft_mem.h"
 #include "ft_types.h"
+#include "job_control.h"
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <signal.h>
 #include <fcntl.h>
-
-static	t_list		*error_fg(char **argv, int i)
-{
-	if (!i)
-		ft_printf_fd(2, "21sh: fg: %s: no such job\n", argv[1]);
-	else
-		ft_putstr_fd("21sh: fg: current: no such job\n", 2);
-	return (NULL);
-}
 
 static	t_list		*check_args(int argc, char **argv, int numprocbg)
 {
@@ -57,28 +49,36 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 	return (error_fg(argv, 0));
 }
 
+static pid_t		is_pipe2(t_list *elem)
+{
+	t_pids	*pids;
+
+	pids = ((t_inffork *)elem->content)->pids;
+	while (pids->next)
+		pids = pids->next;
+	return (pids->pid);
+}
+
 static void			check_retfork(int ret, t_list *elem)
 {
 	int		p;
 	pid_t	pid;
-	t_pids	*pids;
 
 	pid = 0;
 	p = ((t_inffork *)elem->content)->pid == -1 ? 1 : 0;
 	if (p)
-	{
-		pids = ((t_inffork *)elem->content)->pids;
-		while (pids->next)
-			pids = pids->next;
-		pid = pids->pid;
-	}
+		pid = is_pipe2(elem);
 	pid = pid ? pid : ((t_inffork *)elem->content)->pid;
 	if (WIFCONTINUED(ret))
+	{
 		handle_bgstat(pid, BG_RUN, p);
+		((t_inffork *)elem->content)->modif |= (1 << 0);
+	}
 	else if (WIFSTOPPED(ret))
 	{
 		if (WSTOPSIG(ret) == SIGTTIN)
 			handle_bgstat(pid, BG_STOP, p);
+		((t_inffork *)elem->content)->modif |= (1 << 0);
 	}
 	else if (!WIFEXITED(ret))
 		handle_bgstat(pid, BG_KILL, p);

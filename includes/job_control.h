@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 18:59:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/18 16:12:25 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 16:27:57 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,6 @@ void				resetsign(void);
 
 int					creatpushelem(t_pids **head, pid_t pid, t_list *ast, int bquote);
 void				extractpids(t_pids **head, pid_t pid);
+t_list				*error_fg(char **argv, int i);
 
 #endif
