@@ -32,7 +32,7 @@ int			ft_check_quote(char *s)
 	int		counter;
 
 	if (!s)
-		return (1);
+		return (0);
 	i = -1;
 	tmp = s;
 	counter = 0;
@@ -40,7 +40,7 @@ int			ft_check_quote(char *s)
 		if (tmp[i] == '"' || tmp[i] == 39 || tmp[i] == '`')
 		{
 			if (!ft_strchr(&tmp[i + 1], tmp[i]))
-				return (0);
+				return (tmp[i]);
 			tmp = ft_strchr(&tmp[i + 1], tmp[i]);
 			if (*tmp == '"' && *(tmp - 1) == '\\'
 					&& (count_backslash(s, tmp - 1) & 1))
@@ -48,8 +48,8 @@ int			ft_check_quote(char *s)
 			i = 0;
 		}
 	if ((i = ft_strlen(s) - 1) < 0)
-		return (1);
+		return (0);
 	while (tmp[i--] == '\\')
 		counter++;
-	return (counter % 2 ? 0 : 1);
+	return (counter % 2 ? '\\' : 0);
 }

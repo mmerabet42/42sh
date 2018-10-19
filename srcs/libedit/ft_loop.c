@@ -45,7 +45,7 @@ t_cmdedit	*ft_main_loop(t_cmdedit *cmd, t_cursor *cursor)
 	return (cmd);
 }
 
-static void	gain_de_place(char **s)
+static void	gain_de_place(char **s, int tmp)
 {
 	static char	*t;
 	char		*u;
@@ -56,18 +56,28 @@ static void	gain_de_place(char **s)
 	ft_printf("quote>");
 	ft_getcursor(&cursor, NULL);
 	u = ft_loop_init(cursor, 1);
-	v = ft_strjoin(*s, "\n");
-	t = ft_strjoin(v, u);
-	ft_strdel(s);
-	if (u && *u != 3 && ft_strcmp(u, "exit"))
-		*s = t;
+	if (tmp == '\'' || tmp == '`' || (tmp == '"' && *(*s + ft_strlen(*s) - 1) != '\\'))
+	{
+		v = ft_strjoin(*s, "\n");
+		t = ft_strjoin(v, u);
+		ft_strdel(s);
+		if (u && *u != 3 && ft_strcmp(u, "exit"))
+			*s = t;
+		else
+		{
+			ft_strdel(&t);
+			*s = ft_strdup("");
+		}
+		ft_strdel(&u);
+		ft_strdel(&v);
+	}
 	else
 	{
-		ft_strdel(&t);
-		*s = ft_strdup("");
+		v = ft_strn2join(*s, u, ft_strlen(*s) - 1);
+		ft_strdel(s);
+		*s = v;
+		ft_strdel(&u);
 	}
-	ft_strdel(&u);
-	ft_strdel(&v);
 }
 
 char		*ft_loop_init(int prompt, int retry)
@@ -75,6 +85,7 @@ char		*ft_loop_init(int prompt, int retry)
 	t_cmdedit	*cmd;
 	t_cursor	cursor;
 	char		*s;
+	int			tmp;
 
 	if (init_cursor(prompt, &cursor) == -1)
 		return (NULL);
@@ -85,8 +96,8 @@ char		*ft_loop_init(int prompt, int retry)
 	cmd = ft_main_loop(cmd, &cursor);
 	if (ft_clean_term() == -1 || !(s = list_to_str(&cmd)))
 		return (NULL);
-	while (!ft_check_quote((s)) && !retry)
-		gain_de_place(&s);
+	while ((tmp = ft_check_quote((s))) && !retry)
+		gain_de_place(&s, tmp);
 	ft_clean_term();
 	return (s);
 }
