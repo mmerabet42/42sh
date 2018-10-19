@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 17:15:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/18 16:44:53 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 11:03:40 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,18 @@ static char				*g_status[] = {
 
 static void		jobs_print(t_list *elem)
 {
-	int		x;
-	t_pids	*a;
+	int			x;
+	t_pids		*a;
+	t_inffork	*inf;
 
 	a = ((t_inffork *)elem->content)->pids;
-	ft_printf("[%d]\t%c %s %s\n", ((t_inffork *)elem->content)->x,
-					((t_inffork *)elem->content)->sign,
-					g_status[((t_inffork *)elem->content)->status],
-					((t_inffork *)elem->content)->cmmd);
+	inf = (t_inffork *)elem->content;
+	if (!elem->parent)
+		ft_printf("[%d]\t%c %s %s\n",
+					inf->x, inf->sign, g_status[inf->status], inf->cmmd);
+	else
+		ft_printf("\n[%d]\t%c %s %s\n",
+					inf->x, inf->sign, g_status[inf->status], inf->cmmd);
 	x = -1;
 	while (a)
 	{
@@ -47,20 +51,26 @@ static	int		error_jobs(char **argv, int error)
 {
 	if (!error)
 		ft_printf("21sh: jobs: %s: no such job\n", argv[1]);
-	return (-1);
+	else if (error == 1)
+		ft_printf("21sh: jobs: %s: wrong argument\n", argv[1]);
+	else
+		ft_printf("21sh: jobs: too many arguments\n");
+	return (0);
 }
 
-static	int		if_args(char **argv, int numprocbg)
+static	int		if_args(int argc, char **argv, int numprocbg)
 {
 	int		x;
 	t_list	*elem;
 
 	x = -1;
 	elem = g_shell->bgproc;
+	if (argc > 2)
+		return (error_jobs(argv, 2));
 	while (argv[1][++x] && ft_isdigit(argv[1][x]))
 		;
 	if (argv[1][x] || numprocbg < 1)
-		return (error_jobs(argv, 0));
+		return (error_jobs(argv, argv[1][x] ? 1 : 0));
 	while (elem && ((t_inffork *)elem->content)->x != numprocbg)
 		elem = elem->next;
 	if (!elem)
@@ -76,7 +86,7 @@ int				builtin_jobs(int argc, char **argv)
 	if (!(elem = g_shell->bgproc))
 		return (0);
 	if (argc > 1)
-		return (if_args(argv, ft_atoi(argv[1])));
+		return (if_args(argc, argv, ft_atoi(argv[1])));
 	while (elem)
 	{
 		jobs_print(elem);

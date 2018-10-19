@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/01 14:51:21 by jraymond          #+#    #+#             */
-/*   Updated: 2018/09/16 20:32:06 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 12:36:20 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,7 @@ static	int		no_opt(t_list *elem)
 			return (0);
 		}
 		else if (lst == elem && ((t_inffork *)lst->content)->sign == '+')
-		{
 			return (0);
-		}
 		lst = lst->next;
 	}
 	return (0);
@@ -99,6 +97,10 @@ static	int		withopt(t_list *elem)
 			((t_inffork *)elem->parent->content)->sign = '-';
 		else if (elem->next && ((t_inffork *)elem->next->content)->sign == ' ')
 			((t_inffork *)elem->next->content)->sign = '-';
+		else if (lst->parent && ((t_inffork *)lst->parent->content)->sign == ' ')
+			((t_inffork *)lst->parent->content)->sign = '-';
+		else if (lst->next && ((t_inffork *)lst->next->content)->sign == ' ')
+			((t_inffork *)lst->next->content)->sign = '-';
 	}
 	return (0);
 }
