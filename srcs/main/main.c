@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/19 18:39:46 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/19 19:54:10 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,8 +184,8 @@ int			main(int argc, char **argv, char **envp)
 			"BRACKET1:[*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[](){}\"'}]@or?]]", NULL);
 	ft_regex(RGX_ADD, NULL,
 			"BRACKET2:{*[?[@BRACKET]|?[@DQUOTE]|?[@QUOTE]|?[@BSLASH]|?![{[](){}\"'}]@or?]}", NULL);
-	ft_regex(RGX_ADD, NULL, "TSTRUCT:typedef*[@space]struct*[@space]*[@word]*[@space?]{*}*[@space?]*[@word]*[@space?];", NULL);
-	ft_regex(RGX_ADD, NULL, "STRUCT:struct*[@space]*[@word]*[@space?]{*}*[@space?];", NULL);
+	ft_regex(RGX_ADD, NULL, "TSTRUCT:typedef*[@space]struct*[@space]*[@word]*[@space?]?[@BRACKET2]*[@space?]*[@word]*[@space?];", NULL);
+	ft_regex(RGX_ADD, NULL, "STRUCT:struct*[@space]*[@word]*[@space?]?[@BRACKET2]*[@space?];", NULL);
 	ft_regex(RGX_ADD | RGX_ID, NULL, "EXPANSION:?[?[@DQUOTE]|?[@QUOTE]|?[@BRACKET]|?[@BSLASH]@or]", NULL, -2);
 	ft_regex(RGX_ADD, NULL, "OP_andor:?[&&|?[|]?[|]@or]", NULL);
 	ft_regex(RGX_ADD, NULL, "OP_pipe:|", NULL);
@@ -195,7 +195,8 @@ int			main(int argc, char **argv, char **envp)
 			"WORD_DELIM:*[@space]", NULL);
 	ft_regex(RGX_ADD | RGX_ID, NULL,
 			"OPERATOR:?[?[@OP_andor]|?[@OP_pipe]|?[@OP_comma]|?[@OP_redir]@or]", NULL, 2);
-	ft_regex(RGX_ADD, "NWORD:*[*[@word]@=%]", NULL);
+	ft_regex(RGX_ADD, NULL,
+			"FUNCTION:*[@word]*[?[*]|?[@space]@or]*[@word]*[@space?]?[@BRACKET0]*[@space?];", NULL);
 	t_list	*matches = NULL;
 	int	ret = ft_regex(RGX_GLOBAL | RGX_GLOBAL, argv[1], argv[2], &matches);
 

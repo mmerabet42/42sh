@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   regex_bracket.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/19 19:26:38 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/10/19 19:26:43 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_str.h"
 #include "ft_printf.h"
 
@@ -23,7 +35,7 @@ static int	bracket_end(const char *str, int l)
 	return (0);
 }
 
-int	regex_bracket(const char *str, int *s)
+int			regex_bracket(const char *str, int *s)
 {
 	int	i;
 	int	j;

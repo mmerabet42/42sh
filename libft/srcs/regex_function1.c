@@ -1,70 +1,53 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   regex_function1.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/19 19:28:22 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/10/19 19:28:43 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_str.h"
 #include "ft_types.h"
 #include "ft_math.h"
 #include "ft_printf.h"
 
-static int	get_result(t_regex_info *rgxi, t_regex_rule *rule)
+int			delim_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 {
-	int		a;
-	int		b;
-	char	*s;
-
-	a = regex_variable(rgxi, rule->arg + 2);
-	if (!(s = ft_strnpbrk(rule->arg + 2, "+-/*%><=!", rule->len_arg - 2)))
-		return (a);
-	b = regex_variable(rgxi, s + 1);
-	if (*s == '+' || *s == '-')
-		return (*s == '+' ? (a + b) : (a - b));
-	else if (*s == '*')
-		return (a * b);
-	else if (*s == '=' || *s == '!')
-		return (*s == '=' ? (a == b) : (a != b));
-	else if (*s == '>' || *s == '<')
-		return (*s == '>' ? (a > b) : (a < b));
-	else if (*s == '/' && b != 0)
-		return (a / b);
-	else if (*s == '%' && b != 0)
-		return (a % b);
-	return (0);
+	if (*rule->rule == '^' && rgxi->str == rgxi->str_begin)
+		return (0);
+	else if (*rule->rule == '^' && rule->rule[1] == 'n'
+			&& *(rgxi->str - 1) == '\n')
+		return (0);
+	else if (*rule->rule == '$' && !*rgxi->str)
+		return (0);
+	else if (*rule->rule == '$' && rule->rule[1] == 'n'
+			&& *rgxi->str == '\n')
+		return (0);
+	return (-1);
 }
 
-int			expr_rgx(t_regex_info *rgxi, t_regex_rule *rule)
+int			case_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 {
-	char			*str;
-	int				r;
-	int				ret;
-	t_regex_info	tmp;
+	int	i;
 
-	r = 0;
-	if (rule->len_arg <= 1)
-		return (-1);
-	ret = 0;
-	if (rule->arg[1] == ':' || rule->arg[1] == ';')
+	if (ft_strnequ(rule->rule, "set%", rule->len_rule))
 	{
-		if (!(str = ft_strndup(&rule->arg[2], rule->len_arg - 2)))
-			return (-1);
-		tmp = *rgxi;
-		tmp.id = NULL;
-		tmp.regex = str;
-		tmp.rgx_begin = str;
-		tmp.len = 0;
-		tmp.flags = RGX_END;
-		r = regex_exec(&tmp);
-		free(str);
-		if (rule->arg[0] == '0')
-			return (r == -1 ? -1 : 0);
-		else if (rule->arg[1] == ';')
-			ret = r;
+		rgxi->param = rule->arg;
+		rgxi->len_param = rule->len_arg;
+		rgxi->param_i = 0;
+		return (0);
 	}
-	else
-		r = get_result(rgxi, rule);
-	if (rule->arg[0] == '0')
-		return (r ? 0 : -1);
-	if (ft_isupper(rule->arg[0]))
-		rgxi->vars[26 + rule->arg[0] - 65] = r;
-	else if (ft_islower(rule->arg[0]))
-		rgxi->vars[rule->arg[0] - 97] = r;
-	return (ret);
+	i = -1;
+	while (++i < rule->len_arg && rgxi->str[i])
+		if (ft_tolower(rule->arg[i]) != ft_tolower(rgxi->str[i]))
+			return (-1);
+	if (!rgxi->str[i] && i < rule->len_arg)
+		return (-1);
+	return (i);
 }
 
 static int	next_op(t_regex_rule *rule, int i)

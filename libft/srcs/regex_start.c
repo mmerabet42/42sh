@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   regex_start.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/19 19:33:06 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/10/19 19:33:48 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "ft_printf.h"
@@ -91,7 +103,7 @@ static int	regex_once(t_regex_info *rgxi, t_regex_rule *rule)
 	return (rule->cond == RGX_MARK ? 0 : -1);
 }
 
-int	regex_start(t_regex_info *rgxi, t_regex_rule *rule)
+int			regex_start(t_regex_info *rgxi, t_regex_rule *rule)
 {
 	if (!rule->func)
 		return (-1);

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 20:05:27 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/18 14:58:48 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/19 19:31:16 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	regex_init(t_regex_info *regex_info, const char *regex, const char *str)
 	regex_info->strn = -1;
 }
 
-int	regex_variable(t_regex_info *rgxi, const char *s)
+int		regex_variable(t_regex_info *rgxi, const char *s)
 {
 	if (ft_isdigit(*s))
 		return (ft_atoi(s));
@@ -38,7 +38,7 @@ int	regex_variable(t_regex_info *rgxi, const char *s)
 	return (0);
 }
 
-int	manage_rules(const char *str, t_list **rules, int flags, va_list vp)
+int		manage_rules(const char *str, t_list **rules, int flags, va_list vp)
 {
 	t_regex_func	func;
 	t_list			*nw;
@@ -50,10 +50,7 @@ int	manage_rules(const char *str, t_list **rules, int flags, va_list vp)
 	if (flags & RGX_ADD)
 	{
 		func.func = va_arg(vp, t_regex_funcptr);
-		if (!(flags & RGX_ID))
-			func.id = ft_lstsize(*rules) + 1;
-		else
-			func.id = va_arg(vp, int);
+		func.id = ((flags & RGX_ID) ? va_arg(vp, int) : ft_lstsize(*rules) + 1);
 		if (!(nw = ft_lstnew(&func, sizeof(t_regex_func))))
 			return (-1);
 		ft_lstpushfront(rules, nw);

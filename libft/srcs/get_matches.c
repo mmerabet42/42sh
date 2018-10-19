@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/19 17:43:10 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/19 18:18:04 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/19 19:54:11 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	loop_matches(t_regex_info *rgxi, t_regex_match *matchs,
 	return (i);
 }
 
-int	get_matches(t_regex_info *rgxi)
+int			get_matches(t_regex_info *rgxi)
 {
 	t_list			*head;
 	t_regex_match	matchs[2];

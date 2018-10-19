@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   regex_exec.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/19 19:27:06 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/10/19 19:27:49 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_str.h"
 
 static int	regex_modulus(t_regex_info *rgxi)
 {
 	int	v;
-	
+
 	if (rgxi->param && (*rgxi->regex == '.' || *rgxi->regex == '+'))
 	{
 		if (rgxi->param_i >= rgxi->len_param)
@@ -71,7 +83,7 @@ static int	regex_equ(t_regex_info *rgxi)
 	return (i);
 }
 
-int	regex_exec(t_regex_info *regex_info)
+int			regex_exec(t_regex_info *regex_info)
 {
 	int	pos;
 

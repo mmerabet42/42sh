@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   regex_wildcard.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/19 19:33:56 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/10/19 19:34:08 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "ft_types.h"
@@ -73,7 +85,7 @@ static int	regex_mark(t_regex_info *rgxi)
 	return (0);
 }
 
-int		regex_wildcard(t_regex_info *rgxi)
+int			regex_wildcard(t_regex_info *rgxi)
 {
 	int				ret;
 	int				neg;

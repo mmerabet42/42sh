@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   regex_function.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/19 19:31:44 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/10/19 19:32:50 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_str.h"
 #include "ft_types.h"
 #include "ft_math.h"
@@ -7,7 +19,7 @@
 static int			default_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 {
 	int	i;
-	
+
 	i = 0;
 	while (i < rule->len_arg)
 	{
@@ -112,7 +124,8 @@ static t_regex_func	g_regexfs[] = {
 };
 static size_t		g_regex_len = (sizeof(g_regexfs) / sizeof(t_regex_func));
 
-t_regex_func		*get_regex_func(const char *name, int len_rule, t_regex_info *rgxi)
+t_regex_func		*get_regex_func(const char *name, int len_rule,
+						t_regex_info *rgxi)
 {
 	size_t	i;
 	int		len;
@@ -137,7 +150,8 @@ t_regex_func		*get_regex_func(const char *name, int len_rule, t_regex_info *rgxi
 	return (get_regex_rule(name, len_rule, rgxi));
 }
 
-t_regex_func		*get_regex_rule(const char *name, int len_rule, t_regex_info *rgxi)
+t_regex_func		*get_regex_rule(const char *name, int len_rule,
+						t_regex_info *rgxi)
 {
 	t_list			*rules;
 	t_regex_func	*func;
