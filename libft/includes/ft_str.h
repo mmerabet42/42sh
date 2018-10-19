@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/19 17:48:32 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/19 18:39:47 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,7 +237,6 @@ extern int			g_ifound;
 # define RGX_CLEAN (1 << 8)
 # define RGX_FREE (1 << 9)
 # define RGX_ID (1 << 10)
-# define RGX_TRACE (1 << 11)
 
 enum				e_regex_condtion
 {
