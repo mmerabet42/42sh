@@ -12,7 +12,20 @@
 
 #include "libedit.h"
 
-int				ft_check_quote(char *s)
+static int	count_backslash(char *start, char *s)
+{
+	int		i;
+
+	if (!start || !s)
+		return (0);
+	i = 0;
+	while (s != start && *s == '\\')
+		if (*s-- == '\\')
+			i++;
+	return (i);
+}
+
+int			ft_check_quote(char *s)
 {
 	int		i;
 	char	*tmp;
@@ -29,6 +42,9 @@ int				ft_check_quote(char *s)
 			if (!ft_strchr(&tmp[i + 1], tmp[i]))
 				return (0);
 			tmp = ft_strchr(&tmp[i + 1], tmp[i]);
+			if (*tmp == '"' && *(tmp - 1) == '\\'
+					&& (count_backslash(s, tmp - 1) & 1))
+				tmp--;
 			i = 0;
 		}
 	if ((i = ft_strlen(s) - 1) < 0)
