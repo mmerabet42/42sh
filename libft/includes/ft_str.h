@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/19 15:01:56 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/19 17:48:32 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,6 +284,7 @@ typedef struct		s_regex_info
 
 typedef struct		s_regex_match
 {
+	const char		*str_begin;
 	const char		*str;
 	int				pos;
 	int				len;
@@ -316,6 +317,8 @@ int					regex_variable(t_regex_info *rgxi, const char *s);
 int					regex_start(t_regex_info *rgxi, t_regex_rule *rule);
 int					regex_wildcard(t_regex_info *rgxi);
 int					regex_bracket(const char *str, int *s);
+int					get_matches(t_regex_info *rgxi);
+int					regex_pos(t_regex_info *rgxi);
 int					regex_exec(t_regex_info *regex_info);
 void				regex_init(t_regex_info *regex_info, const char *regex, const char *str);
 
