@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/19 15:59:44 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/19 16:41:56 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ int			main(int argc, char **argv, char **envp)
 	ft_regex(RGX_ADD | RGX_ID, NULL,
 			"OPERATOR:?[?[@OP_andor]|?[@OP_pipe]|?[@OP_comma]|?[@OP_redir]@or]", NULL, 2);
 	t_list	*matches = NULL;
-	int	ret = ft_regex(RGX_UGLOBAL, argv[1], argv[2], &matches);
+	int	ret = ft_regex(RGX_UGLOBAL | RGX_GLOBAL, argv[1], argv[2], &matches);
 
 	ft_printf("regex: '%s' '%s' %d\n", argv[1], argv[2], ret);
 	ft_printf("%d match\n", ret);
