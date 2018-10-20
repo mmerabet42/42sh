@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/17 21:52:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 19:40:07 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/20 20:06:13 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	shell_error_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		return (SH_BADEXPR);
 	else if (ast->u)
 		return (0);
-	if (!ft_astvalid(ast->left))
+	if (!ft_astvalid(ast->left) && ast->type != TK_REDIR)
 		return (SH_BADEXPR);
 	else if (!ft_strequ(ast->name, "&")
 			&& (ast->type != TK_REDIR || !ft_strchr(ast->name, '&'))
