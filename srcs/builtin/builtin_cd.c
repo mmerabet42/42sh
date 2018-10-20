@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 11:58:28 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/16 11:30:16 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/20 17:53:45 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char	*canonical(char *curpath, char *canon)
 	if (!canon || !curpath || !*curpath)
 		return (canon);
 	tmp = ft_strchr(curpath, '/');
-	component = (tmp ? tmp - curpath : ft_strlen(curpath));
+	component = (tmp ? tmp - curpath : (unsigned int)ft_strlen(curpath));
 	if (!component && ft_strlen(canon) > 0
 			&& canon[ft_strlen(canon) - 1] == '/')
 		return (canonical(curpath + component + 1, canon));

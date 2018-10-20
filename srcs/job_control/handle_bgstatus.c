@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 13:31:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/19 15:58:15 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/20 17:53:07 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,7 @@ static int			lookpid_pipe(t_list *elem, pid_t pid, int opt)
 int					handle_bgstat(pid_t pid, int status, int opt)
 {
 	t_list	*elem;
-	size_t	i;
 
-	i = -1;
 	elem = g_shell->bgproc;
 	while (elem && ((t_inffork *)elem->content)->pid != pid)
 	{

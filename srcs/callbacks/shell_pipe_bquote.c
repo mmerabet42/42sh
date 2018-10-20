@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 15:36:45 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/16 16:52:27 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/20 18:02:03 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,17 +98,15 @@ static void		fork_father(t_pipe *a, t_list **elem)
 static int		wait_fork(t_pipe *a, void *res)
 {
 	t_pids	*elem;
-	int		ret;
 
 	elem = a->bquote;
-	ret = 0;
 	ft_lstdel(&a->tabpipe, NULL);
 	while (elem)
 	{
 		waitpid(elem->pid, res, WUNTRACED);
 		elem = elem->next;
 	}
-	*(int *)res = WEXITSTATUS(res);
+	*(int *)res = WEXITSTATUS(*(int *)res);
 	signal(SIGCHLD, sign_child);
 	freetpids(&a->bquote);
 	ft_lstdelone(&a->tabpipe, NULL);

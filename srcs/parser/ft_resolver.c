@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 16:37:58 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/15 13:07:31 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/20 17:55:43 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ static int	listtotab(t_list *it, char ***av, int *ac)
 {
 	int		size;
 	int		x;
-	int		c;
 
 	x = -1;
 	if (!(size = ft_lstsize(it)))
@@ -120,7 +119,6 @@ static int	listtotab(t_list *it, char ***av, int *ac)
 		(*av)[x] = (char *)it->content;
 		it = it->next;
 	}
-	c = it ? 1 : 0;
 	(*av)[x] = NULL;
 	if (g_shell->kill_builtin)
 	{

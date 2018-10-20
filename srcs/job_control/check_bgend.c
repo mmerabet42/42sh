@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/19 16:14:14 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/20 17:52:44 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,6 @@ static char				*g_status[] = {
 
 void					print_cmd_args2(char *tab)
 {
-	int	x;
-
-	x = -1;
 	if (!tab)
 		return ;
 	ft_printf("%s\n", tab);

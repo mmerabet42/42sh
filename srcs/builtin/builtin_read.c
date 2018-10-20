@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/08 10:24:29 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/15 13:58:33 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/20 17:54:47 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "get_next_line.h"
+#include <signal.h>
 
 static int	handle_opt(char ***argv, char *r)
 {

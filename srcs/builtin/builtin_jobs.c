@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 17:15:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/19 11:03:40 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/20 17:54:07 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static char				*g_status[] = {
 
 static void		jobs_print(t_list *elem)
 {
-	int			x;
 	t_pids		*a;
 	t_inffork	*inf;
 
@@ -37,7 +36,6 @@ static void		jobs_print(t_list *elem)
 	else
 		ft_printf("\n[%d]\t%c %s %s\n",
 					inf->x, inf->sign, g_status[inf->status], inf->cmmd);
-	x = -1;
 	while (a)
 	{
 		ft_printf("    %-5d %s %s\n", a->pid,
