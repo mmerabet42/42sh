@@ -76,8 +76,7 @@ static void			check_retfork(int ret, t_list *elem)
 	}
 	else if (WIFSTOPPED(ret))
 	{
-		if (WSTOPSIG(ret) == SIGTTIN)
-			handle_bgstat(pid, BG_STOP, p);
+		handle_bgstat(pid, BG_STOP, p);
 		((t_inffork *)elem->content)->modif |= (1 << 0);
 	}
 	else if (!WIFEXITED(ret))
