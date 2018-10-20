@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 21:35:11 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 19:23:23 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/18 16:03:47 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int			ft_interpret(const char *cmd, t_expf *expf, t_lexerf *lexf,
 	t_ast	*head;
 	int		ret;
 
+	(void)itf;
 	ret = -1;
 	if (!(head = ft_lexer(cmd, lexf)))
 		return (0);

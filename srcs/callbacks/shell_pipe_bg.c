@@ -44,8 +44,7 @@ static int		init_struct(t_pipe *pipe, t_ast *ast)
 		pipe->fd[x] = -1;
 	if ((ret = handle_ast_pipe(ast, &pipe->tabpipe)))
 		return (ret);
-	if (ret_pipecmd(ast, &pipe->all_cmd) != 0)
-		return (SH_MALLOC);
+	ret_pipecmd(pipe->tabpipe, &pipe->allcmmd);
 	return (0);
 }
 
@@ -86,11 +85,11 @@ static void		fork_father(t_pipe *a, t_list **elem)
 	if (!a->pgrp)
 	{
 		a->pgrp = a->pid;
-		handle_bgproc(a->pid, a->all_cmd, BG_RUN, 1);
+		handle_bgproc(a->pid, &a->allcmmd, BG_RUN, 1);
 		free(a->all_cmd);
 		a->head = ft_lstend(g_shell->bgproc);
 	}
-	creatpushelem(&((t_inffork *)a->head->content)->pids, a->pid);
+	creatpushelem(&((t_inffork *)a->head->content)->pids, a->pid, *elem, 0);
 	*elem = (*elem)->parent;
 	if (*elem && (*elem)->next && (*elem)->next->next)
 		swap1(a->fd);

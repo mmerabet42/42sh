@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/16 10:24:55 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/19 17:20:52 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,28 @@ typedef struct		s_ast
 	struct s_ast	*right;
 }					t_ast;
 
+# ifndef STRUCT_PIDS
+# define STRUCT_PIDS
+
+typedef struct s_pids	t_pids;
+
+struct			s_pids
+{
+	pid_t		pid;
+	char		*cmd;
+	t_pids		*parent;
+	t_pids		*next;
+};
+
+# endif
+
 typedef struct		s_pipe
 {
 	t_list			*tabpipe;
 	t_list			*head;
+	t_pids			*bquote;
 	char			**all_cmd;
+	char			*allcmmd;
 	int				fd[4];
 	int				pgrp;
 	int				pid;
@@ -242,7 +259,7 @@ char				**ft_getoptl(char **argv,
 		const char *loption,
 		int lfirst);
 char				**ft_getoptv(char **argv, const char *options);
-int					ret_pipecmd(t_ast *ast, char ***cmd);
+int					ret_pipecmd(t_list *tabpipe, char **cmd);
 
 int					ft_interpret(const char *cmd, t_expf *expf, t_lexerf *lexf,
 		t_iterf *itf);

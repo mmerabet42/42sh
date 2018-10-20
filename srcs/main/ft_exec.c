@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 17:21:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 10:54:18 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 18:55:42 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int		fork_father(pid_t pidl)
 	elem = ft_lstend(g_shell->bgproc);
 	waitpid(pidl, &ret, WUNTRACED);
 	g_shell->bits &= ~(1 << 1);
-	if (!(g_shell->bits & (1 << 4)))
+	if (!(g_shell->bits & (1 << 4)) && !g_shell->script)
 	{
 		signal(SIGCHLD, sign_child);
 		tcsetpgrp(0, getpid());
@@ -61,7 +61,7 @@ int		ft_exec(char *name, char **argv, char **envp, pid_t *pid)
 	}
 	else if (!(pidl = fork()))
 	{
-		if (!(g_shell->bits & (1 << 4)))
+		if (!(g_shell->bits & (1 << 4)) && !g_shell->script)
 			handle_pgid();
 		execve(name, argv, envp);
 		exit(126);

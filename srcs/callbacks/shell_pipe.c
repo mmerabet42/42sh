@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/15 15:12:22 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/18 18:47:44 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ static int		init_struct(t_pipe *pipe, t_ast *ast)
 		pipe->fd[x] = -1;
 	if ((ret = handle_ast_pipe(ast, &pipe->tabpipe)))
 		return (ret);
-	if (ret_pipecmd(ast, &pipe->all_cmd) != 0)
-		return (SH_MALLOC);
+	ret_pipecmd(pipe->tabpipe, &pipe->allcmmd);
 	return (0);
 }
 
@@ -95,23 +94,27 @@ static void		fork_father(t_pipe *a, t_list **elem)
 	if (!a->pgrp)
 	{
 		a->pgrp = a->pid;
-		handle_bgproc(a->pid, a->all_cmd, BG_RUN, 1);
-		free(a->all_cmd);
+		handle_bgproc(a->pid, &a->allcmmd, BG_RUN, 1);
 		tcsetpgrp(0, a->pgrp);
 		a->head = ft_lstend(g_shell->bgproc);
 	}
-	else
-		creatpushelem(&((t_inffork *)a->head->content)->pids, a->pid);
+	creatpushelem(&((t_inffork *)a->head->content)->pids, a->pid, *elem, 0);
 	*elem = (*elem)->parent;
-		if (*elem && (*elem)->next && (*elem)->next->next)
-			swap1(a->fd);
+	if (*elem && (*elem)->next && (*elem)->next->next)
+		swap1(a->fd);
 }
 
 static int		handle_res(int res, pid_t pid)
 {
 	t_list	*elem;
 
-	if (WIFEXITED(res))
+	if (WIFSTOPPED(res))
+	{
+		handle_bgstat(pid, BG_STOP, 1);
+		handle_bgsign(ft_lstend(g_shell->bgproc), 0);
+		return (WSTOPSIG(res));
+	}
+	else if (WIFEXITED(res) || !WIFEXITED(res))
 	{
 		elem = ft_lstend(g_shell->bgproc);
 		if (elem == g_shell->bgproc)
@@ -119,12 +122,6 @@ static int		handle_res(int res, pid_t pid)
 		else
 			elem->parent->next = NULL;
 		ft_lstdelone(&elem, del);
-	}
-	else if (WIFSTOPPED(res))
-	{
-		handle_bgstat(pid, BG_STOP, 1);
-		handle_bgsign(ft_lstend(g_shell->bgproc), 0);
-		return (WSTOPSIG(res));
 	}
 	return (WEXITSTATUS(res));
 }
@@ -139,10 +136,10 @@ static int		wait_fork(t_pipe *a, void *res)
 	ft_lstdel(&a->tabpipe, NULL);
 	while (elem)
 	{
-		waitpid(elem->pid, res, WUNTRACED);
+		waitpid(elem->pid, &ret, WUNTRACED);
 		elem = elem->next;
 	}
-	*(int *)res = handle_res(*(int *)res, ((t_inffork *)a->head->content)->pids->pid);
+	*(int *)res = handle_res(ret, ((t_inffork *)a->head->content)->pids->pid);
 	tcsetpgrp(0, getpgrp());
 	signal(SIGCHLD, sign_child);
 	ft_lstdelone(&a->tabpipe, NULL);
@@ -160,7 +157,6 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		return (shell_pipe_bg(ast, op, res, iterf));
 	if (g_shell->bits & (1 << 4))
 		return (shell_pipe_bquote(ast, op, res, iterf));
-	g_shell->bits |= (1 << 1);
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);
 	elem = ft_lstend(a.tabpipe);

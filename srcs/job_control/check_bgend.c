@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/06 22:40:06 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/20 17:52:44 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,22 @@
 #include "ft_mem.h"
 #include "ft_io.h"
 
-void			print_cmd_args(char **tab)
-{
-	int	x;
+static char				*g_status[] = {
+	"",
+	"Running",
+	"Done",
+	"Killed",
+	"Suspended"
+};
 
-	x = -1;
-	if (!tab || !tab[0])
+void					print_cmd_args2(char *tab)
+{
+	if (!tab)
 		return ;
-	while (tab[++x] && tab[x + 1])
-		ft_printf(" %s", tab[x]);
-	if (x && tab[x])
-		ft_printf("%s\n", tab[x]);
-	else if (tab[x])
-		ft_printf(" %s\n", tab[x]);
+	ft_printf("%s\n", tab);
 }
 
-void			print_cmd_args2(char **tab)
-{
-	int	x;
-
-	x = -1;
-	if (!tab || !tab[0])
-		return ;
-	while (tab[++x] && tab[x + 1])
-		ft_printf(" %s", tab[x]);
-	if (!x && tab[x])
-		ft_printf("%s\n", tab[x]);
-	else if (tab[x])
-		ft_printf("%s\n", tab[x]);
-}
-
-t_list			*delete_info(t_list *elem)
+static t_list			*delete_info(t_list *elem)
 {
 	int		i;
 	t_list	*save;
@@ -59,20 +44,15 @@ t_list			*delete_info(t_list *elem)
 		return (save);
 }
 
-t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
+static t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
 {
-	if (!*struc->cmd)
-		ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
-					struc->status);
-	else
-		ft_printf("[%d]  %c %s", struc->x, struc->sign,
-					struc->status);
-	print_cmd_args(struc->cmd);
+	ft_printf("[%d]\t%c %s\t%s\n", struc->x, struc->sign,
+				g_status[struc->status], struc->cmmd);
 	struc->modif &= (0 << 0);
 	return (elem->next);
 }
 
-int				check_bgend(void)
+int						check_bgend(void)
 {
 	t_list		*elem;
 	t_inffork	*struc;
@@ -81,15 +61,14 @@ int				check_bgend(void)
 	while (elem)
 	{
 		struc = elem->content;
-		if (end_status(struc->status) != -1)
+		if (struc->status == BG_END || struc->status == BG_KILL)
 		{
-			if (!*struc->cmd)
-				ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
-							struc->status);
+			if (!struc->cmmd)
+				ft_printf("[%d]\t%c %s\t%s\n", struc->x, struc->sign,
+							g_status[struc->status], struc->cmmd);
 			else
-				ft_printf("[%d]  %c %s", struc->x, struc->sign,
-							struc->status);
-			print_cmd_args(struc->cmd);
+				ft_printf("[%d]\t%c %s\t%s\n", struc->x, struc->sign,
+							g_status[struc->status], struc->cmmd);
 			handle_bgsign(elem, 1);
 			elem = delete_info(elem);
 		}

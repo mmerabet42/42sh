@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/11 19:11:35 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 19:08:34 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,23 @@ static int	in_parent(int fd[2], void *res)
 	int		efail;
 	char	*mem;
 
-	wait(NULL);
+
+	efail = 0;
+	wait(res);
+	tcsetpgrp(0, g_shell->shellpid);
 	close(fd[1]);
 	get_next_line(fd[0], &mem);
-	ft_memcpy(&efail, mem, sizeof(int));
-	ft_memdel((void **)&mem);
+	if (mem)
+	{
+		ft_memcpy(&efail, mem, sizeof(int));
+		ft_memdel((void **)&mem);
+	}
 	get_next_line(fd[0], &mem);
-	ft_memcpy(res, mem, sizeof(int));
-	ft_memdel((void **)&mem);
+	if (mem)
+	{
+		ft_memcpy(res, mem, sizeof(int));
+		ft_memdel((void **)&mem);
+	}
 	close(fd[0]);
 	return (efail);
 }
@@ -87,28 +96,27 @@ static int	in_parent(int fd[2], void *res)
 static int	lists_subshell(t_ast *head, void *res, t_iterf *iterf)
 {
 	pid_t	pid;
-	pid_t	save;
 	int		fd[2];
 	int		efail;
 
 	efail = 0;
-	save = getpgrp();
 	if (pipe(fd) == -1)
 		return (SH_PIPFAIL);
 	if ((pid = fork()) == -1)
 		return (SH_FORKFAIL);
 	else if (!pid)
 	{
-		handle_pgid();
+		setpgid(0, 0);
+		tcsetpgrp(0, getpgrp());
 		efail = ft_astiter(head, res, iterf);
 		close(fd[0]);
 		ft_printf_fd(fd[1], "%.*r\n%.*r", sizeof(int), &efail,
 				sizeof(int), res);
 		close(fd[1]);
-		tcsetpgrp(0, save);
 		ft_astdel(&head);
 		exit(0);
 	}
+	g_shell->curpid = pid;
 	return (in_parent(fd, res));
 }
 
@@ -124,6 +132,7 @@ int			shell_lists_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	ptr = ft_strend(ast->name);
 	tmp = *ptr;
 	*ptr = '\0';
+	g_shell->script = ast->name + 1;
 	head = ft_lexer(ast->name + 1, ast->lexerf);
 	*ptr = tmp;
 	efail = 0;
@@ -133,6 +142,7 @@ int			shell_lists_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		efail = ft_astiter(head, res, iterf);
 	else if ((efail = lists_subshell(head, res, iterf)))
 		efail = (efail == SH_EXIT ? 0 : efail);
+	g_shell->script = NULL;
 	ft_astdel(&head);
 	return (efail);
 }
