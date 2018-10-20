@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/19 17:22:51 by sle-rest         ###   ########.fr        #
+#    Updated: 2018/10/20 18:17:36 by ouralgan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,13 @@ CFLAGS		=	-Wall -Werror -Wextra -g3
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
 SRCD		=	srcs/
+
+UNAME := $(shell uname)
+ifeq ($(UNAME),Linux)
+	TERMCAPS = -lncurses
+else
+	TERMCAPS = -ltermcap
+endif
 
 INCLUDES	=	includes/expr.h includes/job_control.h includes/parser.h \
 				includes/shell.h includes/globing.h \
@@ -101,7 +108,7 @@ all:
 
 $(NAME): $(LIBFT) $(OBJB)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) -ltermcap $(FRAMEWORKS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) $(TERMCAPS) $(FRAMEWORKS) -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
 lib:
