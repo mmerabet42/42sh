@@ -23,10 +23,10 @@ static int	loop_return(t_regex_info *rg, t_regex_info *t,
 			|| (r->cond == RGX_EQUAL && r->i < r->l)
 			|| (!r->i && ((!r->neg && ret == -1) || (r->neg && ret != -1))))
 		return (-1);
-	if (t->len == -1 && (!(rg->flags & RGX_END) || (t->regex && *t->regex)))
-		return (-1);
 	if (t->len == -1 && !*rg->regex && (!*rg->str || (rg->flags & RGX_END)))
 		return (rg->len);
+	if (t->len == -1 && (!(rg->flags & RGX_END) || (t->regex && *t->regex)))
+		return (-1);
 	return (t->len == -1 ? -1 : rg->len + t->len);
 }
 
@@ -90,8 +90,13 @@ static int	regex_once(t_regex_info *rgxi, t_regex_rule *rule)
 	{
 		if (ret == -1 && rule->cond != RGX_MARK)
 			return (-1);
-		rgxi->str += (ret == -1 ? 0 : ret);
-		rgxi->len += (ret == -1 ? 0 : ret);
+		if (*rgxi->str && ret)
+		{
+			rgxi->str += (ret == -1 ? 0 : ret);
+			rgxi->len += (ret == -1 ? 0 : ret);
+		}
+		else if (!*rgxi->str && ret)
+			return (-1);
 		return (0);
 	}
 	else if (ret == -1 && *rgxi->str)

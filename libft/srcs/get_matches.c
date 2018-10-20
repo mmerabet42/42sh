@@ -63,7 +63,6 @@ int			get_matches(t_regex_info *rgxi)
 {
 	t_list			*head;
 	t_regex_match	matchs[2];
-	int				zero;
 	int				i;
 
 	rgxi->pos = &(matchs[0].pos);
@@ -73,7 +72,6 @@ int			get_matches(t_regex_info *rgxi)
 	head = NULL;
 	i = 0;
 	matchs[1].pos = 0;
-	zero = 0;
 	i = loop_matches(rgxi, matchs, &head);
 	if ((rgxi->flags & RGX_UGLOBAL) && matchs[0].len == -1)
 	{

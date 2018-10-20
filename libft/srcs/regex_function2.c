@@ -16,22 +16,18 @@
 
 int	print_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 {
-	int	t;
+	int	i;
 
-	t = 0;
-	if (ft_islower(rule->arg[0]))
-		t = rgxi->vars[rule->arg[0] - 97];
-	else if (ft_isupper(rule->arg[0]))
-		t = rgxi->vars[26 + rule->arg[0] - 65];
-	else if (ft_isdigit(rule->arg[0]))
-		t = ft_atoi(rule->arg);
-	if (*rule->rule == 'r')
+	i = 0;
+	while (i < rule->len_arg)
 	{
-		while (*rgxi->str)
-			++rgxi->str;
-		return (t);
+		if (rule->arg[i] == '%' && ft_isalpha(rule->arg[i + 1]))
+			ft_printf("%d", regex_variable(rgxi, rule->arg + ++i));
+		else
+			ft_printf("%c", rule->arg[i]);
+		++i;
 	}
-	ft_printf("var: %d\n", t);
+	ft_printf("\n");
 	return (0);
 }
 
@@ -59,8 +55,10 @@ int	getint_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 
 int	debug_rgx(t_regex_info *rgxi, t_regex_rule *rule)
 {
-	ft_printf("('%.*s')str('%s') rgx('%s') begin('%s')\n",
-			rule->len_arg, rule->arg, rgxi->str, rgxi->regex, rgxi->rgx_begin);
+	ft_printf("DEBUG \"%.*s\" ->\n\tstr:\t\t'%s'\n\tstr_begin:\t'%s'\n",
+			rule->len_arg, rule->arg, rgxi->str, rgxi->str_begin);
+	ft_printf("\tregex:\t\t'%s'\n\tregex_begin:\t'%s'\n",
+			rgxi->regex, rgxi->rgx_begin);
 	return (0);
 }
 
