@@ -26,8 +26,8 @@ static void	restore_fds(void *c, size_t s)
 
 	(void)s;
 	r = (t_redir *)c;
-	if (!(g_max_fd = 0) && r->fdz == -2 && ft_memdel((void **)&c))
-		return ((void)close(r->fda));
+	if (!(g_max_fd = 0) && r->fdz == -2)
+		close(r->fda);
 	else if (r->checked)
 	{
 		if (r->rep)
@@ -47,13 +47,6 @@ static void	restore_fds(void *c, size_t s)
 	else
 		close(r->fdz);
 	free(c);
-}
-
-static int	heredoc(t_redir *r)
-{
-	if (!r->file)
-		return (SH_HDOCWORD);
-	return (0);
 }
 
 static int	dup_file(t_redir *r)
@@ -105,6 +98,13 @@ static void	store_fds(t_list *elem)
 		g_max_fd++;
 		elem = elem->next;
 	}
+}
+
+static int	heredoc(t_redir *r)
+{
+	if (!r->file)
+		return (SH_HDOCWORD);
+	return (0);
 }
 
 int			shell_redir_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
