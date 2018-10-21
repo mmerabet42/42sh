@@ -12,7 +12,7 @@
 
 NAME		=	42sh
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra -g3
+CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
@@ -45,14 +45,15 @@ _BLTN_FSO	=	$(_BLTN_FS:.c=.o)
 BLTN_FSO	=	$(BLTN_FS:.c=.o)
 
 _PARSER_FS	=	ft_parser.c ft_lexer.c ft_astiter.c ft_resolver.c ft_getopt.c \
-				ft_argsdel.c ft_astdel.c newast.c ft_interpret.c utils.c
+				ft_argsdel.c ft_astdel.c newast.c ft_interpret.c utils.c ft_astresolver.c
 PARSER_FS	=	$(addprefix $(SRCD)parser/,$(_PARSER_FS))
 _PARSER_FSO	=	$(_PARSER_FS:.c=.o)
 PARSER_FSO	=	$(PARSER_FS:.c=.o)
 
-_SHCB_FS	=	shell_command.c shell_pipe.c shell_pipe_bg.c shell_arithmetic.c shell_condition.c \
-				shell_equal.c shell_redir.c shell_redir1.c shell_expansions.c shell_expansions1.c \
-				shell_localvar.c shell_error.c shell_hdoc.c shell_seco.c handle_pipe.c ret_pipecmd.c shell_pipe_bquote.c
+_SHCB_FS	=	shell_command.c shell_pipe.c shell_pipe_bg.c shell_arithmetic.c \
+				shell_condition.c shell_equal.c shell_redir.c shell_redir1.c \
+				shell_expansions.c shell_expansions1.c shell_localvar.c shell_error.c \
+				shell_hdoc.c shell_seco.c handle_pipe.c ret_pipecmd.c shell_pipe_bquote.c
 SHCB_FS		=	$(addprefix $(SRCD)callbacks/,$(_SHCB_FS))
 _SHCB_FSO	=	$(_SHCB_FS:.c=.o)
 SHCB_FSO	=	$(SHCB_FS:.c=.o)

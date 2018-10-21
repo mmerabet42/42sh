@@ -56,7 +56,7 @@ int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	(void)op;
 	if ((ret = ft_astcresolver(ast, ((t_allf *)iterf->data)->expf)))
 		return ((*(int *)res = 1) ? ret : ret);
-	if ((ret = ft_astcresolver(ast, &g_expf)))
+	if ((ret = ft_astresolver(ast, &g_expf)))
 		return ((*(int *)res = 1) ? ret : ret);
 	if (!ast || !ast->cname || !*ast->cname)
 		return (0);

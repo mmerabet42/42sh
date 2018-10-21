@@ -246,6 +246,7 @@ int					ft_astvalid(t_ast *ast);
 
 int					ft_resolver(t_args *args, t_list **res, t_expf *expf);
 int					ft_astcresolver(t_ast *ast, t_expf *expf);
+int					ft_astresolver(t_ast *ast, t_expf *expf);
 int					ft_strexpand(const char *origin,
 		t_list **res,
 		int i,
