@@ -6,17 +6,24 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/15 16:07:13 by jraymond         ###   ########.fr        #
+#    Updated: 2018/10/20 18:17:36 by ouralgan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	42sh
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra -g
+CFLAGS		=	-Wall -Werror -Wextra -g3
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
 SRCD		=	srcs/
+
+UNAME := $(shell uname)
+ifeq ($(UNAME),Linux)
+	TERMCAPS = -lncurses
+else
+	TERMCAPS = -ltermcap
+endif
 
 INCLUDES	=	includes/expr.h includes/job_control.h includes/parser.h \
 				includes/shell.h includes/globing.h \
@@ -29,9 +36,10 @@ _JBCNTRL_FSO=	$(_JBCNTRL_FS:.c=.o)
 JBCNTRL_FSO	=	$(JBCNTRL_FS:.c=.o)
 
 _BLTN_FS	=	builtins.c builtin_cd.c builtin_echo.c builtin_setenv.c builtin_source.c \
-				builtin_bool.c builtin_env.c builtin_jobs.c builtin_fg.c builtin_bg.c \
-				ft_isbuiltin.c builtin_export.c builtin_set.c builtin_unset.c builtin_read.c \
-				ft_split_whitespaces.c ft_multi_strjoin.c utils_cd.c builtin_pwd.c builtin_utils.c
+				builtin_bool.c builtin_env.c builtin_jobs.c builtin_fg_error.c builtin_fg.c \
+				builtin_bg.c ft_isbuiltin.c builtin_export.c builtin_set.c builtin_unset.c \
+				builtin_read.c ft_split_whitespaces.c ft_multi_strjoin.c utils_cd.c \
+				builtin_pwd.c builtin_utils.c
 BLTN_FS		=	$(addprefix $(SRCD)builtin/,$(_BLTN_FS))
 _BLTN_FSO	=	$(_BLTN_FS:.c=.o)
 BLTN_FSO	=	$(BLTN_FS:.c=.o)
@@ -98,9 +106,9 @@ all:
 	@$(MAKE) lib
 	@$(MAKE) $(NAME)
 
-$(NAME): $(LIBFT) $(OBJB) $(logger)
+$(NAME): $(LIBFT) $(OBJB)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) -ltermcap $(FRAMEWORKS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) $(TERMCAPS) $(FRAMEWORKS) -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
 lib:

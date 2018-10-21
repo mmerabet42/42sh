@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/10 10:49:33 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/19 16:40:11 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,11 @@
 #include "ft_io.h"
 #include "ft_mem.h"
 #include "ft_types.h"
+#include "job_control.h"
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <signal.h>
 #include <fcntl.h>
-
-static	t_list		*error_fg(char **argv, int i)
-{
-	if (!i)
-		ft_printf_fd(2, "21sh: fg: %s: no such job\n", argv[1]);
-	else
-		ft_putstr_fd("21sh: fg: current: no such job\n", 2);
-	return (NULL);
-}
 
 static	t_list		*check_args(int argc, char **argv, int numprocbg)
 {
@@ -51,23 +43,41 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 		while (elem && ((t_inffork *)elem->content)->sign != '+')
 			elem = elem->next;
 	}
-	if (elem && (((t_inffork *)elem->content)->status[0] != 'K' ||
-				((t_inffork *)elem->content)->status[0] != 'D'))
+	if (elem && (((t_inffork *)elem->content)->status != BG_KILL ||
+				((t_inffork *)elem->content)->status != BG_END))
 		return (elem);
 	return (error_fg(argv, 0));
 }
 
-static void			check_retfork(int ret, pid_t pid)
+static pid_t		is_pipe2(t_list *elem)
+{
+	t_pids	*pids;
+
+	pids = ((t_inffork *)elem->content)->pids;
+	while (pids->next)
+		pids = pids->next;
+	return (pids->pid);
+}
+
+static void			check_retfork(int ret, t_list *elem)
 {
 	int		p;
+	pid_t	pid;
 
-	p = pid == -1 ? 1 : 0;
+	pid = 0;
+	p = ((t_inffork *)elem->content)->pid == -1 ? 1 : 0;
+	if (p)
+		pid = is_pipe2(elem);
+	pid = pid ? pid : ((t_inffork *)elem->content)->pid;
 	if (WIFCONTINUED(ret))
+	{
 		handle_bgstat(pid, BG_RUN, p);
+		((t_inffork *)elem->content)->modif |= (1 << 0);
+	}
 	else if (WIFSTOPPED(ret))
 	{
-		if (WSTOPSIG(ret) == SIGTTIN)
-			handle_bgstat(pid, BG_STOP, p);
+		handle_bgstat(pid, BG_STOP, p);
+		((t_inffork *)elem->content)->modif |= (1 << 0);
 	}
 	else if (!WIFEXITED(ret))
 		handle_bgstat(pid, BG_KILL, p);
@@ -107,9 +117,9 @@ int					builtin_fg(int argc, char **argv)
 		return (1);
 	else
 	{
-		print_cmd_args2(((t_inffork *)elem->content)->cmd);
+		print_cmd_args2(((t_inffork *)elem->content)->cmmd);
 		signal(SIGCHLD, SIG_DFL);
-		if (((t_inffork *)elem->content)->status[0] == 'S')
+		if (((t_inffork *)elem->content)->status == BG_STOP)
 		{
 			if (((t_inffork *)elem->content)->pid != -1)
 				kill(((t_inffork *)elem->content)->pid, SIGCONT);
@@ -117,7 +127,7 @@ int					builtin_fg(int argc, char **argv)
 				kill(-((t_inffork *)elem->content)->pids->pid, SIGCONT);
 		}
 		status = my_wait(elem);
-		check_retfork(status, ((t_inffork *)elem->content)->pid);
+		check_retfork(status, elem);
 		tcsetpgrp(0, getpgrp());
 		signal(SIGCHLD, sign_child);
 	}

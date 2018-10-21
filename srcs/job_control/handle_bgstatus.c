@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 13:31:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/10 14:48:42 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/20 17:53:07 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,31 +20,13 @@
 ** fin de proc; if !opt new process comming else just change.
 */
 
-static	t_bgstats	g_bgstat[] = {
-	{BG_RUN, "Running"}, {BG_KILL, "Killed"},
-	{BG_END, "Done"}, {BG_STOP, "Suspended"},
-};
-
-static	size_t		g_bgstats_size = sizeof(g_bgstat) / sizeof(t_bgstats);
-
-int					end_status(char *str)
-{
-	size_t x;
-
-	x = 0;
-	while (++x < g_bgstats_size)
-	{
-		if (*str == 'K' || *str == 'D')
-			return (x);
-	}
-	return (-1);
-}
-
 static int			lookpid_pipe(t_list *elem, pid_t pid, int opt)
 {
 	t_pids	*pids;
 
 	pids = ((t_inffork *)elem->content)->pids;
+	if (!pids)
+		return (1);
 	if (opt)
 	{
 		while (pids && pids->pid != pid)
@@ -58,9 +40,7 @@ static int			lookpid_pipe(t_list *elem, pid_t pid, int opt)
 int					handle_bgstat(pid_t pid, int status, int opt)
 {
 	t_list	*elem;
-	size_t	i;
 
-	i = -1;
 	elem = g_shell->bgproc;
 	while (elem && ((t_inffork *)elem->content)->pid != pid)
 	{
@@ -69,16 +49,8 @@ int					handle_bgstat(pid_t pid, int status, int opt)
 			break ;
 		elem = elem->next;
 	}
-	if (((t_inffork *)elem->content)->status[0])
+	if (((t_inffork *)elem->content)->status)
 		((t_inffork *)elem->content)->modif |= (1 << 0);
-	while (++i < g_bgstats_size)
-	{
-		if (status == g_bgstat[i].status)
-		{
-			ft_strcpy(((t_inffork *)elem->content)->status,
-						g_bgstat[i].message);
-			break ;
-		}
-	}
+	((t_inffork *)elem->content)->status = status;
 	return (0);
 }
