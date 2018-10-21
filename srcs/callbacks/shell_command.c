@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "shell.h"
+#include "globing.h"
 #include "ft_str.h"
 #include "ft_printf.h"
 #include "get_next_line.h"
@@ -38,6 +39,14 @@ static int	shell_cmd_cb2(char *buff, void *res, t_ast *ast, t_args *args)
 	return (0);
 }
 
+static t_exp		g_exps[] = {
+	{"", exp_glob}
+};
+
+static t_expf		g_expf = {
+	g_exps, sizeof(g_exps), NULL, 0
+};
+
 int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
 	int		ret;
@@ -46,6 +55,8 @@ int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 
 	(void)op;
 	if ((ret = ft_astcresolver(ast, ((t_allf *)iterf->data)->expf)))
+		return ((*(int *)res = 1) ? ret : ret);
+	if ((ret = ft_astcresolver(ast, &g_expf)))
 		return ((*(int *)res = 1) ? ret : ret);
 	if (!ast || !ast->cname || !*ast->cname)
 		return (0);

@@ -107,7 +107,6 @@ static int	listtotab(t_list *it, char ***av, int *ac)
 {
 	int		size;
 	int		x;
-	int		c;
 
 	x = -1;
 	if (!(size = ft_lstsize(it)))
@@ -120,7 +119,6 @@ static int	listtotab(t_list *it, char ***av, int *ac)
 		(*av)[x] = (char *)it->content;
 		it = it->next;
 	}
-	c = it ? 1 : 0;
 	(*av)[x] = NULL;
 	if (g_shell->kill_builtin)
 	{

@@ -27,7 +27,7 @@ static char	*canonical(char *curpath, char *canon)
 	if (!canon || !curpath || !*curpath)
 		return (canon);
 	tmp = ft_strchr(curpath, '/');
-	component = (tmp ? tmp - curpath : ft_strlen(curpath));
+	component = (tmp ? (unsigned int)(tmp - curpath) : ft_strlen(curpath));
 	if (!component && ft_strlen(canon) > 0
 			&& canon[ft_strlen(canon) - 1] == '/')
 		return (canonical(curpath + component + 1, canon));
