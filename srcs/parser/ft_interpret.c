@@ -23,7 +23,7 @@ int			ft_interpret(const char *cmd, t_lexerf *lexf,
 	ret = -1;
 	if (!(head = ft_lexer(cmd, lexf)))
 		return (0);
-	if ((ret = check_syntax(head, (t_allf *)lexf->data)))
+	if ((ret = check_syntax(head, (t_allf *)lexf->data, 0)))
 	{
 		ft_astdel(&head);
 		return (ret);

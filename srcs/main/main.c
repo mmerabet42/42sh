@@ -145,7 +145,7 @@ static void	main_execution(char *line)
 		if (!line[0] && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
 		head = ft_lexer(line, &g_lexerf);
-		if (check_syntax(head, &g_allf))
+		if (check_syntax(head, &g_allf, 0))
 			g_shell->exitcode = 1;
 		else if ((ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
 		{
@@ -153,7 +153,6 @@ static void	main_execution(char *line)
 			if (ret != SH_EXIT)
 				g_shell->exitcode = 1;
 		}
-		ft_astprint(head, 0);
 		check_bgend();
 		ft_astdel(&head);
 	}

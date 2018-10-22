@@ -134,7 +134,7 @@ void				redir_printerror(t_redir *r, int err, void **op);
 int					replace_fd(t_redir *r, int *closed_fd);
 t_list				*list_redirections(t_ast **ast, t_expf *expf);
 
-int					check_syntax(t_ast *ast, t_allf *allf);
+int					check_syntax(t_ast *ast, t_allf *allf, int redir);
 
 char				*ft_getenv(char *name, char **envp);
 int					ft_modenv(char *str, char ***envp);

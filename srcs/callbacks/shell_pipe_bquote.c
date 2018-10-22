@@ -121,6 +121,7 @@ int				shell_pipe_bquote(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	int		ret;
 
 	(void)op;
+	check_syntax(ast, (t_allf *)iterf->data, 1);
 	g_shell->bits |= (1 << 1);
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);

@@ -18,7 +18,6 @@ int				shell_andor_seco_cb(t_ast *ast, void **op, void *res,
 {
 	int	efail;
 
-	ft_printf("hello\n");
 	if (*ast->name == '|' || *ast->name == '&')
 	{
 		if ((*ast->name == '|' && *(int *)op[0] != 0)

@@ -103,7 +103,7 @@ static t_iterf		g_syntax_checker = {
 	sizeof(t_ast *)
 };
 
-int			check_syntax(t_ast *ast, t_allf *allf)
+int			check_syntax(t_ast *ast, t_allf *allf, int create_file)
 {
 	t_ast	*res;
 	int		ret;
@@ -111,6 +111,10 @@ int			check_syntax(t_ast *ast, t_allf *allf)
 
 	res = NULL;
 	g_syntax_checker.data = (void *)allf;
+	if (!create_file)
+		g_callbacks[3].name = "*<<";
+	else
+		g_callbacks[3].name = "*<<:*>:*>>";
 	if ((ret = ft_astiter(ast, &res, &g_syntax_checker)))
 	{
 		if ((err = ft_strshret(ret)))

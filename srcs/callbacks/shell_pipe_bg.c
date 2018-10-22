@@ -102,6 +102,7 @@ int				shell_pipe_bg(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	int		ret;
 
 	(void)op;
+	check_syntax(ast, (t_allf *)iterf->data, 1);
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);
 	elem = ft_lstend(a.tabpipe);

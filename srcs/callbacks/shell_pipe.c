@@ -153,6 +153,7 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	t_list	*elem;
 	int		ret;
 
+	check_syntax(ast, (t_allf *)iterf->data, 1);
 	if (g_shell->bits & (1 << 2))
 		return (shell_pipe_bg(ast, op, res, iterf));
 	if (g_shell->bits & (1 << 4))
