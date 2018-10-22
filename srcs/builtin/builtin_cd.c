@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 11:58:28 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/20 17:53:45 by ouralgan         ###   ########.fr       */
+/*   Updated: 2018/10/22 16:18:29 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ int			builtin_cd(int argc, char **argv)
 
 	pathno = argc - argc;
 	argv++;
+	opt = 0;
 	if (handle_opt(&argv, &opt))
 		return (1);
 	if (ft_strlen(*argv) >= PATH_MAX)

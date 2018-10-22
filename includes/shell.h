@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 14:35:34 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/22 15:58:56 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct		s_shell
 	char			*history_file;
 	int				exitcode;
 	char			*script;
+	char			*subshell;
 	char			*start_cmd;
 	int				kill_builtin;
 	int				width;

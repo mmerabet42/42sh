@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 14:58:55 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/22 16:30:52 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static int	shell_cmd_cb2(char *buff, void *res, t_ast *ast, t_args *args)
 }
 
 static t_exp		g_exps[] = {
+	{"*[\"*\"@b]:'*':$'*'", exp_quote},
+	{"*[\"'@=1]*[@>0]:$'*[@>0]:\":':$'", exp_quote},
 	{"", exp_glob}
 };
 
@@ -143,18 +145,20 @@ int			shell_lists_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	ptr = ft_strend(ast->name);
 	tmp = *ptr;
 	*ptr = '\0';
-	free(g_shell->script);
-	g_shell->script = ast->name + 1;
+	g_shell->subshell = ast->name + 1;
 	head = ft_lexer(ast->name + 1, ast->lexerf);
 	*ptr = tmp;
 	efail = 0;
 	if (!head)
 		return (0);
 	if (*ast->name == '{')
+	{
+		ft_astprint(head, 0);
 		efail = ft_astiter(head, res, iterf);
+	}
 	else if ((efail = lists_subshell(head, res, iterf)))
 		efail = (efail == SH_EXIT ? 0 : efail);
-	g_shell->script = NULL;
+	g_shell->subshell = NULL;
 	ft_astdel(&head);
 	return (efail);
 }
