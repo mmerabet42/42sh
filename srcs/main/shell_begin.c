@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 14:35:30 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/22 16:08:52 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ void	sign_handler(int sign)
 	{
 		g_shell->kill_builtin = 1;
 		kill(-g_shell->curpid, 1);
-		if (g_shell->script)
-			exit(0);
+		if (g_shell->script || g_shell->subshell)
+			exit(shell_end());
 	}
 	else if (sign == SIGWINCH)
 	{

@@ -555,19 +555,19 @@ check_diff
 COMMAND="echo \"\$PATH\""
 check_diff
 
-COMMAND="echo \'\$PATH\'"
+COMMAND="echo '\$PATH'"
 check_diff
 
 COMMAND="echo \"\$PATH\$PWD\""
 check_diff
 
-COMMAND="echo \'\$PATH\$PWD\'"
+COMMAND="echo '\$PATH\$PWD'"
 check_diff
 
 COMMAND="echo \"\$PATH\$NOEXIST\""
 check_diff
 
-COMMAND="echo \'\$PATH\$NOEXIST\'"
+COMMAND="echo '\$PATH\$NOEXIST'"
 check_diff
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\nenv setenv unsetenv\n~~~~~~~~~~~~~\n${NC}"
