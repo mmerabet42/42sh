@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/19 19:08:34 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/22 14:58:55 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ int			shell_lists_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	ptr = ft_strend(ast->name);
 	tmp = *ptr;
 	*ptr = '\0';
+	free(g_shell->script);
 	g_shell->script = ast->name + 1;
 	head = ft_lexer(ast->name + 1, ast->lexerf);
 	*ptr = tmp;
