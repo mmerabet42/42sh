@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 15:58:56 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/22 21:23:59 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef enum	e_shret
 	SH_ESUCCESS, SH_NDIR, SH_PIPFAIL, SH_DUPFAIL, SH_FORKFAIL, SH_EXECERR,
 	SH_MAXBGPROC, SH_NFILE, SH_CONDWTHEN, SH_THENWCOND, SH_ELSEWCOND,
 	SH_HDOCWFAIL, SH_HDOCRFAIL, SH_HDOCWORD, SH_OPENFILE, SH_CMDERR,
-	SH_NOLDPWD, SH_NHOME,
+	SH_NOLDPWD, SH_NHOME, SH_SUBSHELL_NAZI,
 	SH_BADFD, SH_MALLOC, SH_BADEXPR, SH_HDOCSTOP, SH_EXPRERR,
 	TK_CMD, TK_OP, TK_EQUAL, TK_REDIR, TK_NOT, TK_PIPE, TK_AMPERSAND,
 	TK_ANDOR, TK_COMA, TK_IFWHILE, TK_THEN, TK_ELSE, TK_SEMICOLON,
@@ -134,7 +134,7 @@ void				redir_printerror(t_redir *r, int err, void **op);
 int					replace_fd(t_redir *r, int *closed_fd);
 t_list				*list_redirections(t_ast **ast, t_expf *expf);
 
-int					check_syntax(t_ast *ast, t_expf *expf);
+int					check_syntax(t_ast *ast, t_allf *allf);
 
 char				*ft_getenv(char *name, char **envp);
 int					ft_modenv(char *str, char ***envp);

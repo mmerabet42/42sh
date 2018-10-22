@@ -6,17 +6,19 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 20:16:45 by jraymond          #+#    #+#             */
-/*   Updated: 2018/09/24 20:17:01 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/22 21:13:08 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
+#include "ft_printf.h"
 
 int				shell_andor_seco_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf)
 {
 	int	efail;
 
+	ft_printf("hello\n");
 	if (*ast->name == '|' || *ast->name == '&')
 	{
 		if ((*ast->name == '|' && *(int *)op[0] != 0)

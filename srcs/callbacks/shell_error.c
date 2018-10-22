@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/17 21:52:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 17:14:31 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/22 21:23:54 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,40 @@ static int	shell_conditionals_cb(t_ast *ast, void **op, void *res,
 	return (0);
 }
 
+static int	shell_braces_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
+{
+	t_ast	*head;
+
+	(void)op;
+	(void)res;
+	if (*ast->name == '(')
+	{
+		head = ast;
+		while (head)
+		{
+			if (head->parent && head->parent->type == TK_PIPE && head == head->parent->left)
+				return (SH_SUBSHELL_NAZI);
+			head = head->parent;
+		}
+	}
+	else if (ast->parent)
+	{
+		*ft_strend(ast->name) = '\0';
+		head = ft_lexer(ast->name + 1, ((t_allf *)iterf->data)->lexerf);
+		head->parent = ast->parent;
+		if (ast == ast->parent->left)
+			ast->parent->left = head;
+		else
+			ast->parent->right = head;
+	}
+	return (0);
+}
+
 static t_astfunc	g_callbacks[] = {
+	{EXP_BRACES, shell_braces_cb, NULL, 3},
+	{EXP_SUBSHELL, shell_braces_cb, NULL, 3},
 	{"\\:=:&&:||:*[|&!,;\n@=1]:not", shell_error_cb, shell_error_cb, -2},
-	{"*<<", shell_hdoc_cb, NULL, -1},
+	{"*<<:*>:*>>", shell_hdoc_cb, NULL, -1},
 	{DLM_REDP, shell_error_cb, NULL, -2},
 	{"then:if:while:else", shell_conditionals_cb, shell_conditionals_cb, -2}
 };
@@ -72,14 +103,14 @@ static t_iterf		g_syntax_checker = {
 	sizeof(t_ast *)
 };
 
-int			check_syntax(t_ast *ast, t_expf *expf)
+int			check_syntax(t_ast *ast, t_allf *allf)
 {
 	t_ast	*res;
 	int		ret;
 	char	*err;
 
 	res = NULL;
-	g_syntax_checker.data = (void *)expf;
+	g_syntax_checker.data = (void *)allf;
 	if ((ret = ft_astiter(ast, &res, &g_syntax_checker)))
 	{
 		if ((err = ft_strshret(ret)))

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 17:00:04 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/22 21:23:56 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ static int	check_script(void)
 	{
 		++g_shell->curargs->argv;
 		--g_shell->curargs->argc;
-		ft_interpret(g_shell->script, &g_expf, &g_lexerf, &g_shell_iterf);
+		ft_interpret(g_shell->script, &g_lexerf, &g_shell_iterf);
 		--g_shell->curargs->argv;
 		++g_shell->curargs->argc;
 		return (1);
@@ -131,7 +131,7 @@ static int	check_cmd_starter(void)
 	if (!isatty(1))
 		return (1);
 	if (g_shell->start_cmd)
-		ft_interpret(g_shell->start_cmd, &g_expf, &g_lexerf, &g_shell_iterf);
+		ft_interpret(g_shell->start_cmd, &g_lexerf, &g_shell_iterf);
 	return (0);
 }
 
@@ -145,7 +145,7 @@ static void	main_execution(char *line)
 		if (!line[0] && !(g_shell->exitcode = 0) && !check_bgend())
 			return ;
 		head = ft_lexer(line, &g_lexerf);
-		if (check_syntax(head, &g_expf))
+		if (check_syntax(head, &g_allf))
 			g_shell->exitcode = 1;
 		else if ((ret = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
 		{
@@ -153,6 +153,7 @@ static void	main_execution(char *line)
 			if (ret != SH_EXIT)
 				g_shell->exitcode = 1;
 		}
+		ft_astprint(head, 0);
 		check_bgend();
 		ft_astdel(&head);
 	}

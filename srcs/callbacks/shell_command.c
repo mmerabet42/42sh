@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 16:30:52 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/22 21:11:37 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ static int	lists_subshell(t_ast *head, void *res, t_iterf *iterf)
 		ft_astdel(&head);
 		exit(0);
 	}
+	setpgid(pid, pid);
 	g_shell->curpid = pid;
 	return (in_parent(fd, res));
 }
@@ -152,10 +153,7 @@ int			shell_lists_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	if (!head)
 		return (0);
 	if (*ast->name == '{')
-	{
-		ft_astprint(head, 0);
 		efail = ft_astiter(head, res, iterf);
-	}
 	else if ((efail = lists_subshell(head, res, iterf)))
 		efail = (efail == SH_EXIT ? 0 : efail);
 	g_shell->subshell = NULL;

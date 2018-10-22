@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/19 17:20:52 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/22 20:05:46 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,7 +262,7 @@ char				**ft_getoptl(char **argv,
 char				**ft_getoptv(char **argv, const char *options);
 int					ret_pipecmd(t_list *tabpipe, char **cmd);
 
-int					ft_interpret(const char *cmd, t_expf *expf, t_lexerf *lexf,
+int					ft_interpret(const char *cmd, t_lexerf *lexf,
 		t_iterf *itf);
 
 #endif

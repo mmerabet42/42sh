@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:27 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/19 19:52:43 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/22 20:55:35 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ static t_op	g_shellerrs[] = {
 	{"condition statement without then", SH_CONDWTHEN},
 	{"then without previous condition statement", SH_THENWCOND},
 	{"else without previous condition statement", SH_ELSEWCOND},
+	{"WSH T SRX FDP ?!!", SH_SUBSHELL_NAZI},
 	{"none", SH_NONE}, {NULL, SH_EXIT}
 };
 static size_t	g_shellerrs_len = (sizeof(g_shellerrs) / sizeof(t_op));

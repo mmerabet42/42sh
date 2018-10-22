@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 17:16:11 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 19:40:47 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/22 20:47:41 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,21 @@ static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 	return (0);
 }
 
+static int	shell_create_file(t_ast *ast, void **op, void *res)
+{
+	int	fd;
+
+	(void)op;
+	(void)res;
+	if (ft_strchr(ast->name, '>'))
+	{
+		fd = open(ast->right->name, O_CREAT, 0666);
+		close(fd);
+		return (1);
+	}
+	return (0);
+}
+
 int			shell_hdoc_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
 	static int	n;
@@ -87,16 +102,16 @@ int			shell_hdoc_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	int			ret;
 	char		*hdoc_file;
 
-	(void)op;
-	(void)res;
 	*(t_ast **)res = ast;
 	if (!ft_astvalid(ast->right))
 		return (SH_BADEXPR);
+	if (shell_create_file(ast, op, res))
+		return (0);
 	if (!(hdoc_file = ft_strjoin_clr(HDOC_TMP_FILE, ft_itoa(n++), 1)))
 		return (SH_MALLOC);
 	if ((fd = open(hdoc_file, O_WRONLY | O_TRUNC | O_CREAT, 0666)) == -1)
 		return (SH_OPENFILE);
-	if (!(ret = go_hdoc(ast, fd, (t_expf *)iterf->data)))
+	if (!(ret = go_hdoc(ast, fd, ((t_allf *)iterf->data)->expf)))
 	{
 		ft_strstr(ast->name, "<<")[1] = '\0';
 		*ft_memdel((void **)&ast->right->name) = hdoc_file;
