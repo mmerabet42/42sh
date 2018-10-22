@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 18:29:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/16 11:08:21 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/22 19:02:36 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,33 @@ int			exp_quote(t_strid *sid, t_list **res, t_expf *expf)
 	return (0);
 }
 
+static int	get_arguments(t_strid *sid, t_list **res)
+{
+	int		n;
+	char	**args;
+
+	if ((n = ft_atoi(sid->str + 2)) >= g_shell->curargs->argc)
+		return (0);
+	if (sid->i == -1)
+	{
+		*res = ft_lstcreate(NULL, 0);
+		while (n < g_shell->curargs->argc)
+		{
+			(*res)->content = ft_strjoin_clr((*res)->content,
+												g_shell->curargs->argv[n++], 0);
+			if (n < g_shell->curargs->argc)
+				(*res)->content = ft_strjoinc_clr((*res)->content, ' ');
+		}
+	}
+	else
+	{
+		args = g_shell->curargs->argv;
+		while (n < g_shell->curargs->argc)
+			ft_lstpush_p(res, ft_lstcreate(ft_strdup(args[n++]), 0));
+	}
+	return (0);
+}
+
 int			exp_arg(t_strid *sid, t_list **res, t_expf *expf)
 {
 	int	n;
@@ -114,23 +141,7 @@ int			exp_arg(t_strid *sid, t_list **res, t_expf *expf)
 		if (sid->str[1] == '#')
 			*res = ft_lstcreate(ft_itoa(g_shell->curargs->argc), 0);
 		else if (sid->str[1] == '@')
-		{
-			if ((n = ft_atoi(sid->str + 2)) >= g_shell->curargs->argc)
-				return (0);
-			if (sid->i == -1)
-			{
-				*res = ft_lstcreate(NULL, 0);
-				while (n < g_shell->curargs->argc)
-				{
-					(*res)->content = ft_strjoin_clr((*res)->content, g_shell->curargs->argv[n++], 0);
-					if (n < g_shell->curargs->argc)
-						(*res)->content = ft_strjoinc_clr((*res)->content, ' ');
-				}
-			}
-			else
-				while (n < g_shell->curargs->argc)
-					ft_lstpush_p(res, ft_lstcreate(ft_strdup(g_shell->curargs->argv[n++]), 0));
-		}
+			return (get_arguments(sid, res));
 		else if ((n = ft_atoi(sid->str + 1)) < g_shell->curargs->argc)
 			*res = ft_lstcreate(ft_strdup(g_shell->curargs->argv[n]), 0);
 	}

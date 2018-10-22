@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 20:01:35 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/15 18:15:36 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/22 18:38:46 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,25 @@ static t_ast	*lexer_iter(char *str, t_expf *ef, int *efail)
 	return (ast);
 }
 
+static int		close_fd(int *fd, int opt)
+{
+	if (opt)
+	{
+		if (close(fd[0]) == -1)
+		{
+			close(fd[1]);
+			exit(2);
+		}
+	}
+	else
+	{
+		close(fd[0]);
+		close(fd[1]);
+		return (SH_FORKFAIL);
+	}
+	return (0);
+}
+
 int				exp_cmd(t_strid *sid, t_list **res, t_expf *expf)
 {
 	int		fd[2];
@@ -67,18 +86,10 @@ int				exp_cmd(t_strid *sid, t_list **res, t_expf *expf)
 	if (pipe(fd) == -1)
 		return (SH_PIPFAIL);
 	if ((pid = fork()) == -1)
-	{
-		close(fd[0]);
-		close(fd[1]);
-		return (SH_FORKFAIL);
-	}
+		return (close_fd(fd, 0));
 	else if (!pid && !(sid->str[sid->len - 1] = '\0'))
 	{
-		if (close(fd[0]) == -1)
-		{
-			close(fd[1]);
-			exit(2);
-		}
+		close_fd(fd, 1);
 		dup2(fd[1], 1);
 		resetsign();
 		g_shell->bits |= (1 << 4);

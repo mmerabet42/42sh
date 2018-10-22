@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 16:30:52 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/22 17:55:15 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,29 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
+static t_exp		g_exps[] = {
+	{"*[\"*\"@b]:'*':$'*'", exp_quote},
+	{"*[\"'@=1]*[@>0]:$'*[@>0]:\":':$'", exp_quote},
+	{"", exp_glob}
+};
+
+static t_expf		g_expf = {
+	g_exps, sizeof(g_exps), NULL, 0
+};
+
 static int	shell_cmd_cb2(char *buff, void *res, t_ast *ast, t_args *args)
 {
 	struct stat	st;
 	int			i;
+	int			ret;
 
+	if ((ret = ft_getfullpath(ast->cname, g_shell->paths, buff, 1024)) != SH_OK)
+	{
+		ft_printshret(ret, ast->cname);
+		*(int *)res = (ret == SH_ADENIED ? 126 : 127);
+		g_shell->curargs = args;
+		return (0);
+	}
 	if (!(i = (stat(buff, &st) ? 0 : S_ISREG(st.st_mode)))
 			&& (*(int *)res = 128))
 		ft_printshret(SH_NFILE, ast->cname);
@@ -38,16 +56,6 @@ static int	shell_cmd_cb2(char *buff, void *res, t_ast *ast, t_args *args)
 	g_shell->curargs = args;
 	return (0);
 }
-
-static t_exp		g_exps[] = {
-	{"*[\"*\"@b]:'*':$'*'", exp_quote},
-	{"*[\"'@=1]*[@>0]:$'*[@>0]:\":':$'", exp_quote},
-	{"", exp_glob}
-};
-
-static t_expf		g_expf = {
-	g_exps, sizeof(g_exps), NULL, 0
-};
 
 int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
@@ -70,13 +78,6 @@ int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	if ((*(int *)res = execbuiltin(ast->cname, ast->cargs)) != -1
 			&& (g_shell->curargs = args))
 		return (g_shell->running ? 0 : SH_EXIT);
-	if ((ret = ft_getfullpath(ast->cname, g_shell->paths, buff, 1024)) != SH_OK)
-	{
-		ft_printshret(ret, ast->cname);
-		*(int *)res = (ret == SH_ADENIED ? 126 : 127);
-		g_shell->curargs = args;
-		return (0);
-	}
 	return (shell_cmd_cb2(buff, res, ast, args));
 }
 
@@ -84,7 +85,6 @@ static int	in_parent(int fd[2], void *res)
 {
 	int		efail;
 	char	*mem;
-
 
 	efail = 0;
 	wait(res);
@@ -152,10 +152,7 @@ int			shell_lists_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	if (!head)
 		return (0);
 	if (*ast->name == '{')
-	{
-		ft_astprint(head, 0);
 		efail = ft_astiter(head, res, iterf);
-	}
 	else if ((efail = lists_subshell(head, res, iterf)))
 		efail = (efail == SH_EXIT ? 0 : efail);
 	g_shell->subshell = NULL;

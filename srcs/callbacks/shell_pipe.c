@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/18 18:47:44 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/22 19:35:12 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,47 +20,6 @@
 #include <fcntl.h>
 
 #include "parser.h"
-
-static void		swap1(int *fd)
-{
-	fd[0] = dup(fd[2]);
-	fd[1] = dup(fd[3]);
-	close(fd[2]);
-	close(fd[3]);
-	fd[2] = -1;
-	fd[3] = -1;
-}
-
-static void		closefd(int *fd, t_list *elem)
-{
-	if (!elem->next)
-		close(fd[1]);
-	else if (elem->next && elem->parent)
-	{
-		close(fd[3]);
-		close(fd[0]);
-	}
-	else
-		close(fd[0]);
-}
-
-
-static int		init_struct(t_pipe *pipe, t_ast *ast)
-{
-	int		x;
-	int		ret;
-
-	x = -1;
-	g_shell->bits |= (1 << 1);
-	pipe->all_cmd = NULL;
-	ft_bzero(pipe, sizeof(t_pipe));
-	while (++x < 4)
-		pipe->fd[x] = -1;
-	if ((ret = handle_ast_pipe(ast, &pipe->tabpipe)))
-		return (ret);
-	ret_pipecmd(pipe->tabpipe, &pipe->allcmmd);
-	return (0);
-}
 
 static void		fork_son(t_pipe *a, t_list *elem, void *res, t_iterf *iterf)
 {
@@ -157,7 +116,7 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		return (shell_pipe_bg(ast, op, res, iterf));
 	if (g_shell->bits & (1 << 4))
 		return (shell_pipe_bquote(ast, op, res, iterf));
-	if ((ret = init_struct(&a, ast)) != 0)
+	if ((ret = init_structpipe(&a, ast)) != 0)
 		return (ret);
 	elem = ft_lstend(a.tabpipe);
 	signal(SIGCHLD, SIG_DFL);
@@ -165,7 +124,7 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	{
 		if (!a.pgrp && pipe(a.fd) == -1)
 			return (SH_PIPFAIL);
- 		else if (elem->parent && elem->next)
+		else if (elem->parent && elem->next)
 			if (pipe((a.fd + 2)) == -1)
 				return (SH_PIPFAIL);
 		if ((a.pid = fork()) == -1)

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 17:16:11 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 19:40:47 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/22 19:00:03 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,16 @@ static int	interpret_line(char *line, char *eof, t_expf *expf)
 	return (ret);
 }
 
+static void	init_hdoc(t_ast *ast, t_expf *expf, t_list **lst, char **eof)
+{
+	*lst = NULL;
+	*eof = NULL;
+	ft_strexpand(ast->right->name, lst, -1, expf);
+	*eof = ast->right->name;
+	if (*lst && (*lst)->content)
+		*eof = (*lst)->content;
+}
+
 static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 {
 	char	*line;
@@ -53,11 +63,7 @@ static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 	t_list	*lst;
 	int		cursor;
 
-	lst = NULL;
-	ft_strexpand(ast->right->name, &lst, -1, expf);
-	eof = ast->right->name;
-	if (lst && lst->content)
-		eof = lst->content;
+	init_hdoc(ast, expf, &lst, &eof);
 	while (1)
 	{
 		ft_putstr("heredoc> ");
@@ -65,11 +71,8 @@ static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 		if (!(line = ft_loop_init(cursor, 0)))
 			break ;
 		ft_putchar('\n');
-		if (*line == 3)
-		{
-			ft_strdel(&line);
+		if (*line == 3 && ft_memdel((void **)&line))
 			return (end_sig(lst, 3, ast));
-		}
 		if (interpret_line(line, eof, expf) || !ft_strcmp(line, "exit"))
 			break ;
 		ft_putendl_fd(line, fd);
