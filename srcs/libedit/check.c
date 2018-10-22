@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/16 11:03:26 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/16 12:22:18 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/22 16:09:17 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int			ft_check_quote(char *s)
 				tmp--;
 			i = 0;
 		}
-	if ((i = ft_strlen(s) - 1) < 0)
+	if ((i = ft_strlen(tmp) - 1) < 0)
 		return (0);
 	while (tmp[i--] == '\\')
 		counter++;
