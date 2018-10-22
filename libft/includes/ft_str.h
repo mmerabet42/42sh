@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/15 14:47:06 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/22 17:41:01 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,6 +308,7 @@ void				ft_print_matches(const char *str, t_list *matches);
 
 t_mchi				*ft_getmchi(const char *match);
 void				ft_delmchi(t_mchi *head);
+t_mchi				*mchi_db(const char *str);
 
 int					ft_strmatch_old(const char *str, const char *match);
 int					ft_strmatch(const char *str, const char *match);

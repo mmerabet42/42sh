@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/23 20:11:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/23 20:13:00 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/22 18:08:53 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,35 @@
 #include "ft_list.h"
 #include "ft_printf.h"
 
-static t_mchi	*mchi_db(const char *str)
+static void		free_mchi(void *c, size_t n)
+{
+	t_mchi		*mchi;
+	t_mchi		*sv;
+
+	(void)n;
+	mchi = ((t_strmchi *)c)->mchi;
+	while (mchi)
+	{
+		sv = mchi->next;
+		free(mchi->str);
+		free(mchi);
+		mchi = sv;
+	}
+	free(((t_strmchi *)c)->str);
+	free(c);
+}
+
+t_mchi			*mchi_db(const char *str)
 {
 	static t_list	*mchi_list;
 	t_strmchi		mchi;
 	t_list			*it;
 
+	if (!str)
+	{
+		ft_lstdel(&mchi_list, free_mchi);
+		return (NULL);
+	}
 	it = mchi_list;
 	while (it)
 	{
