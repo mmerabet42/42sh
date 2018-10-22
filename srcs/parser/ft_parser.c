@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/03 06:51:04 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/16 19:00:53 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/22 17:12:10 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,14 @@ static char	*checkarg(const char **cmd, t_parserf *pdef)
 	return (!str ? tld : NULL);
 }
 
-static void	getalls(t_parserf *pdef)
+static int	getalls(t_parserf *pdef)
 {
 	static char	*def_all;
 	static char	*exp_all;
 	size_t		i;
 
+	if (!pdef && ft_memdel((void **)&def_all) && ft_memdel((void **)&exp_all))
+		return (0);
 	if ((!exp_all || pdef->exp_all != exp_all) && ft_memdel((void **)&exp_all))
 	{
 		i = 0;
@@ -88,6 +90,7 @@ static void	getalls(t_parserf *pdef)
 				pdef->def_hstop, pdef->def_lstop, pdef->exp_all);
 		pdef->def_all = def_all;
 	}
+	return (0);
 }
 
 static int	checkbreak(const char **str, t_parserf *pdef, int *pos)
@@ -107,6 +110,8 @@ int			ft_parser(const char **str, t_args *args, t_parserf *pdef)
 	char	*s;
 	int		pos;
 
+	if (!str && !getalls(NULL))
+		return (-1);
 	if (!str || !*str || !**str || !args || !pdef)
 		return (-1);
 	while (**str && (pos = ft_strpbrkstr_len(*str, pdef->def_word)))

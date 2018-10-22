@@ -6,12 +6,14 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/15 23:32:59 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/10 18:15:32 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/22 17:30:33 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_str.h"
+#include "ft_printf_ext.h"
+#include "get_next_line.h"
 
 static void	del_func(void *content, size_t size)
 {
@@ -58,5 +60,9 @@ int			shell_end(void)
 	exitcode = g_shell->exitcode;
 	free(g_shell);
 	g_shell = NULL;
+	ft_printf_free_formats();
+	ft_parser(NULL, NULL, NULL);
+	get_next_line(0, NULL);
+	get_next_delimstr(0, NULL, NULL);
 	return (exitcode);
 }

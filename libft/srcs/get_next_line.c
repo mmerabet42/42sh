@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/23 23:02:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/13 16:13:27 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/22 17:25:40 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,11 @@ int			get_next_delim(const int fd, char delim, char **line)
 	static t_list	*fds;
 	t_fd			*curr_fd;
 
+	if (!line)
+	{
+		ft_lstdel(&fds, content_delfunc);
+		return (-1);
+	}
 	if (fd < 0 || !line || !(curr_fd = get_fd(&fds, fd)))
 		return (-1);
 	*line = NULL;
@@ -77,6 +82,11 @@ int			get_next_delimstr(const int fd, const char *delim, char **line)
 	static t_list	*fds;
 	t_fd			*curr_fd;
 
+	if (!line)
+	{
+		ft_lstdel(&fds, content_delfunc);
+		return (-1);
+	}
 	if (fd < 0 || !line || !delim || !(curr_fd = get_fd(&fds, fd)))
 		return (-1);
 	*line = NULL;
