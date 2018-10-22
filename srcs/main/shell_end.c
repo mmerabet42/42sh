@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/15 23:32:59 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 17:30:33 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/22 17:40:49 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,6 @@ int			shell_end(void)
 	ft_parser(NULL, NULL, NULL);
 	get_next_line(0, NULL);
 	get_next_delimstr(0, NULL, NULL);
+	mchi_db(NULL);
 	return (exitcode);
 }
