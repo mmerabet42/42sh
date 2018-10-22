@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/19 19:54:10 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/22 19:07:31 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,10 +195,6 @@ int			main(int argc, char **argv, char **envp)
 			"WORD_DELIM:*[@space]", NULL);
 	ft_regex(RGX_ADD | RGX_ID, NULL,
 			"OPERATOR:?[?[@OP_andor]|?[@OP_pipe]|?[@OP_comma]|?[@OP_redir]@or]", NULL, 2);
-	ft_regex(RGX_ADD, NULL,
-			"FUNCTION:*[@word]*[?[*]|?[@space]@or]*[@word]*[@space?]?[@BRACKET0]*[@space?];", NULL);
-	ft_regex(RGX_ADD, NULL,
-			"FT_FUNCTION:*[@word]*[?[*]|?[@space]@or]ft_*[@word]*[@space?]?[@BRACKET0]*[@space?];", NULL);
 	t_list	*matches = NULL;
 	int	ret = ft_regex(RGX_GLOBAL | RGX_GLOBAL, argv[1], argv[2], &matches);
 
