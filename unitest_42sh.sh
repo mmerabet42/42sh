@@ -630,13 +630,13 @@ check_diff
 COMMAND="(echo 1 ; echo 2 ; (ls /) > file; cat file && echo 3 || echo 4)"
 check_diff
 
-COMMAND="{ ls ~ | wc -l > file ; echo Hello } > file"
+COMMAND="{ ls ~ | wc -l > file ; echo Hello; } > file"
 check_diff
 
-COMMAND="echo 1 && echo 2; { echo 3 ; echo 4 || echo 5 } > file2"
+COMMAND="echo 1 && echo 2; { echo 3 ; echo 4 || echo 5; } > file2"
 check_diff
 
-COMMAND="echo 1 && echo 2; { cat < file2 | cat -e >> file2 ; echo 4 || echo 5 } >> file2; cat file2"
+COMMAND="echo 1 && echo 2; { cat < file2 | cat -e >> file2 ; echo 4 || echo 5; } >> file2; cat file2"
 check_diff
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\narithmetique\n~~~~~~~~~~~~~\n${NC}"
