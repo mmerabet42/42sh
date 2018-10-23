@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 15:13:56 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/23 19:43:22 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ t_shret				ft_isbuiltin(char *name, t_args *args);
 int					isbuiltin(char *name);
 int					execbuiltin(char *name, t_args *args);
 
+char				*check_and_move_split(char **curparth, char *path);
 int					builtin_cd(int argc, char **argv);
 char				*get_curpath_extends(char *path, int *pathno);
 char				*get_curpath(char *path, int *pathno);

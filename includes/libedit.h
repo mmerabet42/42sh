@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 11:44:12 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/04 18:41:29 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/23 20:04:14 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ t_cmdedit			*paste_edit(t_cmdedit *cmd, t_cmdedit *cp,
 **	------------- UTILS -----------------
 */
 
+t_cmdedit			*ft_main_loop(t_cmdedit *cmd, t_cursor *cursor);
 char				*ft_loop_init(int prompt, int retry);
 char				*list_to_str(t_cmdedit **cmd);
 int					ft_new_term(void);

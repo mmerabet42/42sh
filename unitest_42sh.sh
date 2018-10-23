@@ -658,4 +658,4 @@ COMMAND="echo \$[ 1 +
               ]m tmp tmp2"
 check_diff
 
-rm tmp tmp2
+rm tmp tmp2 file file2

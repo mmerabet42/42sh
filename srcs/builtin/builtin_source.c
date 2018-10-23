@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/23 20:14:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/16 11:03:02 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/23 19:48:56 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "ft_io.h"
 #include <fcntl.h>
 
-int	builtin_source(int argc, char **argv)
+int			builtin_source(int argc, char **argv)
 {
 	char	*content;
 	int		fd;
@@ -41,7 +41,19 @@ int	builtin_source(int argc, char **argv)
 	return (res);
 }
 
-int	builtin_function(int argc, char **argv)
+static void	incr_arg_builtin_fun(int opt)
+{
+	if (opt)
+	{
+		++g_shell->curargs->argv;
+		--g_shell->curargs->argc;
+		return ;
+	}
+	--g_shell->curargs->argv;
+	++g_shell->curargs->argc;
+}
+
+int			builtin_function(int argc, char **argv)
 {
 	t_list	*it;
 	t_func	*func;
@@ -53,13 +65,11 @@ int	builtin_function(int argc, char **argv)
 	if (argc > 1)
 	{
 		res = 0;
-		++g_shell->curargs->argv;
-		--g_shell->curargs->argc;
+		incr_arg_builtin_fun(1);
 		itf = g_shell->allf->iterf;
 		if ((func = get_function(argv[1])))
 			ret = ft_astiter(func->ast, &res, itf);
-		--g_shell->curargs->argv;
-		++g_shell->curargs->argc;
+		incr_arg_builtin_fun(0);
 		if (!func || ret)
 			return (!func ? 127 : 1);
 		return (0);

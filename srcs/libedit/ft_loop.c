@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 11:33:35 by gdufay            #+#    #+#             */
-/*   Updated: 2018/09/25 17:30:32 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/23 20:04:50 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,23 @@ inline int	ft_isws(int c)
 			|| c == '\n' || c == '\f' || c == '\r');
 }
 
-t_cmdedit	*ft_main_loop(t_cmdedit *cmd, t_cursor *cursor)
+static void	split_gdp(char **v, char **t, char **u, char **s)
 {
-	char	buf[8];
-	int		ret;
-
-	while (1)
+	*v = ft_strjoin(*s, "\n");
+	*t = ft_strjoin(*v, *u);
+	ft_strdel(s);
+	if (*u && **u != 3 && ft_strcmp(*u, "exit"))
+		*s = *t;
+	else
 	{
-		ft_bzero(buf, 7);
-		ret = read(0, buf, 7);
-		buf[ret] = 0;
-		if (buf[0] == '\n')
-			break ;
-		if (!(cmd = ft_parser_edit(buf, cmd, cursor)))
-			break ;
+		ft_strdel(t);
+		*s = ft_strdup("");
 	}
-	while (cmd && cmd->next)
-		cmd = move_cursor(cmd, cursor, 'C');
-	return (cmd);
+	ft_strdel(u);
+	ft_strdel(v);
 }
 
-static void	gain_de_place(char **s, int tmp)
+static void	gain_de_place(char **s, int eol)
 {
 	static char	*t;
 	char		*u;
@@ -56,21 +52,9 @@ static void	gain_de_place(char **s, int tmp)
 	ft_printf("quote>");
 	ft_getcursor(&cursor, NULL);
 	u = ft_loop_init(cursor, 1);
-	if (tmp == '\'' || tmp == '`' || (tmp == '"' && *(*s + ft_strlen(*s) - 1) != '\\'))
-	{
-		v = ft_strjoin(*s, "\n");
-		t = ft_strjoin(v, u);
-		ft_strdel(s);
-		if (u && *u != 3 && ft_strcmp(u, "exit"))
-			*s = t;
-		else
-		{
-			ft_strdel(&t);
-			*s = ft_strdup("");
-		}
-		ft_strdel(&u);
-		ft_strdel(&v);
-	}
+	if (eol == '\'' || eol == '`' ||
+		(eol == '"' && *(*s + ft_strlen(*s) - 1) != '\\'))
+		split_gdp(&v, &t, &u, s);
 	else
 	{
 		v = ft_strn2join(*s, u, ft_strlen(*s) - 1);
