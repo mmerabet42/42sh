@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/17 22:28:02 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/17 22:30:36 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/23 18:31:52 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,23 +27,23 @@ void		ft_astprint(t_ast *bt, int n)
 
 	if (!bt)
 	{
-		ft_printf("%?*\tEND\n", n);
+		ft_printf_fd(2, "%?*\tEND\n", n);
 		return ;
 	}
-	ft_printf("%?*\t'%d': '%s'('%s') unary %d\n", n, bt->type, bt->name,
+	ft_printf_fd(2, "%?*\t'%d': '%s'('%s') unary %d\n", n, bt->type, bt->name,
 			(bt->parent ? bt->parent->name : NULL), bt->u);
 	if (bt->type == bt->cmd_offset && bt->args && bt->args->argc > 1)
 	{
 		i = -1;
-		ft_printf("%?*\tArgs: \n", n + 1);
+		ft_printf_fd(2, "%?*\tArgs: \n", n + 1);
 		while (++i < bt->args->argc)
 			ft_printf("%?*\t '%s'\n", n + 1, bt->args->argv[i]);
 	}
-	ft_printf("%?*\tLeft {\n", n);
+	ft_printf_fd(2, "%?*\tLeft {\n", n);
 	ft_astprint(bt->left, n + 1);
-	ft_printf("%?*\t}\n%1$?*\tRight {\n", n);
+	ft_printf_fd(2, "%?*\t}\n%1$?*\tRight {\n", n);
 	ft_astprint(bt->right, n + 1);
-	ft_printf("%?*\t}\n", n);
+	ft_printf_fd(2, "%?*\t}\n", n);
 }
 
 int			ft_astvalid(t_ast *ast)

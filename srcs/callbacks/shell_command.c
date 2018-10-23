@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 14:57:31 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/23 18:34:42 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static int	shell_cmd_cb2(char *buff, void *res, t_ast *ast, t_args *args)
 }
 
 static t_exp		g_exps[] = {
+	{"*[`?`;$(?);${?};\"*\";'*'@b]", exp_cmd},
 	{"*[\"*\"@b]:'*':$'*'", exp_quote},
 	{"*[\"'@=1]*[@>0]:$'*[@>0]:\":':$'", exp_quote},
 	{"", exp_glob}
@@ -58,6 +59,7 @@ int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	(void)op;
 	if ((ret = ft_astcresolver(ast, ((t_allf *)iterf->data)->expf)))
 		return ((*(int *)res = 1) ? ret : ret);
+	g_expf.data = iterf->data;
 	if ((ret = ft_astresolver(ast, &g_expf)))
 		return ((*(int *)res = 1) ? ret : ret);
 	if (!ast || !ast->cname || !*ast->cname)
