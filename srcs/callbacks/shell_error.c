@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/17 21:52:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 21:23:54 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/23 16:15:09 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ static int	shell_braces_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 			ast->parent->left = head;
 		else
 			ast->parent->right = head;
+		astdelone(&ast);
 	}
 	return (0);
 }

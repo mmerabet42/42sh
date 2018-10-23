@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SHB="/bin/bash --posix"
-SH="valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./42sh"
+SH="./42sh"
 OUT=tmp
 OUTB=tmp2
 RED='\033[0;31m'

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/26 16:10:49 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/19 17:20:16 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/23 17:16:14 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ static t_list	*getrdrctn(t_ast *red, t_ast *cmd, t_expf *expf)
 		r.fdb = -1;
 	else if (r.rep)
 		r.fdb = (ft_isdigit(*(ptr + 1)) ? ft_atoi(ptr + 1) : def);
+	if (cmd->type != TK_CMD)
+		return (NULL);
 	return (implement_args(cmd, red, &r, expf));
 }
 
@@ -86,11 +88,17 @@ t_list			*list_redirections(t_ast **ast, t_expf *expf)
 	{
 		parent = (*ast)->parent;
 		while ((*ast)->left)
+		{
 			*ast = (*ast)->left;
+			if (*ast && (*ast)->type != TK_REDIR)
+				break ;
+		}
+		ft_printf("astt: '%s'\n", (*ast)->name);
 		red = (*ast)->parent;
 		while (red != parent)
 		{
-			ft_lstpush_p(&lst, getrdrctn(red, *ast, expf));
+			if (red->type == TK_REDIR)
+				ft_lstpush_p(&lst, getrdrctn(red, *ast, expf));
 			red = red->parent;
 		}
 	}

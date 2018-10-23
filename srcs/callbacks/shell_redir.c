@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 17:21:51 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 15:48:52 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/23 17:04:57 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ int			shell_redir_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		r->checked = 1;
 		it = it->next;
 	}
+	ft_printf_fd(2, "i1: '%d'\n", i[1]);
 	if (i[1] && i[1] != SH_BADEXPR && (*(int *)res = 1))
 		redir_printerror(r, i[1], op);
 	else if (!i[1])
