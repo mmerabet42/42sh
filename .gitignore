@@ -4,4 +4,5 @@
 *.a
 logger
 unitest_sh
-shelltesteur
+42ShellTester
+*tester*

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:29:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/05 22:53:26 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/23 15:17:53 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int			builtin_history(int argc, char **argv)
 	while ((ret = ft_getopt(&argv, "c;clear", &opt)) != OPT_END)
 	{
 		if (ret == OPT_UNKNOWN)
-			return (ft_printf("illegal option -- %c\n", opt.c) ? 1 : 1);
+			return (ft_printf_fd(2, "illegal option -- %c\n", opt.c) ? 1 : 1);
 		else if (opt.c == 'c'
 				|| (opt.c == '-' && ft_strequ(opt.clong, "clear")))
 			clr = 1;

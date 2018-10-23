@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 11:58:28 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/22 16:18:29 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/23 15:01:53 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,26 +77,31 @@ static char	*check_and_move(char **curpath, char *path, char opt)
 {
 	struct stat		buf;
 	char			pwd[PATH_MAX];
+	char			*end;
 
 	update_export("OLDPWD", getcwd(pwd, PATH_MAX));
 	if (opt != 'P')
+	{
 		*curpath = handle_opt_cd(curpath);
+		if (*(end = ft_strend(*curpath)) == '/' && *curpath != end)
+			*end = '\0';
+	}
 	if (stat((*curpath), &buf) == -1)
 	{
 		ft_strdel(curpath);
-		return ((void*)(size_t)!ft_printf("42sh: cd: %s: No such file or direc"
+		return ((void*)(size_t)!ft_printf_fd(2, "42sh: cd: %s: No such file or direc"
 					"tory\n", path ? path : ft_getenv("HOME", g_shell->envp)));
 	}
-	if ((buf.st_mode & S_IFMT) != S_IFDIR)
+	else if ((buf.st_mode & S_IFMT) != S_IFDIR)
 	{
 		ft_strdel(curpath);
-		return ((void*)(size_t)!ft_printf("42sh: cd: %s: Not a directory\n",
+		return ((void*)(size_t)!ft_printf_fd(2, "42sh: cd: %s: Not a directory\n",
 					path ? path : ft_getenv("HOME", g_shell->envp)));
 	}
-	if (chdir(*curpath) == -1)
+	else if (chdir(*curpath) == -1)
 	{
 		ft_strdel(curpath);
-		return ((void*)(size_t)!ft_printf("42sh: cd: %s: Permission denied\n",
+		return ((void*)(size_t)!ft_printf_fd(2, "42sh: cd: %s: Permission denied\n",
 					path ? path : ft_getenv("HOME", g_shell->envp)));
 	}
 	return (*curpath);
@@ -132,10 +137,10 @@ int			builtin_cd(int argc, char **argv)
 	if (handle_opt(&argv, &opt))
 		return (1);
 	if (ft_strlen(*argv) >= PATH_MAX)
-		return (!!ft_printf("42sh: cd: pathname too long\n"));
+		return (!!ft_printf_fd(2, "42sh: cd: pathname too long\n"));
 	if (!(curpath = get_curpath(*argv, &pathno)))
 	{
-		return (pathno ? 1 : !!ft_printf("42sh: cd: %s"
+		return (pathno ? 1 : !!ft_printf_fd(2, "42sh: cd: %s"
 					": No such file or directory\n", *argv));
 	}
 	if (!(curpath = check_and_move(&curpath, *argv, opt)))

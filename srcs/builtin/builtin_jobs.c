@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 17:15:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/20 17:54:07 by ouralgan         ###   ########.fr       */
+/*   Updated: 2018/10/23 15:32:18 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ static void		jobs_print(t_list *elem)
 static	int		error_jobs(char **argv, int error)
 {
 	if (!error)
-		ft_printf("21sh: jobs: %s: no such job\n", argv[1]);
+		ft_printf_fd(2, "21sh: jobs: %s: no such job\n", argv[1]);
 	else if (error == 1)
-		ft_printf("21sh: jobs: %s: wrong argument\n", argv[1]);
+		ft_printf_fd(2, "21sh: jobs: %s: wrong argument\n", argv[1]);
 	else
-		ft_printf("21sh: jobs: too many arguments\n");
+		ft_printf_fd(2, "21sh: jobs: too many arguments\n");
 	return (0);
 }
 

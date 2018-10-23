@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 12:53:55 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/12 14:14:22 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/23 15:16:05 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static char	*get_curpath_cdpath(char **paths, char *path)
 	char	*tmp;
 	size_t	len;
 
+	tmp = NULL;
 	while (paths && *paths)
 	{
 		len = ft_strlen(*paths);
@@ -53,7 +54,7 @@ char		*get_curpath(char *path, int *pathno)
 
 	tmp = ft_getenv("HOME", g_shell->envp);
 	if (!path && !tmp && (*pathno = 1))
-		return ((void*)(size_t)!ft_printf("42sh: cd: HOME not set\n"));
+		return ((void*)(size_t)!ft_printf_fd(2, "42sh: cd: HOME not set\n"));
 	if (!path && tmp)
 		return (ft_strdup(tmp));
 	if (path[0] == '/' || !ft_strncmp(path, ".", 1)
@@ -61,7 +62,7 @@ char		*get_curpath(char *path, int *pathno)
 		return (ft_strdup(path));
 	tmp = ft_getenv("OLDPWD", g_shell->envp);
 	if (!ft_strcmp(path, "-") && !tmp && (*pathno = 1))
-		return ((void*)(size_t)!ft_printf("42sh: cd: OLDPWD not set\n"));
+		return ((void*)(size_t)!ft_printf_fd(2, "42sh: cd: OLDPWD not set\n"));
 	if (!ft_strcmp(path, "-") && (*pathno = 1))
 		return (ft_strdup(tmp));
 	return (get_curpath_extends(path, pathno));
@@ -84,6 +85,5 @@ char		*get_curpath_extends(char *path, int *pathno)
 		return (curpath ? curpath : get_curpath_cdpath(last, path));
 	}
 	curpath = get_curpath_cdpath(last, path);
-	return (curpath ? curpath :
-			(void*)(size_t)!ft_printf("42sh: cd: %s: Not a directory\n", path));
+	return (curpath);
 }
