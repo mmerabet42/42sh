@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/17 21:52:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 16:15:09 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/23 20:05:19 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,21 @@ static int	shell_conditionals_cb(t_ast *ast, void **op, void *res,
 	return (0);
 }
 
+static int	shell_parenthesis(t_ast *ast)
+{
+	t_ast	*head;
+
+	head = ast;
+	while (head)
+	{
+		if (head->parent && head->parent->type == TK_PIPE)
+			if (head == head->parent->left)
+				return (SH_SUBSHELL_NAZI);
+		head = head->parent;
+	}
+	return (0);
+}
+
 static int	shell_braces_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
 	t_ast	*head;
@@ -67,16 +82,8 @@ static int	shell_braces_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	(void)op;
 	(void)res;
 	if (*ast->name == '(')
-	{
-		head = ast;
-		while (head)
-		{
-			if (head->parent && head->parent->type == TK_PIPE && head == head->parent->left)
-				return (SH_SUBSHELL_NAZI);
-			head = head->parent;
-		}
-	}
-	else if (ast->parent)
+		return (shell_parenthesis(ast));
+	else if (ast->parent && ast->parent->type != TK_EQUAL)
 	{
 		*ft_strend(ast->name) = '\0';
 		head = ft_lexer(ast->name + 1, ((t_allf *)iterf->data)->lexerf);

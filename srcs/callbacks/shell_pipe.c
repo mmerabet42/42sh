@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:45:28 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/18 18:47:44 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/23 20:41:39 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,13 @@ static void		fork_son(t_pipe *a, t_list *elem, void *res, t_iterf *iterf)
 		close(a->fd[0]);
 		dup2(a->fd[1], 1);
 	}
-	else if (elem->next && elem->parent)
-	{
-		close(a->fd[2]);
-		close(a->fd[1]);
-		dup2(a->fd[3], 1);
-		dup2(a->fd[0], 0);
-	}
 	else
 	{
+		if (elem->parent)
+		{
+			close(a->fd[2]);
+			dup2(a->fd[3], 1);
+		}
 		close(a->fd[1]);
 		dup2(a->fd[0], 0);
 	}
@@ -153,11 +151,12 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	t_list	*elem;
 	int		ret;
 
+	(void)op;
 	check_syntax(ast, (t_allf *)iterf->data, 1);
 	if (g_shell->bits & (1 << 2))
-		return (shell_pipe_bg(ast, op, res, iterf));
+		return (shell_pipe_bg(ast, res, iterf));
 	if (g_shell->bits & (1 << 4))
-		return (shell_pipe_bquote(ast, op, res, iterf));
+		return (shell_pipe_bquote(ast, res, iterf));
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);
 	elem = ft_lstend(a.tabpipe);
