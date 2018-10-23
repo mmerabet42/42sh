@@ -62,15 +62,13 @@ static void		fork_son(t_pipe *a, t_list *elem, void *res, t_iterf *iterf)
 		close(a->fd[0]);
 		dup2(a->fd[1], 1);
 	}
-	else if (elem->next && elem->parent)
-	{
-		close(a->fd[2]);
-		close(a->fd[1]);
-		dup2(a->fd[3], 1);
-		dup2(a->fd[0], 0);
-	}
 	else
 	{
+		if (elem->parent)
+		{
+			close(a->fd[2]);
+			dup2(a->fd[3], 1);
+		}
 		close(a->fd[1]);
 		dup2(a->fd[0], 0);
 	}
@@ -95,14 +93,12 @@ static void		fork_father(t_pipe *a, t_list **elem)
 		swap1(a->fd);
 }
 
-int				shell_pipe_bg(t_ast *ast, void **op, void *res, t_iterf *iterf)
+int				shell_pipe_bg(t_ast *ast, void *res, t_iterf *iterf)
 {
 	t_pipe	a;
 	t_list	*elem;
 	int		ret;
 
-	(void)op;
-	check_syntax(ast, (t_allf *)iterf->data, 1);
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);
 	elem = ft_lstend(a.tabpipe);

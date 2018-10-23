@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 20:01:35 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 18:34:34 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/23 20:22:29 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,18 @@ static int		exp_cmd1(int fd[2], t_list **res, int mode, pid_t pid)
 	return (0);
 }
 
-static t_ast	*lexer_iter(char *str, t_expf *ef, int *efail)
+static t_ast	*lexer_iter(char *str, t_expf *ef, int *efail, int fd[2])
 {
 	t_ast	*ast;
 
+	if (close(fd[0]) == -1)
+	{
+		close(fd[1]);
+		exit(2);
+	}
+	dup2(fd[1], 1);
+	resetsign();
+	g_shell->bits |= (1 << 4);
 	str += (*str == '$' ? 2 : 1);
 	ast = ft_lexer(str, ((t_allf *)ef->data)->lexerf);
 	if ((*efail = ft_astiter(ast, efail, ((t_allf *)ef->data)->iterf)))
@@ -74,15 +82,7 @@ int				exp_cmd(t_strid *sid, t_list **res, t_expf *expf)
 	}
 	else if (!pid && !(sid->str[sid->len - 1] = '\0'))
 	{
-		if (close(fd[0]) == -1)
-		{
-			close(fd[1]);
-			exit(2);
-		}
-		dup2(fd[1], 1);
-		resetsign();
-		g_shell->bits |= (1 << 4);
-		head = lexer_iter(sid->str, expf, &efail);
+		head = lexer_iter(sid->str, expf, &efail, fd);
 		ft_astdel(&head);
 		close(fd[1]);
 		exit(efail ? 1 : 0);

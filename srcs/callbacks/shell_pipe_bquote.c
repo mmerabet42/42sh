@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 15:36:45 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/20 18:02:03 by ouralgan         ###   ########.fr       */
+/*   Updated: 2018/10/23 20:40:05 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,14 +114,12 @@ static int		wait_fork(t_pipe *a, void *res)
 	return (0);
 }
 
-int				shell_pipe_bquote(t_ast *ast, void **op, void *res, t_iterf *iterf)
+int				shell_pipe_bquote(t_ast *ast, void *res, t_iterf *iterf)
 {
 	t_pipe	a;
 	t_list	*elem;
 	int		ret;
 
-	(void)op;
-	check_syntax(ast, (t_allf *)iterf->data, 1);
 	g_shell->bits |= (1 << 1);
 	if ((ret = init_struct(&a, ast)) != 0)
 		return (ret);

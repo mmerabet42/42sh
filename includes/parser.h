@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 20:05:46 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/23 20:43:05 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,13 +205,9 @@ int					shell_bckgrnd_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
 int					shell_pipe_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_pipe_bg(t_ast *ast, void **op, void *res,
-		t_iterf *iterf);
+int					shell_pipe_bg(t_ast *ast, void *res, t_iterf *iterf);
 int					handle_ast_pipe(t_ast *ast, t_list **pipe);
-int					shell_pipe_bquote(t_ast *ast,
-		void **op,
-		void *res,
-		t_iterf *iterf);
+int					shell_pipe_bquote(t_ast *ast, void *res, t_iterf *iterf);
 int					shell_redir_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
 int					shell_cond_cb(t_ast *ast, void **op, void *res,
