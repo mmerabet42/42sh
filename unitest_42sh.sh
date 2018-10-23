@@ -594,7 +594,7 @@ printf "${ORANGE}\n~~~~~~~~~~~~~\nsubshell\n~~~~~~~~~~~~~\n${NC}"
 COMMAND="(cd / ; ls)"
 check_diff
 
-COMMAND="(cat -e) | (cat -n)"
+COMMAND="(cat -e | cat -n)"
 check_diff
 
 COMMAND="(cat -e; (cat -n; cat -v); ( ( cat -t ) ) )"
@@ -616,6 +616,27 @@ COMMAND="ls | (cat -e | cat -n)"
 check_diff
 
 COMMAND="ls | (cat -e | cat -n) | (rev| ( ( cat -e ) ) )"
+check_diff
+
+COMMAND="ls ; (cat -e && cat -n)"
+check_diff
+
+COMMAND="ls > \`(cat -e | cat -n)\`"
+check_diff
+
+COMMAND="echo Hello ; (((ls);ls);ls)"
+check_diff
+
+COMMAND="(echo 1 ; echo 2 ; (ls /) > file; cat file && echo 3 || echo 4)"
+check_diff
+
+COMMAND="{ ls ~ | wc -l > file ; echo Hello } > file"
+check_diff
+
+COMMAND="echo 1 && echo 2; { echo 3 ; echo 4 || echo 5 } > file2"
+check_diff
+
+COMMAND="echo 1 && echo 2; { cat < file2 | cat -e >> file2 ; echo 4 || echo 5 } >> file2; cat file2"
 check_diff
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\narithmetique\n~~~~~~~~~~~~~\n${NC}"
