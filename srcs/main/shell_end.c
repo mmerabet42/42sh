@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/15 23:32:59 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/22 17:40:49 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 16:19:03 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void		ft_free_tab(char ***tab)
 {
 	register int	i;
 
-	if (!tab)
+	if (!tab || !(*tab))
 		return ;
 	i = -1;
 	while ((*tab)[++i])
