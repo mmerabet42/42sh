@@ -535,6 +535,9 @@ check_diff
 COMMAND="cd .. && ls"
 check_diff
 
+COMMAND="mkdir toto; cd toto; rm -rf ../toto; cd .."
+check_diff
+
 COMMAND="cd ~ ; cd - && ls"
 check_diff
 
