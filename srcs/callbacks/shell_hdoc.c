@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 17:16:11 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 20:25:09 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 12:00:57 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,6 @@
 #include "ft_types.h"
 #include <fcntl.h>
 #include "libedit.h"
-
-static int	end_sig(t_list *lst, int c, t_ast *ast)
-{
-	ft_lstdel(&lst, content_delfunc);
-	while (c == 3 && ast->parent)
-		if (ft_strmatch((ast = ast->parent)->name, "*<<"))
-			return (2);
-	return (c == 4 || !ast->parent ? 1 : 2);
-}
 
 static int	interpret_line(char *line, char *eof, t_expf *expf)
 {
@@ -46,12 +37,33 @@ static int	interpret_line(char *line, char *eof, t_expf *expf)
 	return (ret);
 }
 
+static int	in_loophdoc(char **line, t_list **lst, t_ast *ast)
+{
+	int	cursor;
+
+	ft_putstr("heredoc> ");
+	ft_getcursor(&cursor, NULL);
+	if (!(*line = ft_loop_init(cursor, 0)))
+		return (0);
+	ft_putchar('\n');
+	if (*line[0] == 3)
+	{
+		ft_strdel(line);
+		ft_lstdel(lst, content_delfunc);
+		while (ast->parent)
+			if (ft_strmatch((ast = ast->parent)->name, "*<<"))
+				return (2);
+		return (!ast->parent ? 1 : 2);
+	}
+	return (0);
+}
+
 static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 {
 	char	*line;
 	char	*eof;
 	t_list	*lst;
-	int		cursor;
+	int		ret;
 
 	lst = NULL;
 	ft_strexpand(ast->right->name, &lst, -1, expf);
@@ -60,16 +72,8 @@ static int	go_hdoc(t_ast *ast, int fd, t_expf *expf)
 		eof = lst->content;
 	while (1)
 	{
-		ft_putstr("heredoc> ");
-		ft_getcursor(&cursor, NULL);
-		if (!(line = ft_loop_init(cursor, 0)))
-			break ;
-		ft_putchar('\n');
-		if (*line == 3)
-		{
-			ft_strdel(&line);
-			return (end_sig(lst, 3, ast));
-		}
+		if ((ret = in_loophdoc(&line, &lst, ast)) != 0)
+			return (ret);
 		if (interpret_line(line, eof, expf) || !ft_strcmp(line, "exit"))
 			break ;
 		ft_putendl_fd(line, fd);
