@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/02 22:30:11 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/10/23 18:20:45 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/24 15:15:37 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,23 +103,32 @@ static int		get_match(t_list **lst)
 	return (1);
 }
 
+static t_exp		g_exps[] = {
+	{"*[\"*\"@b]:'*':$'*'", exp_quote},
+	{"*[\"'@=1]*[@>0]:$'*[@>0]:\":':$'", exp_quote},
+};
+
+static t_expf		g_expf = {
+	g_exps, sizeof(g_exps), NULL, 0
+};
+
 int				exp_glob(t_strid *strid, t_list **lst, t_expf *expf)
 {
+	char	*str;
+
 	(void)expf;
-	if (!(*lst = (t_list *)malloc(sizeof(t_list))))
+	ft_strexpand(strid->str, lst, strid->i, &g_expf);
+	if (*lst && (*lst)->content)
+		str = ft_strdup((*lst)->content);
+	else
+		str = ft_strdup(strid->str);
+	ft_lstdel(lst, content_delfunc);
+	if (!(*lst = ft_lstcreate(str, ft_strlen(str))))
 		return (SH_MALLOC);
-	if (!((*lst)->content = ft_strdup(strid->str)))
-		return (0);
-	(*lst)->content_size = ft_strlen((*lst)->content);
-	(*lst)->next = NULL;
-	(*lst)->parent = NULL;
 	if (!strid->i)
 		return (0);
-	if (detect_globbing((*lst)->content))
-	{
-		if (!get_match(lst))
-			return (SH_MALLOC);
-	}
+	if (detect_globbing((*lst)->content) && !get_match(lst))
+		return (SH_MALLOC);
 	while (lst && *lst && (*lst)->parent)
 		*lst = (*lst)->parent;
 	return (0);
