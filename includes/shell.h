@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 20:44:09 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 19:17:59 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ void				sign_child(int sign);
 
 t_shret				ft_isbuiltin(char *name, t_args *args);
 int					isbuiltin(char *name);
-int					execbuiltin(char *name, t_args *args);
+int					execbuiltin(char *name, t_args *args, int *res);
 
 char				*check_and_move_split(char **curparth, char *path);
 int					builtin_cd(int argc, char **argv);

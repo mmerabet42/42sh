@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 15:27:55 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/17 15:27:59 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 19:14:53 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,6 @@ int	builtin_false(int argc, char **argv)
 int	builtin_return(int argc, char **argv)
 {
 	if (argc > 1)
-		return ((int)ft_atoui(argv[1]));
+		return ((int)ft_atoi(argv[1]));
 	return (g_shell->exitcode);
 }

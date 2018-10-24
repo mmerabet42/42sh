@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:06 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 13:08:14 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/24 19:31:38 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,17 @@ int		isbuiltin(char *name)
 	return (-1);
 }
 
-int		execbuiltin(char *name, t_args *args)
+int		execbuiltin(char *name, t_args *args, int *res)
 {
 	int		i;
 	char	**argvp;
 
 	if ((i = isbuiltin(name)) == -1)
-		return (-1);
+		return (1);
 	argvp = ft_memdup(args->argv, sizeof(char *) * (args->argc + 1));
-	i = g_builtins[i].func(args->argc, argvp);
+	*res = g_builtins[i].func(args->argc, argvp);
 	free(argvp);
-	return (i);
+	return (0);
 }
 
 t_shret	ft_isbuiltin(char *filename, t_args *args)

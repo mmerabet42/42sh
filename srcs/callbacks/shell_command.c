@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/24 15:15:58 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 19:31:40 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,7 @@ int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	if ((ret = check_function(ast, res, iterf)) != -1
 			&& (g_shell->curargs = args))
 		return (ret);
-	if ((*(int *)res = execbuiltin(ast->cname, ast->cargs)) != -1
-			&& (g_shell->curargs = args))
+	if (!execbuiltin(ast->cname, ast->cargs, (int *)res) && (g_shell->curargs = args))
 		return (g_shell->running ? 0 : SH_EXIT);
 	return (shell_cmd_cb2(buff, res, ast, args));
 }
