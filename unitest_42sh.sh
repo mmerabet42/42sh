@@ -190,9 +190,6 @@ check_diff
 COMMAND="echo 1 2 | cat -e > file && cat file && rm file"
 check_diff
 
-COMMAND="ls > toto ; date >> toto ; >> toto ls ; < toto cat ;"
-check_diff
-
 COMMAND="> file && cat file && rm file"
 check_diff
 
