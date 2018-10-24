@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 20:49:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/09/16 22:59:09 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 17:53:03 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,21 +79,23 @@ static int			expr_cmd_cb(t_ast *ast, void **op, void *res,
 		return (EXPR_OPTMISS);
 	data = (t_exprdata *)ast->data;
 	*(EXPRT *)res = (EXPRT)0;
+	ptr = NULL;
 	if (ft_isdigit(*ast->name))
 	{
 		if (!ft_strforeach(ast->name, ft_isdigit))
 			return (EXPR_BADEXPR);
 		*(EXPRT *)res = (EXPRT)ft_atoll(ast->name);
 	}
-	else if (ft_isalpha(*ast->name)
-			&& (ptr = ft_getenv(ast->name, *data->var_db)))
+	else if (!ft_isalpha(*ast->name))
+		return (EXPR_NOTINT);
+	else if ((ptr = ft_getenv(ast->name, *data->var_db)))
 	{
 		if (!ft_strmatch_x(ptr, INT_RGX))
 			return (EXPR_NOTINT);
 		*(EXPRT *)res = (EXPRT)ft_atoll(ptr);
 	}
 	else
-		return (EXPR_NOTINT);
+		*(EXPRT *)res = 0;
 	return (0);
 }
 

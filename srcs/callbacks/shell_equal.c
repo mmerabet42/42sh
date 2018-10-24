@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 21:09:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 19:59:48 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 18:34:05 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,24 @@ t_func		*get_function(char *name)
 	return (NULL);
 }
 
+static t_exp		g_exps[] = {
+	{"\\\\*[@=1]", exp_var},
+	{"$*[aA0_-zZ9_]:$?", exp_var},
+	{"$*[0-9]:$#:$@:$@*[0-9]", exp_arg},
+	{"*[$((?));(?);\"*\";'*'@b]", exp_arth},
+	{"~", exp_tild},
+	{"*[${?};\"*\";'*'@b]", exp_dvar},
+	{"*[$\\[*\\];\"*\";'*'@b]", exp_cond},
+	{"*[$(?);(?);`?`;${?};\"*\";'*'@b]", exp_cmd},
+	{"*[`?`;$(?);${?};\"*\";'*'@b]", exp_cmd},
+	{"*[\"*\"@b]:'*':$'*'", exp_quote},
+	{"*[\"'@=1]*[@>0]:$'*[@>0]:\":':$'", exp_quote},
+};
+
+static t_expf		g_expf = {
+	g_exps, sizeof(g_exps), NULL, 0
+};
+
 static void	shell_equal_cb2(t_ast *astr, char *lstr, t_allf *allf, t_list *lst)
 {
 	t_func	*funcp;
@@ -52,7 +70,8 @@ static void	shell_equal_cb2(t_ast *astr, char *lstr, t_allf *allf, t_list *lst)
 	}
 	else
 	{
-		ft_strexpand(astr->name, &lst, -1, allf->expf);
+		g_expf.data = allf;
+		ft_strexpand(astr->name, &lst, -1, &g_expf);
 		if (lst && lst->content)
 			ft_setenv(lstr, (char *)lst->content, &g_shell->envp);
 		ft_lstdel(&lst, content_delfunc);

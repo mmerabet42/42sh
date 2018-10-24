@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/16 20:01:35 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 20:22:29 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 18:35:14 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int		exp_cmd1(int fd[2], t_list **res, int mode, pid_t pid)
 	ret = 0;
 	close(fd[1]);
 	get_next_delimstr(fd[0], EOF_NEVER_REACH, &line);
-	if (mode == -1)
+	if (mode == -1 && line)
 	{
 		end = ft_strend(line);
 		while (end != line && *end == '\n')
@@ -34,7 +34,7 @@ static int		exp_cmd1(int fd[2], t_list **res, int mode, pid_t pid)
 		*res = ft_lstcreate(line, 0);
 		line = NULL;
 	}
-	else
+	else if (line)
 		ft_lstpush_p(res, ft_strsplitpbrk_lst(line, " \t\n"));
 	close(fd[0]);
 	waitpid(pid, &ret, WUNTRACED);
