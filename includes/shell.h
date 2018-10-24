@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/24 19:57:24 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 20:16:18 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@
 
 typedef enum	e_shret
 {
-	SH_NONE, SH_EXIT, SH_ADENIED, SH_NFOUND, SH_NEXIST, SH_OK, SH_EFAIL,
-	SH_ESUCCESS, SH_NDIR, SH_PIPFAIL, SH_DUPFAIL, SH_FORKFAIL, SH_EXECERR,
-	SH_MAXBGPROC, SH_NFILE, SH_CONDWTHEN, SH_THENWCOND, SH_ELSEWCOND,
-	SH_HDOCWFAIL, SH_HDOCRFAIL, SH_HDOCWORD, SH_OPENFILE, SH_CMDERR,
-	SH_NOLDPWD, SH_NHOME, SH_SUBSHELL_NAZI,
+	SH_NONE, SH_EXIT, SH_RETURN, SH_ADENIED, SH_NFOUND, SH_NEXIST, SH_OK,
+	SH_EFAIL, SH_ESUCCESS, SH_NDIR, SH_PIPFAIL, SH_DUPFAIL, SH_FORKFAIL,
+	SH_EXECERR, SH_MAXBGPROC, SH_NFILE, SH_CONDWTHEN, SH_THENWCOND,
+	SH_ELSEWCOND, SH_HDOCWFAIL, SH_HDOCRFAIL, SH_HDOCWORD, SH_OPENFILE,
+	SH_CMDERR, SH_NOLDPWD, SH_NHOME, SH_SUBSHELL_NAZI,
 	SH_BADFD, SH_MALLOC, SH_BADEXPR, SH_HDOCSTOP, SH_EXPRERR,
 	TK_CMD, TK_OP, TK_EQUAL, TK_REDIR, TK_NOT, TK_PIPE, TK_AMPERSAND,
 	TK_ANDOR, TK_COMA, TK_IFWHILE, TK_THEN, TK_ELSE, TK_SEMICOLON,
