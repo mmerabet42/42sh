@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 20:43:05 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 13:05:08 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,8 +203,9 @@ int					shell_andor_seco_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
 int					shell_bckgrnd_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_pipe_cb(t_ast *ast, void **op, void *res,
+int					type_pipe(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
+int					shell_pipe_cb(t_ast *ast, void *res, t_iterf *iterf);
 int					shell_pipe_bg(t_ast *ast, void *res, t_iterf *iterf);
 int					handle_ast_pipe(t_ast *ast, t_list **pipe);
 int					shell_pipe_bquote(t_ast *ast, void *res, t_iterf *iterf);
@@ -260,5 +261,10 @@ int					ret_pipecmd(t_list *tabpipe, char **cmd);
 
 int					ft_interpret(const char *cmd, t_lexerf *lexf,
 		t_iterf *itf);
+
+void				swap1(int *fd);
+void				closefd(int *fd, t_list *elem);
+int					init_struct(t_pipe *pipe, t_ast *ast);
+int					init_struct_bq(t_pipe *pipe, t_ast *ast);
 
 #endif
