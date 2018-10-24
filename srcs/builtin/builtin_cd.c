@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 11:58:28 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/23 19:46:49 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/24 19:57:22 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ static char	*check_and_move(char **curpath, char *path, char opt)
 	update_export("OLDPWD", getcwd(pwd, PATH_MAX));
 	if (opt != 'P')
 	{
-		*curpath = handle_opt_cd(curpath);
-		if (*(end = ft_strend(*curpath)) == '/' && *curpath != end)
-			*end = '\0';
+		if ((*curpath = handle_opt_cd(curpath)))
+			if (*(end = ft_strend(*curpath)) == '/' && *curpath != end)
+				*end = '\0';
 	}
 	return (check_and_move_split(curpath, path));
 }
