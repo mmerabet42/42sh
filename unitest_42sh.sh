@@ -163,6 +163,9 @@ check_diff
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\nredir\n~~~~~~~~~~~~~\n${NC}"
 
+COMMAND="mkdir tt; cd tt; ls | wc -l > 1 ; ls |wc -l > 2 ; cat 1 2; rm 1 2; cd ..; rm -rf tt"
+check_diff
+
 COMMAND="cat 4< auteur 3<&4 2<&3 <&2 | cat -e"
 check_diff
 
@@ -522,6 +525,15 @@ check_diff
 
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\nbuiltin cd\n~~~~~~~~~~~~~\n${NC}"
+
+COMMAND="cd noexist"
+check_diff
+
+COMMAND="cd auteur"
+check_diff
+
+COMMAND="mkdir noright; chmod 000 noright; cd noright; chmod 755 noright; rm -rf noright"
+check_diff
 
 COMMAND="cd .. && ls"
 check_diff

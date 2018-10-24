@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 12:53:55 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/23 19:50:56 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/24 14:34:51 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char		*get_curpath_extends(char *path, int *pathno)
 	curpath = get_curpath_cdpath(last, path);
 	return (curpath);
 }
-
+#include <stdio.h>
 char		*check_and_move_split(char **curpath, char *path)
 {
 	struct stat		buf;
@@ -102,7 +102,7 @@ char		*check_and_move_split(char **curpath, char *path)
 	else if ((buf.st_mode & S_IFMT) != S_IFDIR)
 	{
 		ft_strdel(curpath);
-		return ((void*)(size_t)!ft_printf_fd(2, "42sh: cd: %s: Not a ",
+		return ((void*)(size_t)!ft_printf_fd(2, "42sh: cd: %s: Not a "
 				"directory\n", path ? path : ft_getenv("HOME", g_shell->envp)));
 	}
 	else if (chdir(*curpath) == -1)

@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/02 22:30:11 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/10/23 18:20:45 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/24 14:38:30 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,6 @@ int				exp_glob(t_strid *strid, t_list **lst, t_expf *expf)
 	(*lst)->content_size = ft_strlen((*lst)->content);
 	(*lst)->next = NULL;
 	(*lst)->parent = NULL;
-	if (!strid->i)
-		return (0);
 	if (detect_globbing((*lst)->content))
 	{
 		if (!get_match(lst))
