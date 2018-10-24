@@ -1,6 +1,6 @@
 # Fonction qui va afficher la fleche a la fin du prompt avec la valeur de
 # retour de l'ancienne commande si elle est differente de zero
-print_arrow := {
+print_arrow := { 
 	e := $?;
 	if $[e] then
 		echo -n "%{lred/bold}($e)";
