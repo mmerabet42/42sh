@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:37:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/17 14:51:04 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/24 19:18:54 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int			exec_btin_bin(t_ast *ast, void *res, t_iterf *iterf)
 		return ((*(int *)res = 1) ? ret : ret);
 	if (!ast || !ast->cname || !*ast->cname)
 		return (0);
-	if ((*(int *)res = execbuiltin(ast->cname, ast->cargs)) != -1)
+	if (!execbuiltin(ast->cname, ast->cargs, (int *)res))
 		return (g_shell->running ? 0 : SH_EXIT);
 	if ((ret = ft_getfullpath(ast->cname, g_shell->paths, buff, 1024)) != SH_OK)
 	{

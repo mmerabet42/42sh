@@ -77,8 +77,7 @@ int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	if ((ret = check_function(ast, res, iterf)) != -1
 			&& (g_shell->curargs = args))
 		return (ret);
-	if ((*(int *)res = execbuiltin(ast->cname, ast->cargs)) != -1
-			&& (g_shell->curargs = args))
+	if (!execbuiltin(ast->cname, ast->cargs, (int *)res) && (g_shell->curargs = args))
 		return (g_shell->running ? 0 : SH_EXIT);
 	return (shell_cmd_cb2(buff, res, ast, args));
 }

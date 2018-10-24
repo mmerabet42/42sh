@@ -45,17 +45,17 @@ int		isbuiltin(char *name)
 	return (-1);
 }
 
-int		execbuiltin(char *name, t_args *args)
+int		execbuiltin(char *name, t_args *args, int *res)
 {
 	int		i;
 	char	**argvp;
 
 	if ((i = isbuiltin(name)) == -1)
-		return (-1);
+		return (1);
 	argvp = ft_memdup(args->argv, sizeof(char *) * (args->argc + 1));
-	i = g_builtins[i].func(args->argc, argvp);
+	*res = g_builtins[i].func(args->argc, argvp);
 	free(argvp);
-	return (i);
+	return (0);
 }
 
 t_shret	ft_isbuiltin(char *filename, t_args *args)

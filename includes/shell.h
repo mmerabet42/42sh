@@ -180,7 +180,7 @@ void				sign_child(int sign);
 
 t_shret				ft_isbuiltin(char *name, t_args *args);
 int					isbuiltin(char *name);
-int					execbuiltin(char *name, t_args *args);
+int					execbuiltin(char *name, t_args *args, int *res);
 
 char				*check_and_move_split(char **curparth, char *path);
 int					builtin_cd(int argc, char **argv);
