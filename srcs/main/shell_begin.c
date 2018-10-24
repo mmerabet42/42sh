@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 15:36:20 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/24 15:40:49 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,21 @@
 #include <sys/signal.h>
 #include <sys/wait.h>
 
-void	sign_handler(int sign)
+static void		init_sign(void)
+{
+	setlocale(LC_ALL, "");
+	signal(SIGINT, sign_handler);
+	signal(SIGWINCH, sign_handler);
+	signal(SIGTTOU, SIG_IGN);
+	signal(SIGTTIN, SIG_IGN);
+	signal(SIGCHLD, sign_child);
+	signal(SIGTSTP, SIG_IGN);
+}
+
+void			sign_handler(int sign)
 {
 	char	*tmp;
 
-	if (sign == -1)
-	{
-		signal(SIGINT, sign_handler);
-		signal(SIGWINCH, sign_handler);
-		signal(SIGTTOU, SIG_IGN);
-		signal(SIGTTIN, SIG_IGN);
-		signal(SIGCHLD, sign_child);
-		signal(SIGTSTP, SIG_IGN);
-	}
 	if (sign == SIGINT)
 	{
 		g_shell->kill_builtin = 1;
@@ -82,8 +84,7 @@ int				shell_begin(char *name, int argc, char **argv, char **envp)
 	if (!(g_shell = (t_shell *)ft_memalloc(sizeof(t_shell))))
 		ft_exit(EXIT_FAILURE, "Failed to begin shell. Exiting\n");
 	g_shell->shellpid = getpid();
-	sign_handler(-1);
-	setlocale(LC_ALL, "");
+	init_sign();
 	init_gshell(envp, name);
 	args.argc = argc;
 	args.argv = argv;

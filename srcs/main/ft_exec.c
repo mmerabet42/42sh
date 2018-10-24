@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 17:21:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 18:29:11 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/24 15:40:16 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,14 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-int		fork_father(pid_t pidl)
+static int	stopped(pid_t pidl, t_list *elem, int ret)
+{
+	handle_bgstat(pidl, BG_STOP, 1);
+	handle_bgsign(elem, 0);
+	return (WSTOPSIG(ret));
+}
+
+int			fork_father(pid_t pidl)
 {
 	t_list	*elem;
 	int		ret;
@@ -35,11 +42,7 @@ int		fork_father(pid_t pidl)
 		tcsetpgrp(0, getpid());
 	}
 	if (WIFSTOPPED(ret))
-	{
-		handle_bgstat(pidl, BG_STOP, 1);
-		handle_bgsign(elem, 0);
-		return (WSTOPSIG(ret));
-	}
+		stopped(pidl, elem, ret);
 	if (g_shell->bgproc == elem)
 		g_shell->bgproc = NULL;
 	else
@@ -49,7 +52,7 @@ int		fork_father(pid_t pidl)
 	return (WEXITSTATUS(ret));
 }
 
-int		ft_exec(char *name, char **argv, char **envp, pid_t *pid)
+int			ft_exec(char *name, char **argv, char **envp, pid_t *pid)
 {
 	pid_t	pidl;
 
@@ -73,7 +76,7 @@ int		ft_exec(char *name, char **argv, char **envp, pid_t *pid)
 	return (fork_father(pidl));
 }
 
-char	*ft_getcwd(char *pwd, size_t size)
+char		*ft_getcwd(char *pwd, size_t size)
 {
 	static char	spwd[2048];
 
