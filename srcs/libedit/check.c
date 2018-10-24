@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/16 11:03:26 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/24 16:21:48 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/24 16:54:53 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,29 @@ static int	count_backslash(char *start, char *s)
 	return (i);
 }
 
+static int	check_quote_split(char *tmp, int i)
+{
+	int	counter;
+
+	counter = 0;
+	if ((i = ft_strlen(tmp) - 1) < 0)
+		return (0);
+	if (!i && tmp[i] == '\\')
+		return ('\\');
+	while (i && tmp[i--] == '\\')
+		counter++;
+	return (counter % 2 ? '\\' : 0);
+}
+
 int			ft_check_quote(char *s)
 {
 	int		i;
 	char	*tmp;
-	int		counter;
 
 	if (!s)
 		return (0);
 	i = -1;
 	tmp = s;
-	counter = 0;
 	while (tmp[++i])
 		if (tmp[i] == '"' || tmp[i] == 39 || tmp[i] == '`')
 		{
@@ -47,9 +59,5 @@ int			ft_check_quote(char *s)
 				tmp--;
 			i = 0;
 		}
-	if ((i = ft_strlen(tmp) - 1) < 0)
-		return (0);
-	while (i && tmp[i--] == '\\')
-		counter++;
-	return (counter % 2 ? '\\' : 0);
+	return (check_quote_split(tmp, i));
 }
