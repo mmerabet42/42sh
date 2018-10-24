@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 20:10:31 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/12 13:11:13 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/24 18:09:47 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,22 @@ static void	usualprompt(void)
 	free_git_prompt(&git, NULL);
 }
 
+static t_exp		g_exps[] = {
+	{"\\\\*[@=1]", exp_var},
+	{"$*[aA0_-zZ9_]:$?", exp_var},
+	{"$*[0-9]:$#:$@:$@*[0-9]", exp_arg},
+	{"*[$((?));(?);\"*\";'*'@b]", exp_arth},
+	{"~", exp_tild},
+	{"*[${?};\"*\";'*'@b]", exp_dvar},
+	{"*[$(?);(?);`?`;${?};\"*\";'*'@b]", exp_cmd},
+	{"*[`?`;$(?);${?};\"*\";'*'@b]", exp_cmd},
+	{"*[$\\[*\\];\"*\";'*'@b]", exp_cond},
+};
+
+static t_expf		g_expf = {
+	g_exps, sizeof(g_exps), NULL, 0
+};
+
 void		printprompt(int i)
 {
 	char	*prompt;
@@ -57,7 +73,8 @@ void		printprompt(int i)
 	if ((prompt = ft_getenv("PROMPT", g_shell->envp)))
 	{
 		nprompt = NULL;
-		ft_strexpand(prompt, &nprompt, 0, g_shell->allf->expf);
+		g_expf.data = g_shell->allf;
+		ft_strexpand(prompt, &nprompt, -1, &g_expf);
 		if (nprompt && nprompt->content)
 			ft_printf(nprompt->content);
 		ft_lstdel(&nprompt, content_delfunc);
