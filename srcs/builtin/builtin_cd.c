@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 11:58:28 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/24 19:57:22 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/25 02:39:47 by ouralgan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static char	*handle_opt_cd(char **curpath)
 	size_t	len;
 	char	pwd_buf[PATH_MAX];
 
-	if (!curpath || !*curpath || !(pwd = ft_getenv("PWD", g_shell->envp)))
+	if (!curpath || !*curpath || !(pwd = g_shell->pwd))
 	{
 		update_export("PWD", getcwd(pwd_buf, PATH_MAX));
 		ft_strdel(curpath);
