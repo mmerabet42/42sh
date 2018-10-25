@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 19:44:38 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/24 15:16:55 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/25 18:26:20 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,249 +22,253 @@
 # define OP_UNARYLRM (1 << 4)
 # define OP_UNARYRM (1 << 5)
 
-typedef struct		s_opt
+typedef struct			s_opt
 {
-	char			*cur;
-	char			**ptr;
-	int				n;
-	char			c;
-	int				seq;
-	int				ret;
-	char			*clong;
-}					t_opt;
+	char				*cur;
+	char				**ptr;
+	int					n;
+	char				c;
+	int					seq;
+	int					ret;
+	char				*clong;
+}						t_opt;
 
-typedef enum	e_optret
+typedef enum			e_optret
 {
 	OPT_END, OPT_UNKNOWN, OPT_ALAST, OPT_OK, OPT_MISSING, OPT_EMPTY, OPT_EQUAL
-}				t_optret;
+}						t_optret;
 
-typedef struct		s_strid
+typedef struct			s_strid
 {
-	char			*str;
-	const char		*next_str;
-	t_list			*next;
-	t_list			*prev;
-	int				len;
-	int				ifound;
-	int				jump;
-	int				i;
-	int				j;
-}					t_strid;
+	char				*str;
+	const char			*next_str;
+	t_list				*next;
+	t_list				*prev;
+	int					len;
+	int					ifound;
+	int					jump;
+	int					i;
+	int					j;
+}						t_strid;
 
 typedef struct s_expf	t_expf;
-typedef int			(*t_expfunc)(t_strid *, t_list **, t_expf *);
+typedef int				(*t_expfunc)(t_strid *, t_list **, t_expf *);
 
-typedef struct		s_exp
+typedef struct			s_exp
 {
-	char			*name;
-	t_expfunc		func;
-}					t_exp;
+	char				*name;
+	t_expfunc			func;
+}						t_exp;
 
-struct				s_expf
+struct					s_expf
 {
-	t_exp			*expansions;
-	size_t			len;
-	void			*data;
-	int				onlyfirst;
+	t_exp				*expansions;
+	size_t				len;
+	void				*data;
+	int					onlyfirst;
 };
 
-typedef struct		s_parserf
+typedef struct			s_parserf
 {
-	char			*def_word;
-	char			*def_stop;
-	char			*def_lstop;
-	char			*def_rstop;
-	char			*def_hstop;
-	t_exp			*exps;
-	size_t			exps_len;
-	char			*exp_all;
-	char			*def_all;
-	void			*data;
-}					t_parserf;
+	char				*def_word;
+	char				*def_stop;
+	char				*def_lstop;
+	char				*def_rstop;
+	char				*def_hstop;
+	t_exp				*exps;
+	size_t				exps_len;
+	char				*exp_all;
+	char				*def_all;
+	void				*data;
+}						t_parserf;
 
-typedef struct		s_op
+typedef struct			s_op
 {
-	char			*name;
-	int				t;
-}					t_op;
+	char				*name;
+	int					t;
+}						t_op;
 
-typedef struct		s_lexerf
+typedef struct			s_lexerf
 {
-	t_parserf		parserf;
-	t_op			*ops;
-	size_t			ops_len;
-	int				cmd_offset;
-	int				op_offset;
-	void			*data;
-}					t_lexerf;
+	t_parserf			parserf;
+	t_op				*ops;
+	size_t				ops_len;
+	int					cmd_offset;
+	int					op_offset;
+	void				*data;
+}						t_lexerf;
 
-typedef struct		s_args
+typedef struct			s_args
 {
-	int				argc;
-	char			**argv;
-}					t_args;
+	int					argc;
+	char				**argv;
+}						t_args;
 
-typedef struct		s_ast
+typedef struct			s_ast
 {
-	int				type;
-	char			*name;
-	char			*cname;
-	t_args			*args;
-	t_args			*cargs;
-	int				assoc;
-	int				u;
-	int				cmd_offset;
-	int				op_offset;
-	void			*extra_param;
-	void			*data;
-	t_lexerf		*lexerf;
-	struct s_ast	*parent;
-	struct s_ast	*left;
-	struct s_ast	*right;
-}					t_ast;
+	int					type;
+	char				*name;
+	char				*cname;
+	t_args				*args;
+	t_args				*cargs;
+	int					assoc;
+	int					u;
+	int					cmd_offset;
+	int					op_offset;
+	void				*extra_param;
+	void				*data;
+	t_lexerf			*lexerf;
+	struct s_ast		*parent;
+	struct s_ast		*left;
+	struct s_ast		*right;
+}						t_ast;
 
 # ifndef STRUCT_PIDS
-# define STRUCT_PIDS
+#  define STRUCT_PIDS
 
 typedef struct s_pids	t_pids;
 
-struct			s_pids
+struct					s_pids
 {
-	pid_t		pid;
-	char		*cmd;
-	t_pids		*parent;
-	t_pids		*next;
+	pid_t				pid;
+	char				*cmd;
+	t_pids				*parent;
+	t_pids				*next;
 };
 
 # endif
 
-typedef struct		s_pipe
+typedef struct			s_pipe
 {
-	t_list			*tabpipe;
-	t_list			*head;
-	t_pids			*bquote;
-	char			**all_cmd;
-	char			*allcmmd;
-	int				fd[4];
-	int				pgrp;
-	int				pid;
-}					t_pipe;
+	t_list				*tabpipe;
+	t_list				*head;
+	t_pids				*bquote;
+	char				**all_cmd;
+	char				*allcmmd;
+	int					fd[4];
+	int					pgrp;
+	int					pid;
+}						t_pipe;
 
-typedef struct		s_pipebquote
+typedef struct			s_pipebquote
 {
-	int				in;
-	int				out;
-}					t_pipe1;
+	int					in;
+	int					out;
+}						t_pipe1;
 
-typedef struct		s_inst
+typedef struct			s_inst
 {
-	t_args			args;
-	char			*delim;
-	char			*str;
-}					t_inst;
+	t_args				args;
+	char				*delim;
+	char				*str;
+}						t_inst;
 
 typedef struct s_iterf	t_iterf;
 
-typedef int			(*t_astfunc_cb)(t_ast *, void **, void *, t_iterf *);
+typedef int				(*t_astfunc_cb)(t_ast *, void **, void *, t_iterf *);
 
-typedef struct		s_astfunc
+typedef struct			s_astfunc
 {
-	char			*name;
-	t_astfunc_cb	func;
-	t_astfunc_cb	unary_func;
-	int				post;
-}					t_astfunc;
+	char				*name;
+	t_astfunc_cb		func;
+	t_astfunc_cb		unary_func;
+	int					post;
+}						t_astfunc;
 
-struct				s_iterf
+struct					s_iterf
 {
-	t_astfunc		*funcs;
-	size_t			funcs_len;
-	void			*data;
-	int				opmissing_err;
-	size_t			bsize;
+	t_astfunc			*funcs;
+	size_t				funcs_len;
+	void				*data;
+	int					opmissing_err;
+	size_t				bsize;
 };
 
-int					exp_var(t_strid *sid, t_list **res, t_expf *expf);
-int					exp_arg(t_strid *sid, t_list **res, t_expf *expf);
-int					exp_tild(t_strid *sid, t_list **res, t_expf *expf);
-int					exp_arth(t_strid *sid, t_list **res, t_expf *expf);
-int					exp_cmd(t_strid *sid, t_list **res, t_expf *expf);
-int					exp_dvar(t_strid *sid, t_list **res, t_expf *expf);
-int					exp_quote(t_strid *sid, t_list **res, t_expf *expf);
-int					exp_cond(t_strid *sid, t_list **res, t_expf *expf);
+int						exp_var(t_strid *sid, t_list **res, t_expf *expf);
+int						exp_arg(t_strid *sid, t_list **res, t_expf *expf);
+int						exp_tild(t_strid *sid, t_list **res, t_expf *expf);
+int						exp_arth(t_strid *sid, t_list **res, t_expf *expf);
+int						exp_cmd(t_strid *sid, t_list **res, t_expf *expf);
+int						exp_dvar(t_strid *sid, t_list **res, t_expf *expf);
+int						exp_quote(t_strid *sid, t_list **res, t_expf *expf);
+int						exp_cond(t_strid *sid, t_list **res, t_expf *expf);
 
-int					shell_cmd_cb(t_ast *ast, void **op, void *res,
+int						shell_cmd_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_arth_cb(t_ast *ast, void **op, void *res,
+int						shell_arth_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_lists_cb(t_ast *ast, void **op, void *res,
+int						shell_lists_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_andor_seco_cb(t_ast *ast, void **op, void *res,
+int						shell_andor_seco_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_bckgrnd_cb(t_ast *ast, void **op, void *res,
+int						shell_bckgrnd_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					type_pipe(t_ast *ast, void **op, void *res,
+int						type_pipe(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_pipe_cb(t_ast *ast, void *res, t_iterf *iterf);
-int					shell_pipe_bg(t_ast *ast, void *res, t_iterf *iterf);
-int					handle_ast_pipe(t_ast *ast, t_list **pipe);
-int					shell_pipe_bquote(t_ast *ast, void *res, t_iterf *iterf);
-int					shell_redir_cb(t_ast *ast, void **op, void *res,
+int						shell_pipe_cb(t_ast *ast, void *res, t_iterf *iterf);
+int						shell_pipe_bg(t_ast *ast, void *res, t_iterf *iterf);
+int						handle_ast_pipe(t_ast *ast, t_list **pipe);
+int						shell_pipe_bquote(t_ast *ast, void *res,
 		t_iterf *iterf);
-int					shell_cond_cb(t_ast *ast, void **op, void *res,
+int						shell_redir_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_else_cb(t_ast *ast, void **op, void *res,
+int						shell_cond_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_equal_cb(t_ast *ast, void **op, void *res,
+int						shell_else_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_equal(t_ast *ast, void **op, void *res,
+int						shell_equal_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-int					shell_hdoc_cb(t_ast *ast, void **op, void *res,
+int						shell_equal(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
-
-int					shell_then_cb(t_ast *ast, void **op, void *res,
-		t_iterf *iterf);
-int					shell_if_cb(t_ast *ast, void **op, void *res,
+int						shell_hdoc_cb(t_ast *ast, void **op, void *res,
 		t_iterf *iterf);
 
-void				manage_export(char *name, char *content);
+int						shell_then_cb(t_ast *ast, void **op, void *res,
+		t_iterf *iterf);
+int						shell_if_cb(t_ast *ast, void **op, void *res,
+		t_iterf *iterf);
 
-int					ft_parser(const char **str, t_args *args, t_parserf *pdef);
-void				ft_argsdel(t_args *args);
-t_args				*ft_argscopy(t_args *args);
+void					manage_export(char *name, char *content);
 
-t_ast				*ft_lexer(const char *str, t_lexerf *ldef);
-int					ft_astiter(t_ast *ast, void *res, t_iterf *iterf);
-void				ft_astdel(t_ast **ast);
-void				astdelone(t_ast **ast);
-t_ast				*astlink(t_ast *a, t_ast *b, int lr);
-t_ast				*newast(t_inst *inst, int type, t_lexerf *ldef, t_ast *cur);
-int					ft_astvalid(t_ast *ast);
+int						ft_parser(const char **str, t_args *args,
+		t_parserf *pdef);
+void					ft_argsdel(t_args *args);
+t_args					*ft_argscopy(t_args *args);
 
-int					ft_resolver(t_args *args, t_list **res, t_expf *expf);
-int					ft_astcresolver(t_ast *ast, t_expf *expf);
-int					ft_astresolver(t_ast *ast, t_expf *expf);
-int					ft_strexpand(const char *origin,
+t_ast					*ft_lexer(const char *str, t_lexerf *ldef);
+int						ft_astiter(t_ast *ast, void *res, t_iterf *iterf);
+void					ft_astdel(t_ast **ast);
+void					astdelone(t_ast **ast);
+t_ast					*astlink(t_ast *a, t_ast *b, int lr);
+t_ast					*newast(t_inst *inst, int type, t_lexerf *ldef,
+		t_ast *cur);
+int						ft_astvalid(t_ast *ast);
+
+int						ft_resolver(t_args *args, t_list **res, t_expf *expf);
+int						ft_astcresolver(t_ast *ast, t_expf *expf);
+int						ft_astresolver(t_ast *ast, t_expf *expf);
+int						ft_strexpand(const char *origin,
 		t_list **res,
 		int i,
 		t_expf *expf);
 
-int					ft_astgood(t_ast *ast);
-void				ft_astprint(t_ast *bt, int n);
-int					ft_getopt(char ***argv, const char *options, t_opt *opt);
-char				**ft_getoptl(char **argv,
+int						ft_astgood(t_ast *ast);
+void					ft_astprint(t_ast *bt, int n);
+int						ft_getopt(char ***argv, const char *options,
+		t_opt *opt);
+char					**ft_getoptl(char **argv,
 		char option,
 		const char *loption,
 		int lfirst);
-char				**ft_getoptv(char **argv, const char *options);
-int					ret_pipecmd(t_list *tabpipe, char **cmd);
+char					**ft_getoptv(char **argv, const char *options);
+int						ret_pipecmd(t_list *tabpipe, char **cmd);
 
-int					ft_interpret(const char *cmd, t_lexerf *lexf,
+int						ft_interpret(const char *cmd, t_lexerf *lexf,
 		t_iterf *itf);
 
-void				swap1(int *fd);
-void				closefd(int *fd, t_list *elem);
-int					init_struct(t_pipe *pipe, t_ast *ast);
-int					init_struct_bq(t_pipe *pipe, t_ast *ast);
+void					swap1(int *fd);
+void					closefd(int *fd, t_list *elem);
+int						init_struct(t_pipe *pipe, t_ast *ast);
+int						init_struct_bq(t_pipe *pipe, t_ast *ast);
 
 #endif
