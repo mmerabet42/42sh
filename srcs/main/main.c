@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 19:27:14 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/25 18:10:05 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/25 18:15:15 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,6 @@ static int	check_script(void)
 
 static int	check_cmd_starter(void)
 {
-
 	if (!isatty(1))
 		return (1);
 	if (g_shell->start_cmd)
