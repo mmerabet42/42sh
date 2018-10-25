@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/16 21:25:42 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/25 18:42:31 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/25 19:23:42 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ static t_expf	g_expf = {
 	g_exps, sizeof(g_exps), NULL, 0
 };
 
-static void	resolve_history_file(void)
+static void	resolve_history_file(char **line)
 {
 	t_list	*res;
+	int		script_fd;
 
 	if (!g_shell->history_file)
 		return ;
@@ -41,6 +42,16 @@ static void	resolve_history_file(void)
 	g_shell->history_file = res->content;
 	res->content = NULL;
 	ft_lstdel(&res, content_delfunc);
+	if ((script_fd = open(g_shell->history_file,
+			O_RDONLY | O_CREAT, 0666)) != -1)
+	{
+		while (get_next_line(script_fd, line) >= 0)
+		{
+			addhistory(*line);
+			free(*line);
+		}
+		close(script_fd);
+	}
 }
 
 static int	shell_exec(int argc, char **argv, char *line)
@@ -58,20 +69,17 @@ static int	shell_exec(int argc, char **argv, char *line)
 			close(script_fd);
 	}
 	else if (g_shell->history_file)
-	{
-		resolve_history_file();
-		if ((script_fd = open(g_shell->history_file,
-					O_RDONLY | O_CREAT, 0666)) != -1)
-		{
-			while (get_next_line(script_fd, &line) >= 0)
-			{
-				addhistory(line);
-				free(line);
-			}
-			close(script_fd);
-		}
-	}
+		resolve_history_file(&line);
 	return (0);
+}
+
+static int	shell_init_bad_opt(t_opt opt)
+{
+	if (opt.c == '-')
+		ft_exitf(1, "%s: bad option: %s\n", g_shell->name, opt.clong);
+	else
+		ft_exitf(1, "%s: bad option: %c\n", g_shell->name, opt.c);
+	return (1);
 }
 
 int			shell_init(int argc, char **argv)
@@ -84,13 +92,7 @@ int			shell_init(int argc, char **argv)
 	while (ft_getopt(&argv, "c.1l.1s.1;log.1", &opt) != OPT_END)
 	{
 		if (argc && opt.ret == OPT_UNKNOWN)
-		{
-			if (opt.c == '-')
-				ft_exitf(1, "%s: bad option: %s\n", g_shell->name, opt.clong);
-			else
-				ft_exitf(1, "%s: bad option: %c\n", g_shell->name, opt.c);
-			return (1);
-		}
+			return (shell_init_bad_opt(opt));
 		else if (opt.c == 'l' || (opt.c == '-' && ft_strequ(opt.clong, "log")))
 			g_shell->history_file = (opt.ret == OPT_MISSING
 					|| ft_strequ(*opt.ptr, "-") ? NULL : *opt.ptr);
