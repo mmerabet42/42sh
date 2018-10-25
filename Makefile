@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/10/24 20:43:08 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/10/25 17:39:15 by sle-rest         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ _BLTN_FS	=	builtins.c builtin_cd.c builtin_echo.c builtin_setenv.c builtin_sourc
 				builtin_bool.c builtin_env.c builtin_jobs.c builtin_fg_error.c builtin_fg.c \
 				builtin_bg.c ft_isbuiltin.c builtin_export.c builtin_set.c builtin_unset.c \
 				builtin_read.c ft_split_whitespaces.c ft_multi_strjoin.c utils_cd.c \
-				builtin_pwd.c builtin_utils.c
+				builtin_pwd.c builtin_utils.c get_curpath.c
 BLTN_FS		=	$(addprefix $(SRCD)builtin/,$(_BLTN_FS))
 _BLTN_FSO	=	$(_BLTN_FS:.c=.o)
 BLTN_FSO	=	$(BLTN_FS:.c=.o)
