@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/12 11:58:28 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/25 02:39:47 by ouralgan         ###   ########.fr       */
+/*   Updated: 2018/10/25 16:13:02 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "ft_mem.h"
 #include <sys/stat.h>
 #include <limits.h>
+#include <stdio.h>
 
 static char	*canonical(char *curpath, char *canon)
 {
@@ -75,10 +76,9 @@ static char	*handle_opt_cd(char **curpath)
 
 static char	*check_and_move(char **curpath, char *path, char opt)
 {
-	char			pwd[PATH_MAX];
 	char			*end;
 
-	update_export("OLDPWD", getcwd(pwd, PATH_MAX));
+	update_export("OLDPWD", g_shell->pwd);
 	if (opt != 'P')
 	{
 		if ((*curpath = handle_opt_cd(curpath)))

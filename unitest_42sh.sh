@@ -523,6 +523,42 @@ check_diff
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\nbuiltin cd\n~~~~~~~~~~~~~\n${NC}"
 
+COMMAND="cd -:"
+check_diff
+
+COMMAND="ln -s . file_link ; cd && pwd && cd - ; rm file_link"
+check_diff
+
+COMMAND="cd ////./////.////// && pwd && cd -"
+check_diff
+
+COMMAND="cd /tmp; cd /; pwd; cd -; rm -rf test1_cd; rm -rf test2_cd; mkdir test1_cd; cd test1_cd; ls -a | cat -e; cd ..; ln -s test0_cd test2_cd; cd -P test2_cd; pwd | grep test1; cd ..; cd -P test2_cd; pwd | grep test2; cd ..; rm -rf test1_cd; rm -rf test2_cd"
+check_diff
+
+COMMAND="cd /tmp; cd /; cd -; cd -P -; cd -L -; cd -P -; cd -L -; cd tutu 2>&-; cd -"
+check_diff
+
+COMMAND="cd /tmp; pwd; cd /; cd -; cd /tmp; pwd; cd -P -; cd -P -; cd -P /tmp; pwd; cd -; pwd; rm -rf /tmp/toto; mkdir /tmp/toto; cd /tmp; cd /tmp/toto; cd ..; pwd; cd -; pwd; cd /tmp; rm -rf /tmp/toto;"
+check_diff
+
+COMMAND="cd /////private///////..///////private/../../../../../../../////..//././././/./var/../private/././././//////./././///tmp/////////////////.; pwd; export -p PWD; cd /////dev/////.//.///././////./../////dev/../dev/cul/..; pwd; export -p PWD"
+check_diff
+
+COMMAND="echo \"a b   c            d\t\t\te\n\n\n\n\""
+check_diff
+
+COMMAND="env on peut set des var sans no"
+check_diff
+
+COMMAND="ls this_file_does_not_exist 2>&1 > /tmp/redir_test_file;rm -f /tmp/redir_test_file;echo abc && echo def; echo 123 > /tmp/test_redir_file_stdout;echo \"---\" ; echo \"---\" ;cat /tmp/test_redir_file_stdout;rm -f /tmp/test_redir_file_stdoutm"
+check_diff
+
+COMMAND="env -i 1VAR=1=1=1=1======1 2VAR=2=two=deux:,%= 3VAR='3=3=3===hl0=?\(\)#' 4VAR="
+check_diff
+
+COMMAND="mkdir testa ; cd testa ; ls -a ; ls | cat | wc -c > fifi ; cat fifi ; rm -rf ../testa"
+check_diff
+
 COMMAND="cd noexist"
 check_diff
 
@@ -642,13 +678,13 @@ check_diff
 COMMAND="(echo 1 ; echo 2 ; (ls /) > file; cat file && echo 3 || echo 4)"
 check_diff
 
-COMMAND="{ ls ~ | wc -l > file ; echo Hello; } > file"
+COMMAND="{ ls ~ | wc -l > file ; echo Hello; } > file ; rm file"
 check_diff
 
-COMMAND="echo 1 && echo 2; { echo 3 ; echo 4 || echo 5; } > file2"
+COMMAND="echo 1 && echo 2; { echo 3 ; echo 4 || echo 5; } > file2; rm file2"
 check_diff
 
-COMMAND="echo 1 && echo 2; { cat < file2 | cat -e >> file2 ; echo 4 || echo 5; } >> file2; cat file2"
+COMMAND="echo 1 && echo 2; { cat < file2 | cat -e >> file2 ; echo 4 || echo 5; } >> file2; cat file2, rm file2"
 check_diff
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\narithmetique\n~~~~~~~~~~~~~\n${NC}"
