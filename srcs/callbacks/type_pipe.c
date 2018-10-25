@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/24 12:41:27 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/24 12:58:16 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/25 16:45:20 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 int		type_pipe(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
 	(void)op;
-	check_syntax(ast, (t_allf *)iterf->data, 1);
 	if (g_shell->bits & (1 << 2))
 		return (shell_pipe_bg(ast, res, iterf));
 	else if (g_shell->bits & (1 << 4))

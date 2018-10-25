@@ -1,6 +1,0 @@
-while $[i < 10] then
-{ 
-	return 3;
-	echo Hello;
-	$[++i];
-}

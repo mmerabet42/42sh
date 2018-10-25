@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/17 21:52:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/23 20:05:19 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/25 16:10:12 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static t_astfunc	g_callbacks[] = {
 	{EXP_BRACES, shell_braces_cb, NULL, 3},
 	{EXP_SUBSHELL, shell_braces_cb, NULL, 3},
 	{"\\:=:&&:||:*[|&!,;\n@=1]:not", shell_error_cb, shell_error_cb, -2},
-	{"*<<:*>:*>>", shell_hdoc_cb, NULL, -1},
+	{"*<<", shell_hdoc_cb, NULL, -1},
 	{DLM_REDP, shell_error_cb, NULL, -2},
 	{"then:if:while:else", shell_conditionals_cb, shell_conditionals_cb, -2}
 };
@@ -122,7 +122,7 @@ int			check_syntax(t_ast *ast, t_allf *allf, int create_file)
 	if (!create_file)
 		g_callbacks[3].name = "*<<";
 	else
-		g_callbacks[3].name = "*<<:*>:*>>";
+		g_callbacks[3].name = "*<<:<*:*>:*>>";
 	if ((ret = ft_astiter(ast, &res, &g_syntax_checker)))
 	{
 		if ((err = ft_strshret(ret)))
