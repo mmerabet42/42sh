@@ -684,7 +684,7 @@ check_diff
 COMMAND="echo 1 && echo 2; { echo 3 ; echo 4 || echo 5; } > file2; rm file2"
 check_diff
 
-COMMAND="echo 1 && echo 2; { cat < file2 | cat -e >> file2 ; echo 4 || echo 5; } >> file2; cat file2, rm file2"
+COMMAND="echo 1 && echo 2; { cat < 2 | cat -e >> 2 ; echo 4 || echo 5; } >> 2; cat 2; rm 2"
 check_diff
 
 printf "${ORANGE}\n~~~~~~~~~~~~~\narithmetique\n~~~~~~~~~~~~~\n${NC}"
