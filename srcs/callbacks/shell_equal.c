@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 21:09:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/24 18:34:05 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/25 18:10:04 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,8 @@ static void	shell_equal_cb2(t_ast *astr, char *lstr, t_allf *allf, t_list *lst)
 		funcp->src = ft_strndup(astr->name + 1, ft_strlen(astr->name) - 2);
 		funcp->ast = ft_lexer(funcp->src, allf->lexerf);
 	}
-	else
+	else if ((g_expf.data = allf))
 	{
-		g_expf.data = allf;
 		ft_strexpand(astr->name, &lst, -1, &g_expf);
 		if (lst && lst->content)
 			ft_setenv(lstr, (char *)lst->content, &g_shell->envp);

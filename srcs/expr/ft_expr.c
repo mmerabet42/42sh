@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 20:49:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/10/24 17:53:03 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/10/25 18:04:20 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,10 @@ static int			expr_cmd_cb(t_ast *ast, void **op, void *res,
 
 	(void)iterf;
 	(void)op;
-	if (ast->args && ast->args->argc > 1)
+	if ((data = (t_exprdata *)ast->data) && ast->args && ast->args->argc > 1)
 		return (EXPR_OPTMISS);
-	data = (t_exprdata *)ast->data;
 	*(EXPRT *)res = (EXPRT)0;
-	ptr = NULL;
-	if (ft_isdigit(*ast->name))
+	if (!(ptr = NULL) && ft_isdigit(*ast->name))
 	{
 		if (!ft_strforeach(ast->name, ft_isdigit))
 			return (EXPR_BADEXPR);
