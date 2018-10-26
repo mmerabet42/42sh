@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/26 17:12:33 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/26 17:24:58 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,11 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 			elem = elem->next;
 		if (!elem)
 			return (error_fg(argv, 0));
-		if (!elem)
-			return (NULL);
 		handle_bgsign(elem, 0);
 	}
 	else
-	{
 		while (elem && ((t_inffork *)elem->content)->sign != '+')
 			elem = elem->next;
-	}
 	if (elem && (((t_inffork *)elem->content)->status != BG_KILL ||
 				((t_inffork *)elem->content)->status != BG_END))
 		return (elem);
