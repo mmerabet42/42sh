@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/07 16:47:10 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/19 16:21:56 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/26 17:09:35 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 static	t_list		*error_bg(char **argv, int i)
 {
 	if (!i)
-		ft_printf_fd(2, "21hs: bg: %s: no such job\n", argv[1]);
+		ft_printf_fd(2, "42sh: bg: %s: no such job\n", argv[1]);
 	else
-		ft_putstr_fd("21sh: bg: no current job\n", 2);
+		ft_putstr_fd("42sh: bg: no current job\n", 2);
 	return (NULL);
 }
 
@@ -44,10 +44,8 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 		handle_bgsign(elem, 0);
 	}
 	else
-	{
 		while (elem && ((t_inffork *)elem->content)->sign != '+')
 			elem = elem->next;
-	}
 	if (elem && (((t_inffork *)elem->content)->status != BG_KILL ||
 				((t_inffork *)elem->content)->status != BG_END))
 		return (elem);
@@ -66,7 +64,7 @@ int					builtin_bg(int argc, char **argv)
 	else
 	{
 		if (((t_inffork *)elem->content)->status != BG_STOP)
-			ft_printf_fd(2, "21sh: bg: job %d already in background\n", ret);
+			ft_printf_fd(2, "42sh: bg: job %d already in background\n", ret);
 		else
 		{
 			pid = ((t_inffork *)elem->content)->pid;

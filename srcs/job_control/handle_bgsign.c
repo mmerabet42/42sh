@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/01 14:51:21 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/19 16:20:35 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/26 17:05:05 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ void			handle_bgsign(t_list *elem, int opt)
 {
 	int	ret;
 
+	if (!elem)
+		return ;
 	ret = ft_lstsize(g_shell->bgproc);
 	if (ret == 1)
 	{
