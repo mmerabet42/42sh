@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/24 13:16:23 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/24 13:17:01 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/26 16:44:58 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "shell.h"
 #include "parser.h"
 #include "ft_mem.h"
+#include "ft_io.h"
 
 #include <sys/wait.h>
 #include <time.h>
@@ -49,12 +50,16 @@ static void		fork_son(t_pipe *a, t_list *elem, void *res, t_iterf *iterf)
 
 static void		fork_father(t_pipe *a, t_list **elem)
 {
+	t_list	*bg;
+
 	setpgid(a->pid, (!a->pgrp ? a->pid : a->pgrp));
 	closefd(a->fd, *elem);
 	if (!a->pgrp)
 	{
 		a->pgrp = a->pid;
 		handle_bgproc(a->pid, &a->allcmmd, BG_RUN, 1);
+		bg = ft_lstend(g_shell->bgproc);
+		ft_printf("[%d] %d\n", ((t_inffork *)bg->content)->x, a->pid);
 		free(a->all_cmd);
 		a->head = ft_lstend(g_shell->bgproc);
 	}
