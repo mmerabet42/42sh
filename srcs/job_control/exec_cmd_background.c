@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 17:42:32 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/26 16:44:59 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/26 19:44:18 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,10 @@ static int		father_forkbg(pid_t pid, t_ast *ast, void *res, t_iterf *iterf)
 			return (SH_MALLOC);
 	}
 	else
+	{
 		if (handle_bgproc(pid, ret_args(ast), BG_RUN, 1) != 0)
 			return (SH_MALLOC);
+	}
 	ft_astiter(ast->right, res, iterf);
 	return (0);
 }
