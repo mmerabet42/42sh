@@ -12,25 +12,25 @@ Thanks to our hard work we got a final grade of *121* !
 
 ### Mandatory part
 
-* Prompt display
-* Command line edition
-* Bultins: `cd`, `env`, `setenv`, `unsetenv`, `echo` and `exit`
-* Executing commands from the `PATH` environnement variable
-* The logical operators `&&` and `||`
-* Th separator `;`
+* Prompt display.
+* Command line edition.
+* Bultins: `cd`, `env`, `setenv`, `unsetenv`, `echo` and `exit`.
+* Executing commands from the `PATH` environnement variable.
+* The logical operators `&&` and `||`.
+* The `;` separator.
 
 ### Optional part
 
-* Inhibitors `"` (double quotes), `'` (simple quotes) and `\` (backslash)
-* Heredoc `<<` and file descriptors aggregation
+* Inhibitors `"` (double quotes), `'` (simple quotes) and `\` (backslash).
+* Heredoc `<<` and file descriptor aggregations.
 * Globbing : `*`, `?`, `[]`, `{}`, etc.
-* Command substitution ``` ` ``` and `$()`
-* Subshells `()` and command groups `{ ;}`
-* Local variables and `unset`, `set`, `export` builtins
-* `history` builtin, (this shell does not handle the `!` feature)
-* A complete line edition (i.e the ability to edit a line with various keyboard shortcut)
-* The builtin `read`
-* Dynamic autocompletion
+* Command substitution ``` `` ``` and `$()`.
+* Subshells `(command list)` and command groups `{ command list }`.
+* Local variables and `unset`, `set`, `export` builtins.
+* `history` builtin, (the `!` feature is not handled).
+* A complete line edition (i.e the ability to edit a line with various keyboard shortcut).
+* The builtin `read`.
+* Dynamic autocompletion.
 
 ## Very very much appreciated in the grading
 
@@ -39,7 +39,7 @@ Thanks to our hard work we got a final grade of *121* !
 
 ## Additional features
 
-* Arithmetic expansions `$((...))` and `$[...]`
-* Positional argument expansion `$0`, `$1` ... and `$@`
-* Functions with the `:=` operator `func_name := { function definition }`
-* `if` and `while` keyword `if command then command` or `if command then { command list }` or even `if { command list } then { command list }
+* Arithmetic expansions `$((...))` and `$[...]`.
+* Positional argument expansion `$0`, `$1` ... and `$@`.
+* Functions with the `:=` operator `func_name := { command list }`.
+* `if` and `while` keyword `if command then command` or `if command then { command list }` or even `if { command list } then { command list }`.
