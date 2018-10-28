@@ -6,7 +6,7 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/11 13:28:32 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/01 11:50:44 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/27 10:20:58 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void		add_char(char *buf, t_cmdedit *cmd, t_cursor *cursor)
 	int			max;
 
 	i = -1;
-	while (cmd && buf[++i])
+	while (cmd && buf[++i] && buf[i] >= 32 && buf[i] <= 126)
 	{
 		max = cursor->y == 1 ? cursor->xmax - cursor->origin
 			: cursor->xmax - 1;

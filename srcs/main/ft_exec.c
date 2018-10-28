@@ -19,11 +19,21 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-static int	stopped(pid_t pidl, t_list *elem, int ret)
+static int	handle_ret(pid_t pidl, t_list *elem, int ret)
 {
-	handle_bgstat(pidl, BG_STOP, 1);
-	handle_bgsign(elem, 0);
-	return (WSTOPSIG(ret));
+	if (WIFSTOPPED(ret))
+	{
+		handle_bgstat(pidl, BG_STOP, 1);
+		handle_bgsign(elem, 0);
+		return (WSTOPSIG(ret));
+	}
+	if (g_shell->bgproc == elem)
+		g_shell->bgproc = NULL;
+	else
+		elem->parent->next = NULL;
+	ft_lstdelone(&elem, del);
+	g_shell->numproc--;
+	return (WEXITSTATUS(ret));
 }
 
 int			fork_father(pid_t pidl)
@@ -41,15 +51,7 @@ int			fork_father(pid_t pidl)
 		signal(SIGCHLD, sign_child);
 		tcsetpgrp(0, getpid());
 	}
-	if (WIFSTOPPED(ret))
-		stopped(pidl, elem, ret);
-	if (g_shell->bgproc == elem)
-		g_shell->bgproc = NULL;
-	else
-		elem->parent->next = NULL;
-	ft_lstdelone(&elem, del);
-	g_shell->numproc--;
-	return (WEXITSTATUS(ret));
+	return (handle_ret(pidl, elem, ret));
 }
 
 int			ft_exec(char *name, char **argv, char **envp, pid_t *pid)

@@ -6,23 +6,20 @@
 /*   By: gdufay <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/23 12:27:01 by gdufay            #+#    #+#             */
-/*   Updated: 2018/10/01 11:59:57 by gdufay           ###   ########.fr       */
+/*   Updated: 2018/10/27 10:23:39 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libedit.h"
 
-static void			clean_autoc(t_cmdedit **cmd)
+static void			clean_autoc(t_cmdedit *cmd)
 {
-	t_cmdedit	*tmp;
-
 	if (!cmd)
 		return ;
-	tmp = *cmd;
-	while (tmp && tmp->prev)
+	while (cmd && cmd->prev)
 	{
-		tmp->is_autoc = 0;
-		tmp = tmp->prev;
+		cmd->is_autoc = 0;
+		cmd = cmd->prev;
 	}
 }
 
@@ -36,7 +33,7 @@ static t_cmdedit	*gain_de_place(char *buf, t_cmdedit *cmd, t_cursor *cursor)
 	if (buf[0] == '\t')
 		cmd = autocomplete(cmd, cursor);
 	else
-		clean_autoc(&cmd);
+		clean_autoc(cmd);
 	return (cmd);
 }
 

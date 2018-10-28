@@ -6,7 +6,7 @@
 /*   By: sle-rest <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/22 17:08:14 by sle-rest          #+#    #+#             */
-/*   Updated: 2018/09/15 18:05:29 by sle-rest         ###   ########.fr       */
+/*   Updated: 2018/10/26 19:51:09 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	fill_between_comma(char *str, int *i, int j, t_acc **acc)
 	len = 0;
 	len = len_between_comma(str, *i);
 	if (!((*acc)->split[j] = (char *)malloc(sizeof(char) * (len + 1))))
-		return (error_glob("mg", "21sh: error_glob malloc"));
+		return (error_glob("mg", "42sh: error_glob malloc"));
 	x = 0;
 	while (len > 0)
 	{
@@ -82,7 +82,7 @@ int			fill_acc_acc(char *str, int *i, t_acc **acc)
 	(*acc)->type = accolade;
 	len = nb_token_in_acc(str, *i);
 	if (!((*acc)->split = (char **)malloc(sizeof(char *) * (len + 1))))
-		return (error_glob("mg", "21sh: error_glob malloc"));
+		return (error_glob("mg", "42sh: error_glob malloc"));
 	j = 0;
 	while (len--)
 	{

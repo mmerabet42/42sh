@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:40:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/10/26 11:34:54 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/10/26 19:51:50 by sle-rest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ static	t_inffork	*init_infproc(int x, pid_t pid, char **cmd)
 	t_inffork	*new;
 
 	if (!(new = (t_inffork *)ft_memalloc(sizeof(t_inffork))))
-		ft_exitf(EXIT_FAILURE, "21sh: %s\n", ft_strshret(SH_MALLOC));
+		ft_exitf(EXIT_FAILURE, "42sh: %s\n", ft_strshret(SH_MALLOC));
 	new->x = x;
 	new->pid = (g_shell->bits & (1 << 1)) ? -1 : pid;
 	if (tabptrtotab(cmd, new, new->pid) == SH_MALLOC)
-		ft_exitf(EXIT_FAILURE, "21sh: %s\n", ft_strshret(SH_MALLOC));
+		ft_exitf(EXIT_FAILURE, "42sh: %s\n", ft_strshret(SH_MALLOC));
 	new->sign = ' ';
 	return (new);
 }
@@ -63,7 +63,7 @@ static	t_list		*init_t_list(t_inffork *content, size_t size)
 	t_list	*elem;
 
 	if (!(elem = (t_list *)ft_memalloc(sizeof(t_list))))
-		ft_exitf(EXIT_FAILURE, "21sh: %s\n", ft_strshret(SH_MALLOC));
+		ft_exitf(EXIT_FAILURE, "42sh: %s\n", ft_strshret(SH_MALLOC));
 	elem->content = content;
 	elem->content_size = size;
 	return (elem);
@@ -78,7 +78,7 @@ int					nbproc_inbg(t_list *b_list)
 		b_list = b_list->next;
 	if (x >= MAX_BGPROC)
 	{
-		ft_printf_fd(2, "21sh: %s (%d)", ft_strshret(SH_MAXBGPROC),
+		ft_printf_fd(2, "42sh: %s (%d)", ft_strshret(SH_MAXBGPROC),
 						MAX_BGPROC);
 		return (-1);
 	}
