@@ -47,4 +47,6 @@ Thanks to our hard work we got a final grade of *121* !
 * The `.42shrc` file in the home directory, that is executed at the beginning of the shell.
 * `-c` option to give a command in parameter `./42sh -c 'echo Hello World'`.
 
-***FINAL GRADE: 121***
+<p align="center">
+  <b><i>**FINAL GRADE: 121**</i></b>
+</p>
