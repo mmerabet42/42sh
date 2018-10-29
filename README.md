@@ -47,6 +47,16 @@ Thanks to our hard work we got a final grade of *121* !
 * The `.42shrc` file in the home directory, that is executed at the beginning of the shell.
 * `-c` option to give a command in parameter `./42sh -c 'echo Hello World'`.
 
+# Core Team
+
+* [Jeremi Raymond](https://github.com/jraymond96), (The rigorous)
+* [Sebastien Le Rest](https://github.com/SLeRest), (The bug finder)
+* [Gaetan Dufay](https://github.com/gdufay), (The stagiaire)
+* [Mohammed Merabet](https://github.com/mmerabet42), (The clown)
+
+
+
+
 <p align="center">
   <b><i>**FINAL GRADE: 121**</i></b>
 </p>
