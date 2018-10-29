@@ -52,7 +52,7 @@ Thanks to our hard work we got a final grade of *121* !
 * [Jeremi Raymond](https://github.com/jraymond96), (The rigorous)
 * [Sebastien Le Rest](https://github.com/SLeRest), (The bug finder)
 * [Gaetan Dufay](https://github.com/gdufay), (The stagiaire)
-* [Mohammed Merabet](https://github.com/mmerabet42), (The clown)
+* [Mohammed Merabet](https://github.com/mmerabet42), (The genius and The modest)
 
 
 
