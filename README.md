@@ -41,5 +41,10 @@ Thanks to our hard work we got a final grade of *121* !
 
 * Arithmetic expansions `$((...))` and `$[...]`.
 * Positional argument expansion `$0`, `$1` ... and `$@`.
+* The `PROMPT` environnement variable to change the prompt in real time.
 * Functions with the `:=` operator `func_name := { command list }`.
 * `if` and `while` keyword `if command then command` or `if command then { command list }` or even `if { command list } then { command list }`.
+* The `.42shrc` file in the home directory, that is executed at the beginning of the shell.
+* `-c` option to give a command in parameter `./42sh -c 'echo Hello World'`.
+
+***FINAL GRADE: 121***
