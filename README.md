@@ -4,7 +4,7 @@
 
 We deviated from a base of mine but the final project was the result of the contribution of [Jeremi Raymond](https://github.com/jraymond96), [Sebastien Le Rest](https://github.com/SLeRest), [Gaetan Dufay](https://github.com/gdufay) and me [Mohammed Merabet](https://github.com/mmerabet42), we each worked on different aspect of the project but my main duty was to make all the abstraction and the genericity of a system that should simplify the addition of new features.
 
-Thanks to that abstraction, it was easier to get the project at its full potential. For example adding features that were not mandatory, like shell scripting or even job control.
+Thanks to that abstraction, it was easier to get the project at its full potential. For example adding features that were not mandatory, such as shell scripting and job control.
 
 Thanks to our hard work we got a final grade of *121* !
 
